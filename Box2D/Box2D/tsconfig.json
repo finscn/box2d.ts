@@ -1,14 +1,20 @@
 {
   "compilerOptions": {
-    "target": "es6",
+    "target": "es5",
     "module": "system",
+    "preserveConstEnums": true,
     "noImplicitAny": true,
     "noImplicitReturns": true,
     "noImplicitThis": true,
     "noImplicitUseStrict": true,
     "strictNullChecks": false,
     "noUnusedLocals": true,
-    "noUnusedParameters": false
+    "noUnusedParameters": false,
+    "removeComments": true,
+    "sourceMap": true,
+    "inlineSources": false,
+    "declaration": true,
+    "outFile": "../../dist/box2d-ts.js"
   },
   "include": [
     "**/*.ts"
