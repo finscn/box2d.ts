@@ -1571,7 +1571,7 @@ System.register("Box2D/Common/b2GrowableStack", [], function (exports_5, context
                 constructor(N) {
                     this.m_stack = [];
                     this.m_count = 0;
-                    this.m_stack = [];
+                    this.m_stack = [ /*N*/];
                     this.m_count = 0;
                 }
                 Reset() {
@@ -1986,7 +1986,7 @@ System.register("Box2D/Collision/b2Distance", ["Box2D/Common/b2Settings", "Box2D
                     this.m_v1 = new b2SimplexVertex();
                     this.m_v2 = new b2SimplexVertex();
                     this.m_v3 = new b2SimplexVertex();
-                    this.m_vertices = [];
+                    this.m_vertices = [ /*3*/];
                     this.m_count = 0;
                     this.m_vertices[0] = this.m_v1;
                     this.m_vertices[1] = this.m_v2;
@@ -3485,11 +3485,11 @@ System.register("Box2D/Collision/b2DynamicTree", ["Box2D/Common/b2Settings", "Bo
                 Validate() {
                     this.ValidateStructure(this.m_root);
                     this.ValidateMetrics(this.m_root);
-                    let freeCount = 0;
+                    // let freeCount: number = 0;
                     let freeIndex = this.m_freeList;
                     while (freeIndex !== null) {
                         freeIndex = freeIndex.parent; // freeIndex = freeIndex.next;
-                        ++freeCount;
+                        // ++freeCount;
                     }
                     ///b2Assert(this.GetHeight() === this.ComputeHeight());
                 }
@@ -8370,6 +8370,23 @@ System.register("Box2D/Dynamics/Joints/b2GearJoint", ["Box2D/Common/b2Settings",
         }
     };
 });
+/*
+* Copyright (c) 2006-2012 Erin Catto http://www.box2d.org
+*
+* This software is provided 'as-is', without any express or implied
+* warranty.  In no event will the authors be held liable for any damages
+* arising from the use of this software.
+* Permission is granted to anyone to use this software for any purpose,
+* including commercial applications, and to alter it and redistribute it
+* freely, subject to the following restrictions:
+* 1. The origin of this software must not be misrepresented; you must not
+* claim that you wrote the original software. If you use this software
+* in a product, an acknowledgment in the product documentation would be
+* appreciated but is not required.
+* 2. Altered source versions must be plainly marked as such, and must not be
+* misrepresented as being the original software.
+* 3. This notice may not be removed or altered from any source distribution.
+*/
 System.register("Box2D/Dynamics/Joints/b2MotorJoint", ["Box2D/Common/b2Math", "Box2D/Dynamics/Joints/b2Joint"], function (exports_26, context_26) {
     "use strict";
     var __moduleName = context_26 && context_26.id;
@@ -8383,7 +8400,36 @@ System.register("Box2D/Dynamics/Joints/b2MotorJoint", ["Box2D/Common/b2Math", "B
                 b2Joint_7 = b2Joint_7_1;
             }
         ],
-        execute: function () {
+        execute: function () {/*
+            * Copyright (c) 2006-2012 Erin Catto http://www.box2d.org
+            *
+            * This software is provided 'as-is', without any express or implied
+            * warranty.  In no event will the authors be held liable for any damages
+            * arising from the use of this software.
+            * Permission is granted to anyone to use this software for any purpose,
+            * including commercial applications, and to alter it and redistribute it
+            * freely, subject to the following restrictions:
+            * 1. The origin of this software must not be misrepresented; you must not
+            * claim that you wrote the original software. If you use this software
+            * in a product, an acknowledgment in the product documentation would be
+            * appreciated but is not required.
+            * 2. Altered source versions must be plainly marked as such, and must not be
+            * misrepresented as being the original software.
+            * 3. This notice may not be removed or altered from any source distribution.
+            */
+            // Point-to-point constraint
+            // Cdot = v2 - v1
+            //      = v2 + cross(w2, r2) - v1 - cross(w1, r1)
+            // J = [-I -r1_skew I r2_skew ]
+            // Identity used:
+            // w k % (rx i + ry j) = w * (-ry i + rx j)
+            //
+            // r1 = offset - c1
+            // r2 = -c2
+            // Angle constraint
+            // Cdot = w2 - w1
+            // J = [0 0 -1 0 0 1]
+            // K = invI1 + invI2
             b2MotorJointDef = class b2MotorJointDef extends b2Joint_7.b2JointDef {
                 constructor() {
                     super(11 /* e_motorJoint */);
@@ -8506,12 +8552,11 @@ System.register("Box2D/Dynamics/Joints/b2MotorJoint", ["Box2D/Common/b2Math", "B
                     let wB = data.velocities[this.m_indexB].w;
                     const qA = this.m_qA.SetAngle(aA), qB = this.m_qB.SetAngle(aB);
                     // Compute the effective mass matrix.
-                    // this.m_rA = b2Mul(qA, -this.m_localCenterA);
-                    const rA = b2Math_19.b2Rot.MulRV(qA, b2Math_19.b2Vec2.NegV(this.m_localCenterA, b2Math_19.b2Vec2.s_t0), this.m_rA);
+                    // this.m_rA = b2Mul(qA, m_linearOffset - this.m_localCenterA);
+                    const rA = b2Math_19.b2Rot.MulRV(qA, b2Math_19.b2Vec2.SubVV(this.m_linearOffset, this.m_localCenterA, b2Math_19.b2Vec2.s_t0), this.m_rA);
                     // this.m_rB = b2Mul(qB, -this.m_localCenterB);
                     const rB = b2Math_19.b2Rot.MulRV(qB, b2Math_19.b2Vec2.NegV(this.m_localCenterB, b2Math_19.b2Vec2.s_t0), this.m_rB);
                     // J = [-I -r1_skew I r2_skew]
-                    //     [ 0       -1 0       1]
                     // r_skew = [-ry; rx]
                     // Matlab
                     // K = [ mA+r1y^2*iA+mB+r2y^2*iB,  -r1y*iA*r1x-r2y*iB*r2x,          -r1y*iA-r2y*iB]
@@ -8519,6 +8564,7 @@ System.register("Box2D/Dynamics/Joints/b2MotorJoint", ["Box2D/Common/b2Math", "B
                     //     [          -r1y*iA-r2y*iB,           r1x*iA+r2x*iB,                   iA+iB]
                     const mA = this.m_invMassA, mB = this.m_invMassB;
                     const iA = this.m_invIA, iB = this.m_invIB;
+                    // Upper 2 by 2 of K for point to point
                     const K = this.m_K;
                     K.ex.x = mA + mB + iA * rA.y * rA.y + iB * rB.y * rB.y;
                     K.ex.y = -iA * rA.x * rA.y - iB * rB.x * rB.y;
@@ -8530,8 +8576,8 @@ System.register("Box2D/Dynamics/Joints/b2MotorJoint", ["Box2D/Common/b2Math", "B
                     if (this.m_angularMass > 0) {
                         this.m_angularMass = 1 / this.m_angularMass;
                     }
-                    // this.m_linearError = cB + rB - cA - rA - b2Mul(qA, this.m_linearOffset);
-                    b2Math_19.b2Vec2.SubVV(b2Math_19.b2Vec2.SubVV(b2Math_19.b2Vec2.AddVV(cB, rB, b2Math_19.b2Vec2.s_t0), b2Math_19.b2Vec2.AddVV(cA, rA, b2Math_19.b2Vec2.s_t1), b2Math_19.b2Vec2.s_t2), b2Math_19.b2Rot.MulRV(qA, this.m_linearOffset, b2Math_19.b2Vec2.s_t3), this.m_linearError);
+                    // this.m_linearError = cB + rB - cA - rA;
+                    b2Math_19.b2Vec2.SubVV(b2Math_19.b2Vec2.AddVV(cB, rB, b2Math_19.b2Vec2.s_t0), b2Math_19.b2Vec2.AddVV(cA, rA, b2Math_19.b2Vec2.s_t1), this.m_linearError);
                     this.m_angularError = aB - aA - this.m_angularOffset;
                     if (data.step.warmStarting) {
                         // Scale impulses to support a variable time step.
@@ -11869,11 +11915,11 @@ System.register("Box2D/Particle/b2ParticleSystem", ["Box2D/Common/b2Settings", "
         let left = first;
         let stack = [];
         let pos = 0;
-        for (;;) {
-            for (; left + 1 < len; len++) {
+        for (;;) { /* outer loop */
+            for (; left + 1 < len; len++) { /* sort left to len-1 */
                 let pivot = array[left + Math.floor(Math.random() * (len - left))]; /* pick random pivot */
                 stack[pos++] = len; /* sort right part later */
-                for (let right = left - 1;;) {
+                for (let right = left - 1;;) { /* inner loop: partitioning */
                     while (cmp(array[++right], pivot)) { } /* look for greater element */
                     while (cmp(pivot, array[--len])) { } /* look for smaller element */
                     if (right >= len)
@@ -14071,7 +14117,7 @@ System.register("Box2D/Particle/b2ParticleSystem", ["Box2D/Common/b2Settings", "
                     // to
                     //     listA => listB => b1 => b2 => a1 => a2 => a3 => null
                     b2Assert(listA !== listB);
-                    for (let b = listB;;) {
+                    for ( /*ParticleListNode**/let b = listB;;) {
                         b.list = listA;
                         /*ParticleListNode**/
                         let nextB = b.next;
@@ -14141,7 +14187,7 @@ System.register("Box2D/Particle/b2ParticleSystem", ["Box2D/Common/b2Settings", "
                         b2Assert(list.list === list);
                         /*b2ParticleGroup**/
                         let newGroup = this.CreateParticleGroup(def);
-                        for (let node = list; node; node = node.next) {
+                        for ( /*ParticleListNode**/let node = list; node; node = node.next) {
                             let oldIndex = node.index;
                             let flags = this.m_flagsBuffer.data[oldIndex];
                             b2Assert(!(flags & 2 /* b2_zombieParticle */));
@@ -15968,7 +16014,7 @@ System.register("Box2D/Particle/b2ParticleSystem", ["Box2D/Common/b2Settings", "
                     // Number of contacts processed for the current particle.
                     let currentContacts = 0;
                     // Output the number of discarded contacts.
-                    let discarded = 0;
+                    // let discarded = 0;
                     let b2ParticleBodyContactRemovePredicate = function (contact) {
                         // This implements the selection criteria described in
                         // RemoveSpuriousBodyContacts().
@@ -15983,7 +16029,7 @@ System.register("Box2D/Particle/b2ParticleSystem", ["Box2D/Common/b2Settings", "
                             lastIndex = contact.index;
                         }
                         if (currentContacts++ > k_maxContactsPerPoint) {
-                            ++discarded;
+                            // ++discarded;
                             return true;
                         }
                         // Project along inverse normal (as returned in the contact) to get the
@@ -16007,7 +16053,7 @@ System.register("Box2D/Particle/b2ParticleSystem", ["Box2D/Common/b2Settings", "
                                     return false;
                                 }
                             }
-                            ++discarded;
+                            // ++discarded;
                             return true;
                         }
                         return false;
@@ -17298,9 +17344,9 @@ System.register("Box2D/Dynamics/b2Island", ["Box2D/Common/b2Settings", "Box2D/Co
                 constructor() {
                     this.m_allocator = null;
                     this.m_listener = null;
-                    this.m_bodies = []; // TODO: b2Settings
-                    this.m_contacts = []; // TODO: b2Settings
-                    this.m_joints = []; // TODO: b2Settings
+                    this.m_bodies = [ /*1024*/]; // TODO: b2Settings
+                    this.m_contacts = [ /*1024*/]; // TODO: b2Settings
+                    this.m_joints = [ /*1024*/]; // TODO: b2Settings
                     this.m_positions = b2TimeStep_3.b2Position.MakeArray(1024); // TODO: b2Settings
                     this.m_velocities = b2TimeStep_3.b2Velocity.MakeArray(1024); // TODO: b2Settings
                     this.m_bodyCount = 0;
@@ -18235,7 +18281,7 @@ System.register("Box2D/Dynamics/b2World", ["Box2D/Common/b2Settings", "Box2D/Com
                         if (callback instanceof b2WorldCallbacks_3.b2QueryCallback) {
                             return callback.ReportFixture(fixture);
                         }
-                        else {
+                        else /* if (typeof(callback) === 'function') */ {
                             return callback(fixture);
                         }
                     }
@@ -18261,7 +18307,7 @@ System.register("Box2D/Dynamics/b2World", ["Box2D/Common/b2Settings", "Box2D/Com
                             if (callback instanceof b2WorldCallbacks_3.b2QueryCallback) {
                                 return callback.ReportFixture(fixture);
                             }
-                            else {
+                            else /* if (typeof(callback) === 'function') */ {
                                 return callback(fixture);
                             }
                         }
@@ -18291,7 +18337,7 @@ System.register("Box2D/Dynamics/b2World", ["Box2D/Common/b2Settings", "Box2D/Com
                             if (callback instanceof b2WorldCallbacks_3.b2QueryCallback) {
                                 return callback.ReportFixture(fixture);
                             }
-                            else {
+                            else /* if (typeof(callback) === 'function') */ {
                                 return callback(fixture);
                             }
                         }
@@ -18327,7 +18373,7 @@ System.register("Box2D/Dynamics/b2World", ["Box2D/Common/b2Settings", "Box2D/Com
                             if (callback instanceof b2WorldCallbacks_4.b2RayCastCallback) {
                                 return callback.ReportFixture(fixture, point, output.normal, fraction);
                             }
-                            else {
+                            else /* if (typeof(callback) === 'function') */ {
                                 return callback(fixture, point, output.normal, fraction);
                             }
                         }
@@ -19309,14 +19355,14 @@ System.register("Box2D/Dynamics/b2Body", ["Box2D/Common/b2Math", "Box2D/Collisio
                     ///b2Assert(this.m_fixtureCount > 0);
                     let node = this.m_fixtureList;
                     let ppF = null;
-                    let found = false;
+                    // let found: boolean = false;
                     while (node !== null) {
                         if (node === fixture) {
                             if (ppF)
                                 ppF.m_next = fixture.m_next;
                             else
                                 this.m_fixtureList = fixture.m_next;
-                            found = true;
+                            // found = true;
                             break;
                         }
                         ppF = node;
@@ -21822,9 +21868,9 @@ System.register("Box2D/Dynamics/Contacts/b2ContactFactory", ["Box2D/Common/b2Set
                     */
                 }
                 InitializeRegisters() {
-                    this.m_registers = [];
+                    this.m_registers = [ /*b2ShapeType.e_shapeTypeCount*/];
                     for (let i = 0; i < 4 /* e_shapeTypeCount */; i++) {
-                        this.m_registers[i] = [];
+                        this.m_registers[i] = [ /*b2ShapeType.e_shapeTypeCount*/];
                         for (let j = 0; j < 4 /* e_shapeTypeCount */; j++) {
                             this.m_registers[i][j] = new b2ContactRegister();
                         }
@@ -22252,7 +22298,7 @@ System.register("Box2D/Collision/b2BroadPhase", ["Box2D/Collision/b2Collision", 
                         const that = this;
                         // This is called from box2d.b2DynamicTree::Query when we are gathering pairs.
                         // boolean b2BroadPhase::QueryCallback(int32 proxyId);
-                        function QueryCallback(proxy) {
+                        const QueryCallback = function (proxy) {
                             // A proxy cannot form a pair with itself.
                             if (proxy.m_id === queryProxy.m_id) {
                                 return true;
@@ -22274,7 +22320,7 @@ System.register("Box2D/Collision/b2BroadPhase", ["Box2D/Collision/b2Collision", 
                             }
                             ++that.m_pairCount;
                             return true;
-                        }
+                        };
                         // We have to query the tree with the fat AABB so that
                         // we don't fail to create a pair that may touch later.
                         const fatAABB = this.m_tree.GetFatAABB(queryProxy);
@@ -23975,8 +24021,8 @@ System.register("Testbed/Framework/Test", ["Box2D/Box2D", "Testbed/Framework/Deb
                 }
             };
             Test.k_maxContactPoints = 2048;
-            Test.PreSolve_s_state1 = [];
-            Test.PreSolve_s_state2 = [];
+            Test.PreSolve_s_state1 = [ /*box2d.b2_maxManifoldPoints*/];
+            Test.PreSolve_s_state2 = [ /*box2d.b2_maxManifoldPoints*/];
             Test.PreSolve_s_worldManifold = new box2d.b2WorldManifold();
             ///#if B2_ENABLE_PARTICLE
             Test.k_ParticleColors = [
@@ -24266,10 +24312,10 @@ System.register("Testbed/Tests/Car", ["Box2D/Box2D", "Testbed/Testbed"], functio
 * misrepresented as being the original software.
 * 3. This notice may not be removed or altered from any source distribution.
 */
-System.register("Testbed/Tests/RayCast", ["Box2D/Box2D", "Testbed/Testbed"], function (exports_63, context_63) {
+System.register("Testbed/Tests/MotorJoint2", ["Box2D/Box2D", "Testbed/Testbed"], function (exports_63, context_63) {
     "use strict";
     var __moduleName = context_63 && context_63.id;
-    var box2d, testbed, RayCastClosestCallback, RayCastAnyCallback, RayCastMultipleCallback, RayCast;
+    var box2d, testbed, MotorJoint2;
     return {
         setters: [
             function (box2d_5) {
@@ -24277,6 +24323,116 @@ System.register("Testbed/Tests/RayCast", ["Box2D/Box2D", "Testbed/Testbed"], fun
             },
             function (testbed_2) {
                 testbed = testbed_2;
+            }
+        ],
+        execute: function () {/*
+            * Copyright (c) 2006-2012 Erin Catto http://www.box2d.org
+            *
+            * This software is provided 'as-is', without any express or implied
+            * warranty.  In no event will the authors be held liable for any damages
+            * arising from the use of this software.
+            * Permission is granted to anyone to use this software for any purpose,
+            * including commercial applications, and to alter it and redistribute it
+            * freely, subject to the following restrictions:
+            * 1. The origin of this software must not be misrepresented; you must not
+            * claim that you wrote the original software. If you use this software
+            * in a product, an acknowledgment in the product documentation would be
+            * appreciated but is not required.
+            * 2. Altered source versions must be plainly marked as such, and must not be
+            * misrepresented as being the original software.
+            * 3. This notice may not be removed or altered from any source distribution.
+            */
+            // Adapted from MotorJoint.h
+            MotorJoint2 = class MotorJoint2 extends testbed.Test {
+                constructor() {
+                    super();
+                    let ground = null;
+                    {
+                        const bd = new box2d.b2BodyDef();
+                        ground = this.m_world.CreateBody(bd);
+                        const shape = new box2d.b2EdgeShape();
+                        shape.Set(new box2d.b2Vec2(-20.0, 0.0), new box2d.b2Vec2(20.0, 0.0));
+                        const fd = new box2d.b2FixtureDef();
+                        fd.shape = shape;
+                        ground.CreateFixture(fd);
+                    }
+                    // b2Body * body1 = NULL;
+                    let body1 = null;
+                    {
+                        const bd = new box2d.b2BodyDef();
+                        bd.type = 2 /* b2_dynamicBody */;
+                        bd.position.Set(0.0, 4.0);
+                        body1 = this.m_world.CreateBody(bd);
+                        const shape = new box2d.b2CircleShape();
+                        shape.m_radius = 1.0;
+                        const fd = new box2d.b2FixtureDef();
+                        fd.shape = shape;
+                        fd.friction = 0.6;
+                        fd.density = 2.0;
+                        body1.CreateFixture(fd);
+                    }
+                    // b2Body * body2 = NULL;
+                    let body2 = null;
+                    {
+                        const bd = new box2d.b2BodyDef();
+                        bd.type = 2 /* b2_dynamicBody */;
+                        bd.position.Set(4.0, 8.0);
+                        body2 = this.m_world.CreateBody(bd);
+                        const shape = new box2d.b2CircleShape();
+                        shape.m_radius = 1.0;
+                        const fd = new box2d.b2FixtureDef();
+                        fd.shape = shape;
+                        fd.friction = 0.6;
+                        fd.density = 2.0;
+                        body2.CreateFixture(fd);
+                    }
+                    {
+                        const mjd = new box2d.b2MotorJointDef();
+                        mjd.Initialize(body1, body2);
+                        mjd.maxForce = 1000.0;
+                        mjd.maxTorque = 1000.0;
+                        this.m_joint = this.m_world.CreateJoint(mjd);
+                    }
+                }
+                Step(settings) {
+                    super.Step(settings);
+                }
+                static Create() {
+                    return new MotorJoint2();
+                }
+            };
+            exports_63("MotorJoint2", MotorJoint2);
+        }
+    };
+});
+/*
+* Copyright (c) 2006-2012 Erin Catto http://www.box2d.org
+*
+* This software is provided 'as-is', without any express or implied
+* warranty.  In no event will the authors be held liable for any damages
+* arising from the use of this software.
+* Permission is granted to anyone to use this software for any purpose,
+* including commercial applications, and to alter it and redistribute it
+* freely, subject to the following restrictions:
+* 1. The origin of this software must not be misrepresented; you must not
+* claim that you wrote the original software. If you use this software
+* in a product, an acknowledgment in the product documentation would be
+* appreciated but is not required.
+* 2. Altered source versions must be plainly marked as such, and must not be
+* misrepresented as being the original software.
+* 3. This notice may not be removed or altered from any source distribution.
+*/
+System.register("Testbed/Tests/RayCast", ["Box2D/Box2D", "Testbed/Testbed"], function (exports_64, context_64) {
+    "use strict";
+    var __moduleName = context_64 && context_64.id;
+    var box2d, testbed, RayCastClosestCallback, RayCastAnyCallback, RayCastMultipleCallback, RayCast;
+    return {
+        setters: [
+            function (box2d_6) {
+                box2d = box2d_6;
+            },
+            function (testbed_3) {
+                testbed = testbed_3;
             }
         ],
         execute: function () {/*
@@ -24408,14 +24564,14 @@ System.register("Testbed/Tests/RayCast", ["Box2D/Box2D", "Testbed/Testbed"], fun
                         ground.CreateFixture(shape, 0.0);
                     }
                     {
-                        const vertices = [];
+                        const vertices = [ /*3*/];
                         vertices[0] = new box2d.b2Vec2(-0.5, 0.0);
                         vertices[1] = new box2d.b2Vec2(0.5, 0.0);
                         vertices[2] = new box2d.b2Vec2(0.0, 1.5);
                         this.m_polygons[0].Set(vertices, 3);
                     }
                     {
-                        const vertices = [];
+                        const vertices = [ /*3*/];
                         vertices[0] = new box2d.b2Vec2(-0.1, 0.0);
                         vertices[1] = new box2d.b2Vec2(0.1, 0.0);
                         vertices[2] = new box2d.b2Vec2(0.0, 1.5);
@@ -24425,7 +24581,7 @@ System.register("Testbed/Tests/RayCast", ["Box2D/Box2D", "Testbed/Testbed"], fun
                         const w = 1.0;
                         const b = w / (2.0 + box2d.b2Sqrt(2.0));
                         const s = box2d.b2Sqrt(2.0) * b;
-                        const vertices = [];
+                        const vertices = [ /*8*/];
                         vertices[0] = new box2d.b2Vec2(0.5 * s, 0.0);
                         vertices[1] = new box2d.b2Vec2(0.5 * w, b);
                         vertices[2] = new box2d.b2Vec2(0.5 * w, b + s);
@@ -24632,7 +24788,7 @@ System.register("Testbed/Tests/RayCast", ["Box2D/Box2D", "Testbed/Testbed"], fun
                 }
             };
             RayCast.e_maxBodies = 256;
-            exports_63("RayCast", RayCast);
+            exports_64("RayCast", RayCast);
         }
     };
 });
@@ -24653,17 +24809,17 @@ System.register("Testbed/Tests/RayCast", ["Box2D/Box2D", "Testbed/Testbed"], fun
 * misrepresented as being the original software.
 * 3. This notice may not be removed or altered from any source distribution.
 */
-System.register("Testbed/Tests/SphereStack", ["Box2D/Box2D", "Testbed/Testbed"], function (exports_64, context_64) {
+System.register("Testbed/Tests/SphereStack", ["Box2D/Box2D", "Testbed/Testbed"], function (exports_65, context_65) {
     "use strict";
-    var __moduleName = context_64 && context_64.id;
+    var __moduleName = context_65 && context_65.id;
     var box2d, testbed, SphereStack;
     return {
         setters: [
-            function (box2d_6) {
-                box2d = box2d_6;
+            function (box2d_7) {
+                box2d = box2d_7;
             },
-            function (testbed_3) {
-                testbed = testbed_3;
+            function (testbed_4) {
+                testbed = testbed_4;
             }
         ],
         execute: function () {/*
@@ -24724,7 +24880,7 @@ System.register("Testbed/Tests/SphereStack", ["Box2D/Box2D", "Testbed/Testbed"],
                 }
             };
             SphereStack.e_count = 10;
-            exports_64("SphereStack", SphereStack);
+            exports_65("SphereStack", SphereStack);
         }
     };
 });
@@ -24745,17 +24901,17 @@ System.register("Testbed/Tests/SphereStack", ["Box2D/Box2D", "Testbed/Testbed"],
  * misrepresented as being the original software.
  * 3. This notice may not be removed or altered from any source distribution.
  */
-System.register("Testbed/Tests/ElasticParticles", ["Box2D/Box2D", "Testbed/Testbed"], function (exports_65, context_65) {
+System.register("Testbed/Tests/ElasticParticles", ["Box2D/Box2D", "Testbed/Testbed"], function (exports_66, context_66) {
     "use strict";
-    var __moduleName = context_65 && context_65.id;
+    var __moduleName = context_66 && context_66.id;
     var box2d, testbed, ElasticParticles;
     return {
         setters: [
-            function (box2d_7) {
-                box2d = box2d_7;
+            function (box2d_8) {
+                box2d = box2d_8;
             },
-            function (testbed_4) {
-                testbed = testbed_4;
+            function (testbed_5) {
+                testbed = testbed_5;
             }
         ],
         execute: function () {/*
@@ -24868,7 +25024,7 @@ System.register("Testbed/Tests/ElasticParticles", ["Box2D/Box2D", "Testbed/Testb
                     return new ElasticParticles();
                 }
             };
-            exports_65("ElasticParticles", ElasticParticles);
+            exports_66("ElasticParticles", ElasticParticles);
             ///#endif
         }
     };
@@ -24890,14 +25046,14 @@ System.register("Testbed/Tests/ElasticParticles", ["Box2D/Box2D", "Testbed/Testb
  * misrepresented as being the original software.
  * 3. This notice may not be removed or altered from any source distribution.
  */
-System.register("Testbed/Framework/ParticleEmitter", ["Box2D/Box2D"], function (exports_66, context_66) {
+System.register("Testbed/Framework/ParticleEmitter", ["Box2D/Box2D"], function (exports_67, context_67) {
     "use strict";
-    var __moduleName = context_66 && context_66.id;
+    var __moduleName = context_67 && context_67.id;
     var box2d, EmittedParticleCallback, RadialEmitter;
     return {
         setters: [
-            function (box2d_8) {
-                box2d = box2d_8;
+            function (box2d_9) {
+                box2d = box2d_9;
             }
         ],
         execute: function () {/*
@@ -24923,7 +25079,7 @@ System.register("Testbed/Framework/ParticleEmitter", ["Box2D/Box2D"], function (
                  */
                 ParticleCreated(system, particleIndex) { }
             };
-            exports_66("EmittedParticleCallback", EmittedParticleCallback);
+            exports_67("EmittedParticleCallback", EmittedParticleCallback);
             /**
              * Emit particles from a circular region.
              */
@@ -25162,7 +25318,7 @@ System.register("Testbed/Framework/ParticleEmitter", ["Box2D/Box2D"], function (
                     return numberOfParticlesCreated;
                 }
             };
-            exports_66("RadialEmitter", RadialEmitter);
+            exports_67("RadialEmitter", RadialEmitter);
             ///#endif
         }
     };
@@ -25184,17 +25340,17 @@ System.register("Testbed/Framework/ParticleEmitter", ["Box2D/Box2D"], function (
  * misrepresented as being the original software.
  * 3. This notice may not be removed or altered from any source distribution.
  */
-System.register("Testbed/Tests/Faucet", ["Box2D/Box2D", "Testbed/Testbed", "Testbed/Framework/ParticleParameter", "Testbed/Framework/ParticleEmitter"], function (exports_67, context_67) {
+System.register("Testbed/Tests/Faucet", ["Box2D/Box2D", "Testbed/Testbed", "Testbed/Framework/ParticleParameter", "Testbed/Framework/ParticleEmitter"], function (exports_68, context_68) {
     "use strict";
-    var __moduleName = context_67 && context_67.id;
+    var __moduleName = context_68 && context_68.id;
     var box2d, testbed, ParticleParameter_2, ParticleEmitter_1, ParticleLifetimeRandomizer, Faucet;
     return {
         setters: [
-            function (box2d_9) {
-                box2d = box2d_9;
+            function (box2d_10) {
+                box2d = box2d_10;
             },
-            function (testbed_5) {
-                testbed = testbed_5;
+            function (testbed_6) {
+                testbed = testbed_6;
             },
             function (ParticleParameter_2_1) {
                 ParticleParameter_2 = ParticleParameter_2_1;
@@ -25235,7 +25391,7 @@ System.register("Testbed/Tests/Faucet", ["Box2D/Box2D", "Testbed/Testbed", "Test
                     system.SetParticleLifetime(particleIndex, Math.random() * (this.m_maxLifetime - this.m_minLifetime) + this.m_minLifetime);
                 }
             };
-            exports_67("ParticleLifetimeRandomizer", ParticleLifetimeRandomizer);
+            exports_68("ParticleLifetimeRandomizer", ParticleLifetimeRandomizer);
             /**
              * Faucet test creates a container from boxes and continually
              * spawning particles with finite lifetimes that pour into the
@@ -25476,7 +25632,7 @@ System.register("Testbed/Tests/Faucet", ["Box2D/Box2D", "Testbed/Testbed", "Test
                 new ParticleParameter_2.ParticleParameter.Definition(Faucet.k_paramValues)
             ];
             Faucet.k_paramDefCount = Faucet.k_paramDef.length;
-            exports_67("Faucet", Faucet);
+            exports_68("Faucet", Faucet);
             ///#endif
         }
     };
@@ -25498,17 +25654,17 @@ System.register("Testbed/Tests/Faucet", ["Box2D/Box2D", "Testbed/Testbed", "Test
  * misrepresented as being the original software.
  * 3. This notice may not be removed or altered from any source distribution.
  */
-System.register("Testbed/Tests/ParticlesSurfaceTension", ["Box2D/Box2D", "Testbed/Testbed"], function (exports_68, context_68) {
+System.register("Testbed/Tests/ParticlesSurfaceTension", ["Box2D/Box2D", "Testbed/Testbed"], function (exports_69, context_69) {
     "use strict";
-    var __moduleName = context_68 && context_68.id;
+    var __moduleName = context_69 && context_69.id;
     var box2d, testbed, ParticlesSurfaceTension;
     return {
         setters: [
-            function (box2d_10) {
-                box2d = box2d_10;
+            function (box2d_11) {
+                box2d = box2d_11;
             },
-            function (testbed_6) {
-                testbed = testbed_6;
+            function (testbed_7) {
+                testbed = testbed_7;
             }
         ],
         execute: function () {/*
@@ -25621,7 +25777,7 @@ System.register("Testbed/Tests/ParticlesSurfaceTension", ["Box2D/Box2D", "Testbe
                     return new ParticlesSurfaceTension();
                 }
             };
-            exports_68("ParticlesSurfaceTension", ParticlesSurfaceTension);
+            exports_69("ParticlesSurfaceTension", ParticlesSurfaceTension);
             ///#endif
         }
     };
@@ -25643,17 +25799,17 @@ System.register("Testbed/Tests/ParticlesSurfaceTension", ["Box2D/Box2D", "Testbe
 * misrepresented as being the original software.
 * 3. This notice may not be removed or altered from any source distribution.
 */
-System.register("Testbed/Tests/Sparky", ["Box2D/Box2D", "Testbed/Testbed"], function (exports_69, context_69) {
+System.register("Testbed/Tests/Sparky", ["Box2D/Box2D", "Testbed/Testbed"], function (exports_70, context_70) {
     "use strict";
-    var __moduleName = context_69 && context_69.id;
+    var __moduleName = context_70 && context_70.id;
     var box2d, testbed, ParticleVFX, Sparky;
     return {
         setters: [
-            function (box2d_11) {
-                box2d = box2d_11;
+            function (box2d_12) {
+                box2d = box2d_12;
             },
-            function (testbed_7) {
-                testbed = testbed_7;
+            function (testbed_8) {
+                testbed = testbed_8;
             }
         ],
         execute: function () {/*
@@ -25878,7 +26034,7 @@ System.register("Testbed/Tests/Sparky", ["Box2D/Box2D", "Testbed/Testbed"], func
             Sparky.c_maxVFX = 20; ///50;
             Sparky.SHAPE_HEIGHT_OFFSET = 7;
             Sparky.SHAPE_OFFSET = 4.5;
-            exports_69("Sparky", Sparky);
+            exports_70("Sparky", Sparky);
             ///#endif
         }
     };
@@ -25900,10 +26056,10 @@ System.register("Testbed/Tests/Sparky", ["Box2D/Box2D", "Testbed/Testbed"], func
 * misrepresented as being the original software.
 * 3. This notice may not be removed or altered from any source distribution.
 */
-System.register("Testbed/Tests/TestEntries", ["Testbed/Framework/Test", "Testbed/Tests/Car", "Testbed/Tests/RayCast", "Testbed/Tests/SphereStack", "Testbed/Tests/ElasticParticles", "Testbed/Tests/Faucet", "Testbed/Tests/ParticlesSurfaceTension", "Testbed/Tests/Sparky"], function (exports_70, context_70) {
+System.register("Testbed/Tests/TestEntries", ["Testbed/Framework/Test", "Testbed/Tests/Car", "Testbed/Tests/MotorJoint2", "Testbed/Tests/RayCast", "Testbed/Tests/SphereStack", "Testbed/Tests/ElasticParticles", "Testbed/Tests/Faucet", "Testbed/Tests/ParticlesSurfaceTension", "Testbed/Tests/Sparky"], function (exports_71, context_71) {
     "use strict";
-    var __moduleName = context_70 && context_70.id;
-    var Test_1, Car_1, RayCast_1, SphereStack_1, ElasticParticles_1, Faucet_1, ParticlesSurfaceTension_1, Sparky_1, g_testEntries;
+    var __moduleName = context_71 && context_71.id;
+    var Test_1, Car_1, MotorJoint2_1, RayCast_1, SphereStack_1, ElasticParticles_1, Faucet_1, ParticlesSurfaceTension_1, Sparky_1, g_testEntries;
     return {
         setters: [
             function (Test_1_1) {
@@ -25911,6 +26067,9 @@ System.register("Testbed/Tests/TestEntries", ["Testbed/Framework/Test", "Testbed
             },
             function (Car_1_1) {
                 Car_1 = Car_1_1;
+            },
+            function (MotorJoint2_1_1) {
+                MotorJoint2_1 = MotorJoint2_1_1;
             },
             function (RayCast_1_1) {
                 RayCast_1 = RayCast_1_1;
@@ -25949,7 +26108,7 @@ System.register("Testbed/Tests/TestEntries", ["Testbed/Framework/Test", "Testbed
             * 3. This notice may not be removed or altered from any source distribution.
             */
             ///#endif
-            exports_70("g_testEntries", g_testEntries = [
+            exports_71("g_testEntries", g_testEntries = [
                 ///#if B2_ENABLE_PARTICLE
                 new Test_1.TestEntry("Faucet", Faucet_1.Faucet.Create),
                 new Test_1.TestEntry("Surface Tension", ParticlesSurfaceTension_1.ParticlesSurfaceTension.Create),
@@ -25959,6 +26118,7 @@ System.register("Testbed/Tests/TestEntries", ["Testbed/Framework/Test", "Testbed
                 ///new TestEntry("Continuous Test", ContinuousTest.Create),
                 ///new TestEntry("Time of Impact", TimeOfImpact.Create),
                 ///new TestEntry("Motor Joint", MotorJoint.Create),
+                new Test_1.TestEntry("Motor Joint (Bug #487)", MotorJoint2_1.MotorJoint2.Create),
                 ///new TestEntry("Mobile", Mobile.Create),
                 ///new TestEntry("MobileBalanced", MobileBalanced.Create),
                 ///new TestEntry("Ray-Cast", RayCast.Create),
@@ -26001,9 +26161,9 @@ System.register("Testbed/Tests/TestEntries", ["Testbed/Framework/Test", "Testbed
  * misrepresented as being the original software.
  * 3. This notice may not be removed or altered from any source distribution.
  */
-System.register("Testbed/Framework/FullscreenUI", [], function (exports_71, context_71) {
+System.register("Testbed/Framework/FullscreenUI", [], function (exports_72, context_72) {
     "use strict";
-    var __moduleName = context_71 && context_71.id;
+    var __moduleName = context_72 && context_72.id;
     var FullScreenUI;
     return {
         setters: [],
@@ -26055,19 +26215,19 @@ System.register("Testbed/Framework/FullscreenUI", [], function (exports_71, cont
                     return this.m_particleParameterSelectionEnabled;
                 }
             };
-            exports_71("FullScreenUI", FullScreenUI);
+            exports_72("FullScreenUI", FullScreenUI);
             ///#endif
         }
     };
 });
-System.register("Testbed/Framework/Main", ["Box2D/Box2D", "Testbed/Framework/Test", "Testbed/Framework/DebugDraw", "Testbed/Tests/TestEntries", "Testbed/Framework/FullscreenUI", "Testbed/Framework/ParticleParameter"], function (exports_72, context_72) {
+System.register("Testbed/Framework/Main", ["Box2D/Box2D", "Testbed/Framework/Test", "Testbed/Framework/DebugDraw", "Testbed/Tests/TestEntries", "Testbed/Framework/FullscreenUI", "Testbed/Framework/ParticleParameter"], function (exports_73, context_73) {
     "use strict";
-    var __moduleName = context_72 && context_72.id;
+    var __moduleName = context_73 && context_73.id;
     var box2d, Test_2, DebugDraw_2, TestEntries_1, FullscreenUI_1, ParticleParameter_3, Main;
     return {
         setters: [
-            function (box2d_12) {
-                box2d = box2d_12;
+            function (box2d_13) {
+                box2d = box2d_13;
             },
             function (Test_2_1) {
                 Test_2 = Test_2_1;
@@ -26322,7 +26482,7 @@ System.register("Testbed/Framework/Main", ["Box2D/Box2D", "Testbed/Framework/Tes
                     const element = new box2d.b2Vec2(e.clientX, e.clientY);
                     const world = DebugDraw_2.g_camera.ConvertScreenToWorld(element, new box2d.b2Vec2());
                     switch (e.which) {
-                        case 1:// left mouse button
+                        case 1: // left mouse button
                             this.m_lMouseDown = true;
                             if (this.m_shift) {
                                 this.m_test.ShiftMouseDown(world);
@@ -26331,7 +26491,7 @@ System.register("Testbed/Framework/Main", ["Box2D/Box2D", "Testbed/Framework/Tes
                                 this.m_test.MouseDown(world);
                             }
                             break;
-                        case 3:// right mouse button
+                        case 3: // right mouse button
                             this.m_rMouseDown = true;
                             const projection = DebugDraw_2.g_camera.ConvertElementToProjection(element, new box2d.b2Vec2());
                             this.m_projection0.Copy(projection);
@@ -26343,11 +26503,11 @@ System.register("Testbed/Framework/Main", ["Box2D/Box2D", "Testbed/Framework/Tes
                     const element = new box2d.b2Vec2(e.clientX, e.clientY);
                     const world = DebugDraw_2.g_camera.ConvertScreenToWorld(element, new box2d.b2Vec2());
                     switch (e.which) {
-                        case 1:// left mouse button
+                        case 1: // left mouse button
                             this.m_lMouseDown = false;
                             this.m_test.MouseUp(world);
                             break;
-                        case 3:// right mouse button
+                        case 3: // right mouse button
                             this.m_rMouseDown = false;
                             break;
                     }
@@ -26661,7 +26821,7 @@ System.register("Testbed/Framework/Main", ["Box2D/Box2D", "Testbed/Framework/Tes
             ///#if B2_ENABLE_PARTICLE
             Main.fullscreenUI = new FullscreenUI_1.FullScreenUI();
             Main.particleParameter = new ParticleParameter_3.ParticleParameter();
-            exports_72("Main", Main);
+            exports_73("Main", Main);
         }
     };
 });
@@ -26682,15 +26842,15 @@ System.register("Testbed/Framework/Main", ["Box2D/Box2D", "Testbed/Framework/Tes
 * misrepresented as being the original software.
 * 3. This notice may not be removed or altered from any source distribution.
 */
-System.register("Testbed/Testbed", ["Testbed/Framework/Main", "Testbed/Framework/DebugDraw", "Testbed/Framework/FullscreenUI", "Testbed/Framework/ParticleEmitter", "Testbed/Framework/ParticleParameter", "Testbed/Framework/Test", "Testbed/Tests/TestEntries"], function (exports_73, context_73) {
+System.register("Testbed/Testbed", ["Testbed/Framework/Main", "Testbed/Framework/DebugDraw", "Testbed/Framework/FullscreenUI", "Testbed/Framework/ParticleEmitter", "Testbed/Framework/ParticleParameter", "Testbed/Framework/Test", "Testbed/Tests/TestEntries"], function (exports_74, context_74) {
     "use strict";
-    var __moduleName = context_73 && context_73.id;
+    var __moduleName = context_74 && context_74.id;
     function exportStar_2(m) {
         var exports = {};
         for (var n in m) {
             if (n !== "default") exports[n] = m[n];
         }
-        exports_73(exports);
+        exports_74(exports);
     }
     return {
         setters: [

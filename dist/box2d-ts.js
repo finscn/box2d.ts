@@ -6786,7 +6786,7 @@ System.register("Dynamics/Joints/b2MotorJoint", ["Common/b2Math", "Dynamics/Join
                     var vB = data.velocities[this.m_indexB].v;
                     var wB = data.velocities[this.m_indexB].w;
                     var qA = this.m_qA.SetAngle(aA), qB = this.m_qB.SetAngle(aB);
-                    var rA = b2Math_19.b2Rot.MulRV(qA, b2Math_19.b2Vec2.NegV(this.m_localCenterA, b2Math_19.b2Vec2.s_t0), this.m_rA);
+                    var rA = b2Math_19.b2Rot.MulRV(qA, b2Math_19.b2Vec2.SubVV(this.m_linearOffset, this.m_localCenterA, b2Math_19.b2Vec2.s_t0), this.m_rA);
                     var rB = b2Math_19.b2Rot.MulRV(qB, b2Math_19.b2Vec2.NegV(this.m_localCenterB, b2Math_19.b2Vec2.s_t0), this.m_rB);
                     var mA = this.m_invMassA, mB = this.m_invMassB;
                     var iA = this.m_invIA, iB = this.m_invIB;
@@ -6800,7 +6800,7 @@ System.register("Dynamics/Joints/b2MotorJoint", ["Common/b2Math", "Dynamics/Join
                     if (this.m_angularMass > 0) {
                         this.m_angularMass = 1 / this.m_angularMass;
                     }
-                    b2Math_19.b2Vec2.SubVV(b2Math_19.b2Vec2.SubVV(b2Math_19.b2Vec2.AddVV(cB, rB, b2Math_19.b2Vec2.s_t0), b2Math_19.b2Vec2.AddVV(cA, rA, b2Math_19.b2Vec2.s_t1), b2Math_19.b2Vec2.s_t2), b2Math_19.b2Rot.MulRV(qA, this.m_linearOffset, b2Math_19.b2Vec2.s_t3), this.m_linearError);
+                    b2Math_19.b2Vec2.SubVV(b2Math_19.b2Vec2.AddVV(cB, rB, b2Math_19.b2Vec2.s_t0), b2Math_19.b2Vec2.AddVV(cA, rA, b2Math_19.b2Vec2.s_t1), this.m_linearError);
                     this.m_angularError = aB - aA - this.m_angularOffset;
                     if (data.step.warmStarting) {
                         this.m_linearImpulse.SelfMul(data.step.dtRatio);

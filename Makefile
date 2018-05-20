@@ -103,11 +103,11 @@ clean-box2d:
 
 build-box2d: $(BOX2D_OUTPUT_JS_FILE)
 #	@$$(npm bin)/tsc -p Box2D/HelloWorld
-#	@$$(npm bin)/tsc --declaration --sourcemap --target ES6 --module commonjs --outDir build/Box2D $(BOX2D_SOURCE_TS_FILES)
+#	@$$(npm bin)/tsc --declaration --sourcemap --target ES2016 --module commonjs --outDir build/Box2D $(BOX2D_SOURCE_TS_FILES)
 	$(DONE)
 
 $(BOX2D_OUTPUT_JS_FILE): $(BOX2D_SOURCE_TS_FILES)
-	@$$(npm bin)/tsc --declaration --sourcemap --target ES6 --module system --outFile $@ $<
+	@$$(npm bin)/tsc --declaration --sourcemap --target ES2016 --module system --outFile $@ $<
 	$(DONE)
 
 # box2d-helloworld
@@ -126,11 +126,11 @@ clean-box2d-helloworld:
 
 build-box2d-helloworld: $(BOX2D_HELLOWORLD_OUTPUT_JS_FILE)
 #	@$$(npm bin)/tsc -p Box2D/HelloWorld
-#	@$$(npm bin)/tsc --declaration --sourcemap --target ES6 --module commonjs --outDir build/HelloWorld $(BOX2D_HELLOWORLD_SOURCE_TS_FILES)
+#	@$$(npm bin)/tsc --declaration --sourcemap --target ES2016 --module commonjs --outDir build/HelloWorld $(BOX2D_HELLOWORLD_SOURCE_TS_FILES)
 	$(DONE)
 
 $(BOX2D_HELLOWORLD_OUTPUT_JS_FILE): $(BOX2D_HELLOWORLD_SOURCE_TS_FILES)
-	@$$(npm bin)/tsc --declaration --sourcemap --target ES6 --module system --outFile $@ $<
+	@$$(npm bin)/tsc --declaration --sourcemap --target ES2016 --module system --outFile $@ $<
 	$(DONE)
 
 # box2d-testbed
@@ -169,6 +169,7 @@ BOX2D_TESTBED_SOURCE_TS_FILES += Box2D/Testbed/Tests/Car.ts
 #BOX2D_TESTBED_SOURCE_TS_FILES += Box2D/Testbed/Tests/Mobile.ts
 #BOX2D_TESTBED_SOURCE_TS_FILES += Box2D/Testbed/Tests/MobileBalanced.ts
 #BOX2D_TESTBED_SOURCE_TS_FILES += Box2D/Testbed/Tests/MotorJoint.ts
+BOX2D_TESTBED_SOURCE_TS_FILES += Box2D/Testbed/Tests/MotorJoint2.ts
 #BOX2D_TESTBED_SOURCE_TS_FILES += Box2D/Testbed/Tests/OneSidedPlatform.ts
 #BOX2D_TESTBED_SOURCE_TS_FILES += Box2D/Testbed/Tests/Pinball.ts
 #BOX2D_TESTBED_SOURCE_TS_FILES += Box2D/Testbed/Tests/PolyCollision.ts
@@ -208,9 +209,9 @@ clean-box2d-testbed:
 
 build-box2d-testbed: $(BOX2D_TESTBED_OUTPUT_JS_FILE)
 #	@$$(npm bin)/tsc -p Box2D/Testbed
-#	@$$(npm bin)/tsc --declaration --sourcemap --target ES6 --module commonjs --outDir build/Testbed $(BOX2D_TESTBED_SOURCE_TS_FILES)
+#	@$$(npm bin)/tsc --declaration --sourcemap --target ES2016 --module commonjs --outDir build/Testbed $(BOX2D_TESTBED_SOURCE_TS_FILES)
 	$(DONE)
 
 $(BOX2D_TESTBED_OUTPUT_JS_FILE): $(BOX2D_TESTBED_SOURCE_TS_FILES)
-	@$$(npm bin)/tsc --declaration --sourcemap --target ES6 --module system --outFile $@ $<
+	@$$(npm bin)/tsc --declaration --sourcemap --target ES2016 --module system --outFile $@ $<
 	$(DONE)

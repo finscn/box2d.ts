@@ -4453,6 +4453,16 @@ declare module "Testbed/Tests/Car" {
         static Create(): testbed.Test;
     }
 }
+declare module "Testbed/Tests/MotorJoint2" {
+    import * as box2d from "Box2D/Box2D";
+    import * as testbed from "Testbed/Testbed";
+    export class MotorJoint2 extends testbed.Test {
+        constructor();
+        m_joint: box2d.b2MotorJoint;
+        Step(settings: testbed.Settings): void;
+        static Create(): testbed.Test;
+    }
+}
 declare module "Testbed/Tests/RayCast" {
     import * as testbed from "Testbed/Testbed";
     export class RayCast extends testbed.Test {
@@ -4844,7 +4854,7 @@ declare module "Testbed/Framework/Main" {
         m_canvas_div: HTMLDivElement;
         m_canvas: HTMLCanvasElement;
         m_ctx: CanvasRenderingContext2D;
-        m_demo_button: HTMLButtonElement;
+        m_demo_button: HTMLInputElement;
         constructor();
         HomeCamera(): void;
         MoveCamera(move: box2d.b2Vec2): void;
