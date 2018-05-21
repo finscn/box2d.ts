@@ -4,7 +4,6 @@ declare module "Common/b2Settings" {
     export const b2_epsilon: number;
     export const b2_epsilon_sq: number;
     export const b2_pi: number;
-    export const b2_two_pi: number;
     export const b2_maxManifoldPoints: number;
     export const b2_maxPolygonVertices: number;
     export const b2_aabbExtension: number;
@@ -271,6 +270,7 @@ declare module "Common/b2Math" {
     export { b2Sweep } from "Common/Math/b2Sweep";
     export const b2_pi_over_180: number;
     export const b2_180_over_pi: number;
+    export const b2_two_pi: number;
     export function b2Clamp(a: number, lo: number, hi: number): number;
     export function b2Swap(a: any[], b: any[]): void;
     export function b2IsValid(n: number): boolean;
