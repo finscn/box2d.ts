@@ -25,7 +25,7 @@ import { b2Distance, b2DistanceInput, b2DistanceOutput, b2SimplexCache } from ".
 /// Structures and functions used for computing contact points, distance
 /// queries, and TOI queries.
 
-export const enum b2ContactFeatureType {
+export enum b2ContactFeatureType {
   e_vertex = 0,
   e_face = 1
 }
@@ -136,7 +136,7 @@ export class b2ManifoldPoint {
   public id: b2ContactID = new b2ContactID();  ///< uniquely identifies a contact point between two shapes
 
   public static MakeArray(length: number): b2ManifoldPoint[] {
-    return b2MakeArray(length, function (i: number): b2ManifoldPoint { return new b2ManifoldPoint(); } );
+    return b2MakeArray(length, (i: number): b2ManifoldPoint => new b2ManifoldPoint());
   }
 
   public Reset(): void {
@@ -155,7 +155,7 @@ export class b2ManifoldPoint {
   }
 }
 
-export const enum b2ManifoldType {
+export enum b2ManifoldType {
   e_unknown = -1,
   e_circles = 0,
   e_faceA = 1,
@@ -282,7 +282,7 @@ export class b2WorldManifold {
 }
 
 /// This is used for determining the state of contact points.
-export const enum b2PointState {
+export enum b2PointState {
   b2_nullState = 0, ///< point does not exist
   b2_addState = 1, ///< point was added in the update
   b2_persistState = 2, ///< point persisted across the update
@@ -336,7 +336,7 @@ export class b2ClipVertex {
   public id: b2ContactID = new b2ContactID();
 
   public static MakeArray(length: number): b2ClipVertex[] {
-    return b2MakeArray(length, function (i: number): b2ClipVertex { return new b2ClipVertex(); });
+    return b2MakeArray(length, (i: number): b2ClipVertex => new b2ClipVertex());
   }
 
   public Copy(other: b2ClipVertex): b2ClipVertex {

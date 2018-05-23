@@ -16,6 +16,7 @@
 * 3. This notice may not be removed or altered from any source distribution.
 */
 System.register(["../Box2D/Common/b2Math", "../Box2D/Dynamics/b2World", "../Box2D/Dynamics/b2Body", "../Box2D/Dynamics/b2Fixture", "../Box2D/Collision/Shapes/b2PolygonShape"], function (exports_1, context_1) {
+    "use strict";
     var __moduleName = context_1 && context_1.id;
     // This is a simple example of building and running a simulation
     // using Box2D. Here we create a large ground box and a small dynamic
@@ -42,7 +43,7 @@ System.register(["../Box2D/Common/b2Math", "../Box2D/Dynamics/b2World", "../Box2
         groundBody.CreateFixture(groundBox, 0);
         // Define the dynamic body. We set its position and call the body factory.
         const bodyDef = new b2Body_1.b2BodyDef();
-        bodyDef.type = 2 /* b2_dynamicBody */;
+        bodyDef.type = b2Body_1.b2BodyType.b2_dynamicBody;
         bodyDef.position.Set(0, 4);
         const body = world.CreateBody(bodyDef);
         // Define another box shape for our dynamic body.
@@ -99,23 +100,8 @@ System.register(["../Box2D/Common/b2Math", "../Box2D/Dynamics/b2World", "../Box2
                 b2PolygonShape_1 = b2PolygonShape_1_1;
             }
         ],
-        execute: function () {/*
-            * Copyright (c) 2006-2007 Erin Catto http://www.box2d.org
-            *
-            * This software is provided 'as-is', without any express or implied
-            * warranty.  In no event will the authors be held liable for any damages
-            * arising from the use of this software.
-            * Permission is granted to anyone to use this software for any purpose,
-            * including commercial applications, and to alter it and redistribute it
-            * freely, subject to the following restrictions:
-            * 1. The origin of this software must not be misrepresented; you must not
-            * claim that you wrote the original software. If you use this software
-            * in a product, an acknowledgment in the product documentation would be
-            * appreciated but is not required.
-            * 2. Altered source versions must be plainly marked as such, and must not be
-            * misrepresented as being the original software.
-            * 3. This notice may not be removed or altered from any source distribution.
-            */
+        execute: function () {
         }
     };
 });
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiSGVsbG9Xb3JsZC5qcyIsInNvdXJjZVJvb3QiOiIiLCJzb3VyY2VzIjpbIkhlbGxvV29ybGQudHMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7Ozs7Ozs7Ozs7Ozs7Ozs7RUFnQkU7Ozs7SUFVRixnRUFBZ0U7SUFDaEUscUVBQXFFO0lBQ3JFLE9BQU87SUFDUCxvRUFBb0U7SUFDcEUsa0RBQWtEO0lBQ2xEO1FBQ0UsNkJBQTZCO1FBQzdCLE1BQU0sT0FBTyxHQUFXLElBQUksZUFBTSxDQUFDLENBQUMsRUFBRSxDQUFDLEVBQUUsQ0FBQyxDQUFDO1FBRTNDLDJFQUEyRTtRQUMzRSxNQUFNLEtBQUssR0FBWSxJQUFJLGlCQUFPLENBQUMsT0FBTyxDQUFDLENBQUM7UUFFNUMsMEJBQTBCO1FBQzFCLE1BQU0sYUFBYSxHQUFjLElBQUksa0JBQVMsRUFBRSxDQUFDO1FBQ2pELGFBQWEsQ0FBQyxRQUFRLENBQUMsR0FBRyxDQUFDLENBQUMsRUFBRSxDQUFDLEVBQUUsQ0FBQyxDQUFDO1FBRW5DLG1FQUFtRTtRQUNuRSxtRUFBbUU7UUFDbkUsdUNBQXVDO1FBQ3ZDLE1BQU0sVUFBVSxHQUFXLEtBQUssQ0FBQyxVQUFVLENBQUMsYUFBYSxDQUFDLENBQUM7UUFFM0QsK0JBQStCO1FBQy9CLE1BQU0sU0FBUyxHQUFtQixJQUFJLCtCQUFjLEVBQUUsQ0FBQztRQUV2RCw4Q0FBOEM7UUFDOUMsU0FBUyxDQUFDLFFBQVEsQ0FBQyxFQUFFLEVBQUUsRUFBRSxDQUFDLENBQUM7UUFFM0IsNkNBQTZDO1FBQzdDLFVBQVUsQ0FBQyxhQUFhLENBQUMsU0FBUyxFQUFFLENBQUMsQ0FBQyxDQUFDO1FBRXZDLDBFQUEwRTtRQUMxRSxNQUFNLE9BQU8sR0FBYyxJQUFJLGtCQUFTLEVBQUUsQ0FBQztRQUMzQyxPQUFPLENBQUMsSUFBSSxHQUFHLG1CQUFVLENBQUMsY0FBYyxDQUFDO1FBQ3pDLE9BQU8sQ0FBQyxRQUFRLENBQUMsR0FBRyxDQUFDLENBQUMsRUFBRSxDQUFDLENBQUMsQ0FBQztRQUMzQixNQUFNLElBQUksR0FBVyxLQUFLLENBQUMsVUFBVSxDQUFDLE9BQU8sQ0FBQyxDQUFDO1FBRS9DLGlEQUFpRDtRQUNqRCxNQUFNLFVBQVUsR0FBbUIsSUFBSSwrQkFBYyxFQUFFLENBQUM7UUFDeEQsVUFBVSxDQUFDLFFBQVEsQ0FBQyxDQUFDLEVBQUUsQ0FBQyxDQUFDLENBQUM7UUFFMUIsbUNBQW1DO1FBQ25DLE1BQU0sVUFBVSxHQUFpQixJQUFJLHdCQUFZLEVBQUUsQ0FBQztRQUNwRCxVQUFVLENBQUMsS0FBSyxHQUFHLFVBQVUsQ0FBQztRQUU5Qiw2REFBNkQ7UUFDN0QsVUFBVSxDQUFDLE9BQU8sR0FBRyxDQUFDLENBQUM7UUFFdkIsaUNBQWlDO1FBQ2pDLFVBQVUsQ0FBQyxRQUFRLEdBQUcsR0FBRyxDQUFDO1FBRTFCLDZCQUE2QjtRQUM3QixNQUFNLE9BQU8sR0FBYyxJQUFJLENBQUMsYUFBYSxDQUFDLFVBQVUsQ0FBQyxDQUFDO1FBRTFELG9FQUFvRTtRQUNwRSwyRUFBMkU7UUFDM0UsMEJBQTBCO1FBQzFCLE1BQU0sUUFBUSxHQUFXLENBQUMsR0FBRyxFQUFFLENBQUM7UUFDaEMsTUFBTSxrQkFBa0IsR0FBVyxDQUFDLENBQUM7UUFDckMsTUFBTSxrQkFBa0IsR0FBVyxDQUFDLENBQUM7UUFFckMsZ0NBQWdDO1FBQ2hDLEtBQUssSUFBSSxDQUFDLEdBQVcsQ0FBQyxFQUFFLENBQUMsR0FBRyxFQUFFLEVBQUUsRUFBRSxDQUFDLEVBQUU7WUFDbkMsNkRBQTZEO1lBQzdELG1FQUFtRTtZQUNuRSxLQUFLLENBQUMsSUFBSSxDQUFDLFFBQVEsRUFBRSxrQkFBa0IsRUFBRSxrQkFBa0IsQ0FBQyxDQUFDO1lBRTdELGdEQUFnRDtZQUNoRCxNQUFNLFFBQVEsR0FBVyxJQUFJLENBQUMsV0FBVyxFQUFFLENBQUM7WUFDNUMsTUFBTSxLQUFLLEdBQVcsSUFBSSxDQUFDLFFBQVEsRUFBRSxDQUFDO1lBRXRDLE9BQU8sQ0FBQyxHQUFHLENBQUMsUUFBUSxDQUFDLENBQUMsQ0FBQyxPQUFPLENBQUMsQ0FBQyxDQUFDLEVBQUUsUUFBUSxDQUFDLENBQUMsQ0FBQyxPQUFPLENBQUMsQ0FBQyxDQUFDLEVBQUUsS0FBSyxDQUFDLE9BQU8sQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDO1NBQzdFO1FBRUQsaUZBQWlGO1FBQ2pGLHVFQUF1RTtRQUV2RSxJQUFJLENBQUMsY0FBYyxDQUFDLE9BQU8sQ0FBQyxDQUFDO1FBRTdCLEtBQUssQ0FBQyxXQUFXLENBQUMsSUFBSSxDQUFDLENBQUM7UUFFeEIsT0FBTyxDQUFDLENBQUM7SUFDWCxDQUFDIn0=

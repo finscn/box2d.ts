@@ -49,10 +49,10 @@ declare module "Common/b2Settings" {
     export const b2_changelist: number;
     export function b2ParseInt(v: string): number;
     export function b2ParseUInt(v: string): number;
-    export function b2MakeArray(length: number, init: {
-        (i: number): any;
-    }): any[];
-    export function b2MakeNullArray(length: number): any[];
+    export function b2MakeArray<T>(length: number, init: {
+        (i: number): T;
+    }): T[];
+    export function b2MakeNullArray<T>(length: number): (T | null)[];
     export function b2MakeNumberArray(length: number, init?: number): number[];
 }
 declare module "Common/Math/b2Vec2" {
@@ -272,7 +272,7 @@ declare module "Common/b2Math" {
     export const b2_180_over_pi: number;
     export const b2_two_pi: number;
     export function b2Clamp(a: number, lo: number, hi: number): number;
-    export function b2Swap(a: any[], b: any[]): void;
+    export function b2Swap<T>(a: T[], b: T[]): void;
     export function b2IsValid(n: number): boolean;
     export function b2Sq(n: number): number;
     export function b2InvSqrt(n: number): number;
@@ -314,7 +314,7 @@ declare module "Common/b2Draw" {
         MakeStyleString(alpha?: number): string;
         static MakeStyleString(r: number, g: number, b: number, a?: number): string;
     }
-    export const enum b2DrawFlags {
+    export enum b2DrawFlags {
         e_none = 0,
         e_shapeBit = 1,
         e_jointBit = 2,
@@ -363,13 +363,13 @@ declare module "Common/b2Timer" {
     }
 }
 declare module "Common/b2GrowableStack" {
-    export class b2GrowableStack {
-        m_stack: any[];
+    export class b2GrowableStack<T> {
+        m_stack: T[];
         m_count: number;
         constructor(N: number);
-        Reset(): b2GrowableStack;
-        Push(element: any): void;
-        Pop(): any;
+        Reset(): this;
+        Push(element: T): void;
+        Pop(): T;
         GetCount(): number;
     }
 }
@@ -460,7 +460,7 @@ declare module "Collision/Shapes/b2Shape" {
         center: b2Vec2;
         I: number;
     }
-    export const enum b2ShapeType {
+    export enum b2ShapeType {
         e_unknown = -1,
         e_circleShape = 0,
         e_edgeShape = 1,
@@ -489,7 +489,7 @@ declare module "Collision/Shapes/b2Shape" {
 declare module "Collision/b2Collision" {
     import { b2Vec2, b2Transform } from "Common/b2Math";
     import { b2Shape } from "Collision/Shapes/b2Shape";
-    export const enum b2ContactFeatureType {
+    export enum b2ContactFeatureType {
         e_vertex = 0,
         e_face = 1,
     }
@@ -522,7 +522,7 @@ declare module "Collision/b2Collision" {
         Reset(): void;
         Copy(o: b2ManifoldPoint): b2ManifoldPoint;
     }
-    export const enum b2ManifoldType {
+    export enum b2ManifoldType {
         e_unknown = -1,
         e_circles = 0,
         e_faceA = 1,
@@ -550,7 +550,7 @@ declare module "Collision/b2Collision" {
         private static Initialize_s_clipPoint;
         Initialize(manifold: b2Manifold, xfA: b2Transform, radiusA: number, xfB: b2Transform, radiusB: number): void;
     }
-    export const enum b2PointState {
+    export enum b2PointState {
         b2_nullState = 0,
         b2_addState = 1,
         b2_persistState = 2,
@@ -615,7 +615,7 @@ declare module "Collision/b2DynamicTree" {
         m_freeList: b2TreeNode;
         m_path: number;
         m_insertionCount: number;
-        static s_stack: b2GrowableStack;
+        static s_stack: b2GrowableStack<b2TreeNode>;
         static s_r: b2Vec2;
         static s_v: b2Vec2;
         static s_abs_v: b2Vec2;
@@ -668,7 +668,7 @@ declare module "Collision/b2TimeOfImpact" {
         sweepB: b2Sweep;
         tMax: number;
     }
-    export const enum b2TOIOutputState {
+    export enum b2TOIOutputState {
         e_unknown = 0,
         e_failed = 1,
         e_overlapped = 2,
@@ -679,7 +679,7 @@ declare module "Collision/b2TimeOfImpact" {
         state: b2TOIOutputState;
         t: number;
     }
-    export const enum b2SeparationFunctionType {
+    export enum b2SeparationFunctionType {
         e_unknown = -1,
         e_points = 0,
         e_faceA = 1,
@@ -742,7 +742,7 @@ declare module "Dynamics/Joints/b2Joint" {
     import { b2Vec2 } from "Common/b2Math";
     import { b2Body } from "Dynamics/b2Body";
     import { b2SolverData } from "Dynamics/b2TimeStep";
-    export const enum b2JointType {
+    export enum b2JointType {
         e_unknownJoint = 0,
         e_revoluteJoint = 1,
         e_prismaticJoint = 2,
@@ -757,7 +757,7 @@ declare module "Dynamics/Joints/b2Joint" {
         e_motorJoint = 11,
         e_areaJoint = 12,
     }
-    export const enum b2LimitState {
+    export enum b2LimitState {
         e_inactiveLimit = 0,
         e_atLowerLimit = 1,
         e_atUpperLimit = 2,
@@ -2013,7 +2013,7 @@ declare module "Particle/b2Particle" {
     import { b2Vec2 } from "Common/b2Math";
     import { b2Color } from "Common/b2Draw";
     import { b2ParticleGroup } from "Particle/b2ParticleGroup";
-    export const enum b2ParticleFlag {
+    export enum b2ParticleFlag {
         b2_waterParticle = 0,
         b2_zombieParticle = 2,
         b2_wallParticle = 4,
@@ -2249,11 +2249,11 @@ declare module "Particle/b2ParticleSystem" {
         m_timeElapsed: number;
         m_expirationTimeBufferRequiresSorting: boolean;
         m_groupCount: number;
-        m_groupList: b2ParticleGroup;
+        m_groupList: b2ParticleGroup | null;
         m_def: b2ParticleSystemDef;
         m_world: b2World;
-        m_prev: b2ParticleSystem;
-        m_next: b2ParticleSystem;
+        m_prev: b2ParticleSystem | null;
+        m_next: b2ParticleSystem | null;
         static xTruncBits: number;
         static yTruncBits: number;
         static tagBits: number;
@@ -2302,7 +2302,7 @@ declare module "Particle/b2ParticleSystem" {
         GetColorBuffer(): b2Color[];
         GetGroupBuffer(): b2ParticleGroup[];
         GetWeightBuffer(): number[];
-        GetUserDataBuffer(): any[];
+        GetUserDataBuffer<T>(): T[];
         GetFlagsBuffer(): b2ParticleFlag[];
         SetParticleFlags(index: number, newFlags: b2ParticleFlag): void;
         GetParticleFlags(index: number): b2ParticleFlag;
@@ -2310,7 +2310,7 @@ declare module "Particle/b2ParticleSystem" {
         SetPositionBuffer(buffer: b2Vec2[], capacity: number): void;
         SetVelocityBuffer(buffer: b2Vec2[], capacity: number): void;
         SetColorBuffer(buffer: b2Color[], capacity: number): void;
-        SetUserDataBuffer(buffer: any[], capacity: number): void;
+        SetUserDataBuffer<T>(buffer: T[], capacity: number): void;
         GetContacts(): b2ParticleContact[];
         GetContactCount(): number;
         GetBodyContacts(): b2ParticleBodyContact[];
@@ -2356,12 +2356,12 @@ declare module "Particle/b2ParticleSystem" {
         static k_noPressureFlags: number;
         static k_extraDampingFlags: b2ParticleFlag;
         static k_barrierWallFlags: number;
-        FreeBuffer(b: any, capacity: number): void;
-        FreeUserOverridableBuffer(b: b2ParticleSystem.UserOverridableBuffer<any>): void;
-        ReallocateBuffer3(oldBuffer: any[], oldCapacity: number, newCapacity: number): any[];
-        ReallocateBuffer5(buffer: any[], userSuppliedCapacity: number, oldCapacity: number, newCapacity: number, deferred: boolean): any[];
-        ReallocateBuffer4(buffer: b2ParticleSystem.UserOverridableBuffer<any>, oldCapacity: number, newCapacity: number, deferred: boolean): any[];
-        RequestBuffer(buffer: any[]): any[];
+        FreeBuffer<T>(b: T[], capacity: number): void;
+        FreeUserOverridableBuffer<T>(b: b2ParticleSystem.UserOverridableBuffer<T>): void;
+        ReallocateBuffer3<T>(oldBuffer: T[], oldCapacity: number, newCapacity: number): T[];
+        ReallocateBuffer5<T>(buffer: T[], userSuppliedCapacity: number, oldCapacity: number, newCapacity: number, deferred: boolean): T[];
+        ReallocateBuffer4<T>(buffer: b2ParticleSystem.UserOverridableBuffer<any>, oldCapacity: number, newCapacity: number, deferred: boolean): T[];
+        RequestBuffer<T>(buffer: T[]): T[];
         ReallocateHandleBuffers(newCapacity: number): void;
         ReallocateInternalAllocatedBuffers(capacity: number): void;
         CreateParticleForGroup(groupDef: b2ParticleGroupDef, xf: b2Transform, p: b2Vec2): void;
@@ -2495,7 +2495,7 @@ declare module "Particle/b2ParticleSystem" {
         GetParticleContactFilter(): b2ContactFilter;
         GetFixtureContactListener(): b2ContactListener;
         GetParticleContactListener(): b2ContactListener;
-        SetUserOverridableBuffer(buffer: b2ParticleSystem.UserOverridableBuffer<any>, newData: any[], newCapacity: number): void;
+        SetUserOverridableBuffer<T>(buffer: b2ParticleSystem.UserOverridableBuffer<any>, newData: T[], newCapacity: number): void;
         SetGroupFlags(group: b2ParticleGroup, newFlags: b2ParticleGroupFlag): void;
         static BodyContactCompare(lhs: b2ParticleBodyContact, rhs: b2ParticleBodyContact): boolean;
         RemoveSpuriousBodyContacts(): void;
@@ -2517,7 +2517,7 @@ declare module "Particle/b2ParticleSystem" {
     }
     export namespace b2ParticleSystem {
         class UserOverridableBuffer<T> {
-            data: T[];
+            data: T[] | null;
             userSuppliedCapacity: number;
         }
         class Proxy {
@@ -2540,17 +2540,17 @@ declare module "Particle/b2ParticleSystem" {
         }
         class ParticleListNode {
             list: b2ParticleSystem.ParticleListNode;
-            next: b2ParticleSystem.ParticleListNode;
+            next: b2ParticleSystem.ParticleListNode | null;
             count: number;
             index: number;
         }
-        class FixedSetAllocator {
+        class FixedSetAllocator<T> {
             Allocate(itemSize: number, count: number): number;
             Clear(): void;
             GetCount(): number;
             Invalidate(itemIndex: number): void;
             GetValidBuffer(): boolean[];
-            GetBuffer(): any[];
+            GetBuffer(): T[];
             SetCount(count: number): void;
         }
         class FixtureParticle {
@@ -2558,7 +2558,7 @@ declare module "Particle/b2ParticleSystem" {
             second: number;
             constructor(fixture: b2Fixture, particle: number);
         }
-        class FixtureParticleSet extends b2ParticleSystem.FixedSetAllocator {
+        class FixtureParticleSet extends b2ParticleSystem.FixedSetAllocator<FixtureParticle> {
             Initialize(bodyContactBuffer: b2GrowableBuffer<b2ParticleBodyContact>, flagsBuffer: b2ParticleSystem.UserOverridableBuffer<b2ParticleFlag>): void;
             Find(pair: b2ParticleSystem.FixtureParticle): number;
         }
@@ -2567,7 +2567,7 @@ declare module "Particle/b2ParticleSystem" {
             second: number;
             constructor(particleA: number, particleB: number);
         }
-        class b2ParticlePairSet extends b2ParticleSystem.FixedSetAllocator {
+        class b2ParticlePairSet extends b2ParticleSystem.FixedSetAllocator<ParticlePair> {
             Initialize(contactBuffer: b2GrowableBuffer<b2ParticleContact>, flagsBuffer: UserOverridableBuffer<b2ParticleFlag>): void;
             Find(pair: b2ParticleSystem.ParticlePair): number;
         }
@@ -2594,7 +2594,7 @@ declare module "Particle/b2ParticleSystem" {
             ShouldCreateTriad(a: number, b: number, c: number): boolean;
         }
         class CompositeShape extends b2Shape {
-            constructor(shapes: b2Shape[], shapeCount: number);
+            constructor(shapes: b2Shape[], shapeCount?: number);
             m_shapes: b2Shape[];
             m_shapeCount: number;
             Clone(): b2Shape;
@@ -2641,7 +2641,7 @@ declare module "Particle/b2ParticleGroup" {
     import { b2Shape } from "Collision/Shapes/b2Shape";
     import { b2ParticleFlag } from "Particle/b2Particle";
     import { b2ParticleSystem } from "Particle/b2ParticleSystem";
-    export const enum b2ParticleGroupFlag {
+    export enum b2ParticleGroupFlag {
         b2_solidParticleGroup = 1,
         b2_rigidParticleGroup = 2,
         b2_particleGroupCanBeEmpty = 4,
@@ -2669,7 +2669,7 @@ declare module "Particle/b2ParticleGroup" {
         group: b2ParticleGroup;
     }
     export class b2ParticleGroup {
-        m_system: b2ParticleSystem;
+        readonly m_system: b2ParticleSystem;
         m_firstIndex: number;
         m_lastIndex: number;
         m_groupFlags: b2ParticleGroupFlag;
@@ -2684,6 +2684,7 @@ declare module "Particle/b2ParticleGroup" {
         m_angularVelocity: number;
         m_transform: b2Transform;
         m_userData: any;
+        constructor(system: b2ParticleSystem);
         GetNext(): b2ParticleGroup;
         GetParticleSystem(): b2ParticleSystem;
         GetParticleCount(): number;
@@ -2924,7 +2925,7 @@ declare module "Dynamics/b2Body" {
     import { b2JointEdge } from "Dynamics/Joints/b2Joint";
     import { b2Fixture, b2FixtureDef } from "Dynamics/b2Fixture";
     import { b2World } from "Dynamics/b2World";
-    export const enum b2BodyType {
+    export enum b2BodyType {
         b2_unknown = -1,
         b2_staticBody = 0,
         b2_kinematicBody = 1,
