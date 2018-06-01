@@ -5021,8 +5021,8 @@ System.register("Box2D/Box2D/Dynamics/Joints/b2DistanceJoint", ["Box2D/Box2D/Com
                     var cB = data.positions[this.m_indexB].c;
                     var aB = data.positions[this.m_indexB].a;
                     var qA = this.m_qA.SetAngle(aA), qB = this.m_qB.SetAngle(aB);
-                    var rA = b2Math_14.b2Rot.MulRV(this.m_qA, this.m_lalcA, this.m_rA);
-                    var rB = b2Math_14.b2Rot.MulRV(this.m_qB, this.m_lalcB, this.m_rB);
+                    var rA = b2Math_14.b2Rot.MulRV(qA, this.m_lalcA, this.m_rA);
+                    var rB = b2Math_14.b2Rot.MulRV(qB, this.m_lalcB, this.m_rB);
                     var u = this.m_u;
                     u.x = cB.x + rB.x - cA.x - rA.x;
                     u.y = cB.y + rB.y - cA.y - rA.y;
