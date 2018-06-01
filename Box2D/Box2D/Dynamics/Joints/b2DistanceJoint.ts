@@ -17,7 +17,7 @@
 */
 
 import { b2_pi, b2_linearSlop, b2_maxLinearCorrection } from "../../Common/b2Settings";
-import { b2Clamp, b2Vec2, b2Rot } from "../../Common/b2Math";
+import { b2Abs, b2Clamp, b2Vec2, b2Rot } from "../../Common/b2Math";
 import { b2Joint, b2JointDef, b2JointType } from "./b2Joint";
 import { b2SolverData } from "../b2TimeStep";
 import { b2Body } from "../b2Body";
@@ -304,7 +304,7 @@ export class b2DistanceJoint extends b2Joint {
     let aB: number = data.positions[this.m_indexB].a;
 
     // const qA: b2Rot = new b2Rot(aA), qB: b2Rot = new b2Rot(aB);
-    ///const qA: b2Rot = this.m_qA.SetAngle(aA), qB: b2Rot = this.m_qB.SetAngle(aB);
+    const qA: b2Rot = this.m_qA.SetAngle(aA), qB: b2Rot = this.m_qB.SetAngle(aB);
 
     // b2Vec2 rA = b2Mul(qA, m_localAnchorA - m_localCenterA);
     const rA: b2Vec2 = b2Rot.MulRV(this.m_qA, this.m_lalcA, this.m_rA); // use m_rA
@@ -339,6 +339,6 @@ export class b2DistanceJoint extends b2Joint {
     // data.positions[this.m_indexB].c = cB;
     data.positions[this.m_indexB].a = aB;
 
-    return Math.abs(C) < b2_linearSlop;
+    return b2Abs(C) < b2_linearSlop;
   }
 }

@@ -16,9 +16,9 @@
  * 3. This notice may not be removed or altered from any source distribution.
  */
 
-///#if B2_ENABLE_PARTICLE
+// #if B2_ENABLE_PARTICLE
 
-import * as box2d from "../../Box2D/Box2D";
+import * as box2d from "Box2D";
 
 export enum ParticleParameterOptions {
   OptionStrictContacts = 1 << 0,
@@ -219,4 +219,4 @@ export namespace ParticleParameter {
   export class Definition extends ParticleParameterDefinition {}
 }
 
-///#endif
+// #endif

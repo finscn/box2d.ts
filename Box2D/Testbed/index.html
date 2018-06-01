@@ -27,18 +27,32 @@
         });
       }
       SystemJS.config({
+        map: {
+          "Box2D": "../Box2D/Box2D",
+          "Box2D/": "../Box2D/",
+          "Contributions": "../../Contributions",
+          "Contributions/": "../../Contributions/",
+          "Testbed": "./Testbed",
+          "Testbed/": "./"
+        },
         packages: {
-          "../Box2D": { defaultExtension: transpile ? "ts" : "js" },
+          "Box2D": { defaultExtension: transpile ? "ts" : "js" },
+          "Contributions": { defaultExtension: transpile ? "ts" : "js" },
+          "Testbed": { defaultExtension: transpile ? "ts" : "js" },
           ".": { defaultExtension: transpile ? "ts" : "js" }
         }
       });
       System.import("./Testbed").then(function(Testbed) {
-        const app = new Testbed.Main();
-        const loop = function () {
+        let app;
+        const init = function(time) {
+          app = new Testbed.Main(time);
           window.requestAnimationFrame(loop);
-          app.SimulationLoop();
         }
-        loop();
+        const loop = function(time) {
+          window.requestAnimationFrame(loop);
+          app.SimulationLoop(time);
+        }
+        window.requestAnimationFrame(init);
       }).catch(function (error) {
         console.error(error);
       });

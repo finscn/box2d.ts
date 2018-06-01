@@ -17,7 +17,7 @@
 */
 
 import { b2_maxFloat, b2_epsilon, b2_epsilon_sq } from "../Common/b2Settings";
-import { b2Vec2, b2Rot, b2Transform } from "../Common/b2Math";
+import { b2Max, b2Vec2, b2Rot, b2Transform } from "../Common/b2Math";
 import { b2Shape } from "./Shapes/b2Shape";
 
 /// A distance proxy is used by the GJK algorithm.
@@ -126,6 +126,11 @@ export class b2DistanceOutput {
 export let b2_gjkCalls: number = 0;
 export let b2_gjkIters: number = 0;
 export let b2_gjkMaxIters: number = 0;
+export function b2_gjk_reset(): void {
+  b2_gjkCalls = 0;
+  b2_gjkIters = 0;
+  b2_gjkMaxIters = 0;
+}
 
 export class b2SimplexVertex {
   public wA: b2Vec2 = new b2Vec2(); // support point in proxyA
@@ -569,7 +574,7 @@ export function b2Distance(output: b2DistanceOutput, cache: b2SimplexCache, inpu
     ++simplex.m_count;
   }
 
-  b2_gjkMaxIters = Math.max(b2_gjkMaxIters, iter);
+  b2_gjkMaxIters = b2Max(b2_gjkMaxIters, iter);
 
   // Prepare output.
   simplex.GetWitnessPoints(output.pointA, output.pointB);

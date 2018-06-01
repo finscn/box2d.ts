@@ -5,11 +5,23 @@ import { b2Vec2 } from "./b2Vec2";
 export class b2Mat22 {
     public static IDENTITY = new b2Mat22();
 
-    public ex: b2Vec2 = new b2Vec2(1, 0);
-    public ey: b2Vec2 = new b2Vec2(0, 1);
+    public readonly ex: b2Vec2 = new b2Vec2(1, 0);
+    public readonly ey: b2Vec2 = new b2Vec2(0, 1);
 
     public Clone(): b2Mat22 {
         return new b2Mat22().Copy(this);
+    }
+
+    public static FromVV(c1: b2Vec2, c2: b2Vec2): b2Mat22 {
+        return new b2Mat22().SetVV(c1, c2);
+    }
+
+    public static FromSSSS(r1c1: number, r1c2: number, r2c1: number, r2c2: number): b2Mat22 {
+        return new b2Mat22().SetSSSS(r1c1, r1c2, r2c1, r2c2);
+    }
+
+    public static FromAngle(radians: number): b2Mat22 {
+        return new b2Mat22().SetAngle(radians);
     }
 
     public SetSSSS(r1c1: number, r1c2: number, r2c1: number, r2c2: number): b2Mat22 {
@@ -103,18 +115,6 @@ export class b2Mat22 {
         this.ex.SelfSub(M.ex);
         this.ey.SelfSub(M.ey);
         return this;
-    }
-
-    public static FromVV(c1: b2Vec2, c2: b2Vec2): b2Mat22 {
-        return new b2Mat22().SetVV(c1, c2);
-    }
-
-    public static FromSSSS(r1c1: number, r1c2: number, r2c1: number, r2c2: number): b2Mat22 {
-        return new b2Mat22().SetSSSS(r1c1, r1c2, r2c1, r2c2);
-    }
-
-    public static FromAngle(radians: number): b2Mat22 {
-        return new b2Mat22().SetAngle(radians);
     }
 
     public static AbsM(M: b2Mat22, out: b2Mat22): b2Mat22 {

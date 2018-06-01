@@ -182,7 +182,7 @@ export class b2Vec2 {
     }
 
     public static MakeArray(length: number): b2Vec2[] {
-        return b2MakeArray(length, function (i: number): b2Vec2 { return new b2Vec2(); });
+        return b2MakeArray(length, (i: number): b2Vec2 => new b2Vec2());
     }
 
     public static AbsV(v: b2Vec2, out: b2Vec2): b2Vec2 {

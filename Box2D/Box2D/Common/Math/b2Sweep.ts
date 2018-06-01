@@ -9,9 +9,9 @@ import { b2Rot } from "./b2Rot";
 import { b2Transform } from "./b2Transform";
 
 export class b2Sweep {
-    public localCenter: b2Vec2 = new b2Vec2();
-    public c0: b2Vec2 = new b2Vec2();
-    public c: b2Vec2 = new b2Vec2();
+    public readonly localCenter: b2Vec2 = new b2Vec2();
+    public readonly c0: b2Vec2 = new b2Vec2();
+    public readonly c: b2Vec2 = new b2Vec2();
     public a0: number = 0;
     public a: number = 0;
     public alpha0: number = 0;

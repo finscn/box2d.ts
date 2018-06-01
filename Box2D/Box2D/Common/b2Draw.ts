@@ -73,6 +73,21 @@ export class b2Color {
     }
   }
 
+  public SetByteRGB(r: number, g: number, b: number): this {
+    this.r = r / 0xff;
+    this.g = g / 0xff;
+    this.b = b / 0xff;
+    return this;
+  }
+
+  public SetByteRGBA(r: number, g: number, b: number, a: number): this {
+    this.r = r / 0xff;
+    this.g = g / 0xff;
+    this.b = b / 0xff;
+    this.a = a / 0xff;
+    return this;
+  }
+
   public SetRGB(rr: number, gg: number, bb: number): b2Color {
     this.r = rr;
     this.g = gg;
@@ -160,14 +175,15 @@ export class b2Color {
   }
 
   public static MakeStyleString(r: number, g: number, b: number, a: number = 1.0): string {
-    r = Math.round(Math.max(0, Math.min(255, r * 255)));
-    g = Math.round(Math.max(0, Math.min(255, g * 255)));
-    b = Math.round(Math.max(0, Math.min(255, b * 255)));
-    a = Math.max(0, Math.min(1, a));
-    if (a < 1.0) {
-      return "rgba(" + r + "," + g + "," + b + "," + a + ")";
+    // function clamp(x: number, lo: number, hi: number) { return x < lo ? lo : hi < x ? hi : x; }
+    r *= 255; // r = clamp(r, 0, 255);
+    g *= 255; // g = clamp(g, 0, 255);
+    b *= 255; // b = clamp(b, 0, 255);
+    // a = clamp(a, 0, 1);
+    if (a < 1) {
+      return `rgba(${r},${g},${b},${a})`;
     } else {
-      return "rgb(" + r + "," + g + "," + b + ")";
+      return `rgb(${r},${g},${b})`;
     }
   }
 }
@@ -179,9 +195,9 @@ export enum b2DrawFlags {
   e_aabbBit = 0x0004, ///< draw axis aligned bounding boxes
   e_pairBit = 0x0008, ///< draw broad-phase pairs
   e_centerOfMassBit = 0x0010, ///< draw center of mass frame
-  ///#if B2_ENABLE_PARTICLE
+  // #if B2_ENABLE_PARTICLE
   e_particleBit = 0x0020, ///< draw particles
-  ///#endif
+  // #endif
   e_controllerBit = 0x0040, /// @see b2Controller list
   e_all = 0x003f
 }
@@ -219,9 +235,9 @@ export class b2Draw {
 
   public DrawSolidCircle(center: b2Vec2, radius: number, axis: b2Vec2, color: b2Color): void {}
 
-  ///#if B2_ENABLE_PARTICLE
+  // #if B2_ENABLE_PARTICLE
   public DrawParticles(centers: b2Vec2[], radius: number, colors: b2Color[], count: number): void {}
-  ///#endif
+  // #endif
 
   public DrawSegment(p1: b2Vec2, p2: b2Vec2, color: b2Color): void {}
 

@@ -16,9 +16,9 @@
  * 3. This notice may not be removed or altered from any source distribution.
  */
 
-///#if B2_ENABLE_PARTICLE
+// #if B2_ENABLE_PARTICLE
 
-import * as box2d from "../../Box2D/Box2D";
+import * as box2d from "Box2D";
 
 export class EmittedParticleCallback {
   /**
@@ -83,7 +83,7 @@ export class RadialEmitter {
     return Math.random();
   }
 
-  _dtor_(): void {
+  __dtor__(): void {
     this.SetGroup(null);
   }
 
@@ -294,4 +294,4 @@ export class RadialEmitter {
   }
 }
 
-///#endif
+// #endif

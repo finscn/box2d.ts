@@ -17,18 +17,23 @@
 */
 
 import { b2_aabbExtension, b2_aabbMultiplier } from "../Common/b2Settings";
-import { b2Vec2 } from "../Common/b2Math";
+import { b2Abs, b2Min, b2Max, b2Vec2 } from "../Common/b2Math";
 import { b2GrowableStack } from "../Common/b2GrowableStack";
 import { b2AABB, b2RayCastInput, b2TestOverlapAABB } from "./b2Collision";
+
+function verify<T>(value: T | null): T {
+  if (value === null) { throw new Error(); }
+  return value;
+}
 
 /// A node in the dynamic tree. The client does not interact with this directly.
 export class b2TreeNode {
   public m_id: number = 0;
   public aabb: b2AABB = new b2AABB();
   public userData: any = null;
-  public parent: b2TreeNode = null; // or b2TreeNode.prototype.next
-  public child1: b2TreeNode = null; // or b2TreeNode.prototype.next
-  public child2: b2TreeNode = null; // or b2TreeNode.prototype.next
+  public parent: b2TreeNode | null = null; // or next
+  public child1: b2TreeNode | null = null;
+  public child2: b2TreeNode | null = null;
   public height: number = 0; // leaf = 0, free node = -1
 
   constructor(id: number = 0) {
@@ -41,13 +46,13 @@ export class b2TreeNode {
 }
 
 export class b2DynamicTree {
-  public m_root: b2TreeNode = null;
+  public m_root: b2TreeNode | null = null;
 
   // b2TreeNode* public m_nodes;
   // int32 public m_nodeCount;
   // int32 public m_nodeCapacity;
 
-  public m_freeList: b2TreeNode = null;
+  public m_freeList: b2TreeNode | null = null;
 
   public m_path: number = 0;
 
@@ -120,10 +125,10 @@ export class b2DynamicTree {
     const segmentAABB: b2AABB = b2DynamicTree.s_segmentAABB;
     let t_x: number = p1.x + maxFraction * (p2.x - p1.x);
     let t_y: number = p1.y + maxFraction * (p2.y - p1.y);
-    segmentAABB.lowerBound.x = Math.min(p1.x, t_x);
-    segmentAABB.lowerBound.y = Math.min(p1.y, t_y);
-    segmentAABB.upperBound.x = Math.max(p1.x, t_x);
-    segmentAABB.upperBound.y = Math.max(p1.y, t_y);
+    segmentAABB.lowerBound.x = b2Min(p1.x, t_x);
+    segmentAABB.lowerBound.y = b2Min(p1.y, t_y);
+    segmentAABB.upperBound.x = b2Max(p1.x, t_x);
+    segmentAABB.upperBound.y = b2Max(p1.y, t_y);
 
     const stack: b2GrowableStack<b2TreeNode> = b2DynamicTree.s_stack.Reset();
     stack.Push(this.m_root);
@@ -142,7 +147,7 @@ export class b2DynamicTree {
       // |dot(v, p1 - c)| > dot(|v|, h)
       const c: b2Vec2 = node.aabb.GetCenter();
       const h: b2Vec2 = node.aabb.GetExtents();
-      const separation: number = Math.abs(b2Vec2.DotVV(v, b2Vec2.SubVV(p1, c, b2Vec2.s_t0))) - b2Vec2.DotVV(abs_v, h);
+      const separation: number = b2Abs(b2Vec2.DotVV(v, b2Vec2.SubVV(p1, c, b2Vec2.s_t0))) - b2Vec2.DotVV(abs_v, h);
       if (separation > 0) {
         continue;
       }
@@ -165,10 +170,10 @@ export class b2DynamicTree {
           maxFraction = value;
           t_x = p1.x + maxFraction * (p2.x - p1.x);
           t_y = p1.y + maxFraction * (p2.y - p1.y);
-          segmentAABB.lowerBound.x = Math.min(p1.x, t_x);
-          segmentAABB.lowerBound.y = Math.min(p1.y, t_y);
-          segmentAABB.upperBound.x = Math.max(p1.x, t_x);
-          segmentAABB.upperBound.y = Math.max(p1.y, t_y);
+          segmentAABB.lowerBound.x = b2Min(p1.x, t_x);
+          segmentAABB.lowerBound.y = b2Min(p1.y, t_y);
+          segmentAABB.upperBound.x = b2Max(p1.x, t_x);
+          segmentAABB.upperBound.y = b2Max(p1.y, t_y);
         }
       } else {
         stack.Push(node.child1);
@@ -197,7 +202,10 @@ export class b2DynamicTree {
 
   public FreeNode(node: b2TreeNode): void {
     node.parent = this.m_freeList; // node.next = this.m_freeList;
+    node.child1 = null;
+    node.child2 = null;
     node.height = -1;
+    node.userData = null;
     this.m_freeList = node;
   }
 
@@ -260,7 +268,7 @@ export class b2DynamicTree {
     // Find the best sibling for this node
     const leafAABB: b2AABB = leaf.aabb;
     ///const center: b2Vec2 = leafAABB.GetCenter();
-    let index: b2TreeNode = this.m_root;
+    let index: b2TreeNode | null = this.m_root;
     let child1: b2TreeNode;
     let child2: b2TreeNode;
     while (!index.IsLeaf()) {
@@ -361,7 +369,7 @@ export class b2DynamicTree {
       ///b2Assert(child1 !== null);
       ///b2Assert(child2 !== null);
 
-      index.height = 1 + Math.max(child1.height, child2.height);
+      index.height = 1 + b2Max(child1.height, child2.height);
       index.aabb.Combine2(child1.aabb, child2.aabb);
 
       index = index.parent;
@@ -376,8 +384,8 @@ export class b2DynamicTree {
       return;
     }
 
-    const parent: b2TreeNode = leaf.parent;
-    const grandParent: b2TreeNode = parent.parent;
+    const parent: b2TreeNode | null = leaf.parent;
+    const grandParent: b2TreeNode | null = parent && parent.parent;
     let sibling: b2TreeNode;
     if (parent.child1 === leaf) {
       sibling = parent.child2;
@@ -404,7 +412,7 @@ export class b2DynamicTree {
         const child2: b2TreeNode = index.child2;
 
         index.aabb.Combine2(child1.aabb, child2.aabb);
-        index.height = 1 + Math.max(child1.height, child2.height);
+        index.height = 1 + b2Max(child1.height, child2.height);
 
         index = index.parent;
       }
@@ -424,15 +432,15 @@ export class b2DynamicTree {
       return A;
     }
 
-    const B: b2TreeNode = A.child1;
-    const C: b2TreeNode = A.child2;
+    const B: b2TreeNode = verify(A.child1);
+    const C: b2TreeNode = verify(A.child2);
 
     const balance: number = C.height - B.height;
 
     // Rotate C up
     if (balance > 1) {
-      const F: b2TreeNode = C.child1;
-      const G: b2TreeNode = C.child2;
+      const F: b2TreeNode = verify(C.child1);
+      const G: b2TreeNode = verify(C.child2);
 
       // Swap A and C
       C.child1 = A;
@@ -459,8 +467,8 @@ export class b2DynamicTree {
         A.aabb.Combine2(B.aabb, G.aabb);
         C.aabb.Combine2(A.aabb, F.aabb);
 
-        A.height = 1 + Math.max(B.height, G.height);
-        C.height = 1 + Math.max(A.height, F.height);
+        A.height = 1 + b2Max(B.height, G.height);
+        C.height = 1 + b2Max(A.height, F.height);
       } else {
         C.child2 = G;
         A.child2 = F;
@@ -468,8 +476,8 @@ export class b2DynamicTree {
         A.aabb.Combine2(B.aabb, F.aabb);
         C.aabb.Combine2(A.aabb, G.aabb);
 
-        A.height = 1 + Math.max(B.height, F.height);
-        C.height = 1 + Math.max(A.height, G.height);
+        A.height = 1 + b2Max(B.height, F.height);
+        C.height = 1 + b2Max(A.height, G.height);
       }
 
       return C;
@@ -477,8 +485,8 @@ export class b2DynamicTree {
 
     // Rotate B up
     if (balance < -1) {
-      const D: b2TreeNode = B.child1;
-      const E: b2TreeNode = B.child2;
+      const D: b2TreeNode = verify(B.child1);
+      const E: b2TreeNode = verify(B.child2);
 
       // Swap A and B
       B.child1 = A;
@@ -505,8 +513,8 @@ export class b2DynamicTree {
         A.aabb.Combine2(C.aabb, E.aabb);
         B.aabb.Combine2(A.aabb, D.aabb);
 
-        A.height = 1 + Math.max(C.height, E.height);
-        B.height = 1 + Math.max(A.height, D.height);
+        A.height = 1 + b2Max(C.height, E.height);
+        B.height = 1 + b2Max(A.height, D.height);
       } else {
         B.child2 = E;
         A.child1 = D;
@@ -514,8 +522,8 @@ export class b2DynamicTree {
         A.aabb.Combine2(C.aabb, D.aabb);
         B.aabb.Combine2(A.aabb, E.aabb);
 
-        A.height = 1 + Math.max(C.height, D.height);
-        B.height = 1 + Math.max(A.height, E.height);
+        A.height = 1 + b2Max(C.height, D.height);
+        B.height = 1 + b2Max(A.height, E.height);
       }
 
       return B;
@@ -580,7 +588,7 @@ export class b2DynamicTree {
 
     const height1: number = this.ComputeHeightNode(node.child1);
     const height2: number = this.ComputeHeightNode(node.child2);
-    return 1 + Math.max(height1, height2);
+    return 1 + b2Max(height1, height2);
   }
 
   public ComputeHeight(): number {
@@ -635,7 +643,7 @@ export class b2DynamicTree {
 
     ///const height1: number = child1.height;
     ///const height2: number = child2.height;
-    ///const height: number = 1 + Math.max(height1, height2);
+    ///const height: number = 1 + b2Max(height1, height2);
     ///b2Assert(node.height === height);
 
     const aabb: b2AABB = b2DynamicTree.s_aabb;
@@ -675,8 +683,8 @@ export class b2DynamicTree {
 
     const child1: b2TreeNode = node.child1;
     const child2: b2TreeNode = node.child2;
-    const balance: number = Math.abs(child2.height - child1.height);
-    return Math.max(maxBalance, balance);
+    const balance: number = b2Abs(child2.height - child1.height);
+    return b2Max(maxBalance, balance);
   }
 
   public GetMaxBalance(): number {
@@ -694,8 +702,8 @@ export class b2DynamicTree {
 
       int32 child1 = node.child1;
       int32 child2 = node.child2;
-      int32 balance = Math.abs(m_nodes[child2].height - m_nodes[child1].height);
-      maxBalance = Math.max(maxBalance, balance);
+      int32 balance = b2Abs(m_nodes[child2].height - m_nodes[child1].height);
+      maxBalance = b2Max(maxBalance, balance);
     }
     */
 
@@ -751,7 +759,7 @@ export class b2DynamicTree {
       b2TreeNode* parent = m_nodes + parentIndex;
       parent.child1 = index1;
       parent.child2 = index2;
-      parent.height = 1 + Math.max(child1.height, child2.height);
+      parent.height = 1 + b2Max(child1.height, child2.height);
       parent.aabb.Combine(child1.aabb, child2.aabb);
       parent.parent = b2_nullNode;
 

@@ -4,13 +4,16 @@
     "module": "system",
     "strict": true,
     "strictNullChecks": false,
-    "inlineSourceMap": false,
-    "noImplicitAny": true,
-    "noImplicitReturns": true,
-    "noImplicitThis": true,
-    "noImplicitUseStrict": false,
-    "noUnusedLocals": true,
-    "noUnusedParameters": false
+    "inlineSourceMap": true,
+    "baseUrl": ".",
+    "paths": {
+      "Box2D": [ "../Box2D/Box2D" ],
+      "Box2D/*": [ "../Box2D/*" ],
+      "Contributions": [ "../Contributions" ],
+      "Contributions/*": [ "../Contributions/*" ],
+      "Testbed": [ "./Testbed" ],
+      "Testbed/*": [ "./Testbed/*" ],
+    }
   },
   "include": [
     "**/*.ts"

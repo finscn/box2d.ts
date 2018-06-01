@@ -16,7 +16,7 @@
  * 3. This notice may not be removed or altered from any source distribution.
  */
 
-///#if B2_ENABLE_PARTICLE
+// #if B2_ENABLE_PARTICLE
 
 import * as box2d from "../../Box2D/Box2D";
 import * as testbed from "../Testbed";
@@ -223,8 +223,13 @@ export class Faucet extends testbed.Test {
   }
 
   Step(settings: testbed.Settings): void {
-    let dt = 1.0 / settings.hz;
-    testbed.Test.prototype.Step.call(this, settings);
+    let dt = settings.hz > 0.0 ? 1.0 / settings.hz : 0.0;
+
+    if (settings.pause && !settings.singleStep) {
+      dt = 0.0;
+    }
+
+    super.Step(settings);
     this.m_particleColorOffset += dt;
     // Keep m_particleColorOffset in the range 0.0f..k_ParticleColorsCount.
     if (this.m_particleColorOffset >= testbed.Test.k_ParticleColorsCount) {
@@ -316,4 +321,4 @@ export class Faucet extends testbed.Test {
   }
 }
 
-///#endif
+// #endif

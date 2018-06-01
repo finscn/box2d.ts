@@ -16,7 +16,7 @@
 * 3. This notice may not be removed or altered from any source distribution.
 */
 
-import * as box2d from "../../Box2D/Box2D";
+import * as box2d from "Box2D";
 
 export class Camera {
   public m_center: box2d.b2Vec2 = new box2d.b2Vec2(0, 20);
@@ -99,7 +99,7 @@ export class Camera {
 // This class implements debug drawing callbacks that are invoked
 // inside b2World::Step.
 export class DebugDraw extends box2d.b2Draw {
-  public m_ctx: CanvasRenderingContext2D;
+  public m_ctx: CanvasRenderingContext2D | null = null;
 
   constructor() {
     super();
@@ -177,7 +177,7 @@ export class DebugDraw extends box2d.b2Draw {
     }
   }
 
-  ///#if B2_ENABLE_PARTICLE
+  // #if B2_ENABLE_PARTICLE
   public DrawParticles(centers: box2d.b2Vec2[], radius: number, colors: box2d.b2Color[], count: number) {
     const ctx: CanvasRenderingContext2D = this.m_ctx;
     if (ctx) {
@@ -201,7 +201,7 @@ export class DebugDraw extends box2d.b2Draw {
       }
     }
   }
-  ///#endif
+  // #endif
 
   public DrawSegment(p1: box2d.b2Vec2, p2: box2d.b2Vec2, color: box2d.b2Color): void {
     const ctx: CanvasRenderingContext2D = this.m_ctx;
@@ -274,10 +274,10 @@ export class DebugDraw extends box2d.b2Draw {
       ///const vr = g_camera.m_roll;
       ///box2d.b2Rot.MulTRV(vr, p, p);
       const vs: number = g_camera.m_zoom;
-      box2d.b2Vec2.MulSV(vs, p, p);
+      box2d.b2Vec2.MulSV(1 / vs, p, p);
 
       // viewport -> canvas
-      const cs: number = g_camera.m_extent;
+      const cs: number = 0.5 * g_camera.m_height / g_camera.m_extent;
       box2d.b2Vec2.MulSV(cs, p, p);
       p.y *= -1;
       const cc: box2d.b2Vec2 = DebugDraw.DrawStringWorld_s_cc.Set(0.5 * ctx.canvas.width, 0.5 * ctx.canvas.height);

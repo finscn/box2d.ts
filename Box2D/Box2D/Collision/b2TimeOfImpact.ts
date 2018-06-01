@@ -17,7 +17,7 @@
 */
 
 import { b2_linearSlop, b2_maxPolygonVertices } from "../Common/b2Settings";
-import { b2Vec2, b2Rot, b2Transform, b2Sweep } from "../Common/b2Math";
+import { b2Abs, b2Max, b2Vec2, b2Rot, b2Transform, b2Sweep } from "../Common/b2Math";
 import { b2Timer } from "../Common/b2Timer";
 import { b2Distance, b2DistanceInput, b2DistanceOutput, b2DistanceProxy, b2SimplexCache } from "./b2Distance";
 
@@ -28,6 +28,15 @@ export let b2_toiIters: number = 0;
 export let b2_toiMaxIters: number = 0;
 export let b2_toiRootIters: number = 0;
 export let b2_toiMaxRootIters: number = 0;
+export function b2_toi_reset(): void {
+  b2_toiTime = 0;
+  b2_toiMaxTime = 0;
+  b2_toiCalls = 0;
+  b2_toiIters = 0;
+  b2_toiMaxIters = 0;
+  b2_toiRootIters = 0;
+  b2_toiMaxRootIters = 0;
+}
 
 const b2TimeOfImpact_s_xfA: b2Transform = new b2Transform();
 const b2TimeOfImpact_s_xfB: b2Transform = new b2Transform();
@@ -97,9 +106,9 @@ export class b2SeparationFunction {
       const pointB: b2Vec2 = b2Transform.MulXV(xfB, localPointB, b2TimeOfImpact_s_pointB);
       b2Vec2.SubVV(pointB, pointA, this.m_axis);
       const s: number = this.m_axis.Normalize();
-      ///#if B2_ENABLE_PARTICLE
+      // #if B2_ENABLE_PARTICLE
       this.m_localPoint.SetZero();
-      ///#endif
+      // #endif
       return s;
     } else if (cache.indexA[0] === cache.indexA[1]) {
       // Two points on B and one on A.
@@ -288,7 +297,7 @@ export function b2TimeOfImpact(output: b2TOIOutput, input: b2TOIInput): void {
   const tMax: number = input.tMax;
 
   const totalRadius: number = proxyA.m_radius + proxyB.m_radius;
-  const target: number = Math.max(b2_linearSlop, totalRadius - 3 * b2_linearSlop);
+  const target: number = b2Max(b2_linearSlop, totalRadius - 3 * b2_linearSlop);
   const tolerance: number = 0.25 * b2_linearSlop;
   ///b2Assert(target > tolerance);
 
@@ -431,7 +440,7 @@ export function b2TimeOfImpact(output: b2TOIOutput, input: b2TOIInput): void {
 
         const s: number = fcn.Evaluate(indexA[0], indexB[0], t);
 
-        if (Math.abs(s - target) < tolerance) {
+        if (b2Abs(s - target) < tolerance) {
           // t2 holds a tentative value for t1
           t2 = t;
           break;
@@ -451,7 +460,7 @@ export function b2TimeOfImpact(output: b2TOIOutput, input: b2TOIInput): void {
         }
       }
 
-      b2_toiMaxRootIters = Math.max(b2_toiMaxRootIters, rootIterCount);
+      b2_toiMaxRootIters = b2Max(b2_toiMaxRootIters, rootIterCount);
 
       ++pushBackIter;
 
@@ -475,9 +484,9 @@ export function b2TimeOfImpact(output: b2TOIOutput, input: b2TOIInput): void {
     }
   }
 
-  b2_toiMaxIters = Math.max(b2_toiMaxIters, iter);
+  b2_toiMaxIters = b2Max(b2_toiMaxIters, iter);
 
   const time: number = timer.GetMilliseconds();
-  b2_toiMaxTime = Math.max(b2_toiMaxTime, time);
+  b2_toiMaxTime = b2Max(b2_toiMaxTime, time);
   b2_toiTime += time;
 }

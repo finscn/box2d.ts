@@ -7,8 +7,8 @@ import { b2Rot } from "./b2Rot";
 export class b2Transform {
     public static IDENTITY = new b2Transform();
 
-    public p: b2Vec2 = new b2Vec2();
-    public q: b2Rot = new b2Rot();
+    public readonly p: b2Vec2 = new b2Vec2();
+    public readonly q: b2Rot = new b2Rot();
 
     public Clone(): b2Transform {
         return new b2Transform().Copy(this);

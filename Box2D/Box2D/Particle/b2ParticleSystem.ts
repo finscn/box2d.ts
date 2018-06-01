@@ -16,11 +16,11 @@
  * 3. This notice may not be removed or altered from any source distribution.
  */
 
-///#if B2_ENABLE_PARTICLE
+// #if B2_ENABLE_PARTICLE
 
 import { b2_linearSlop, b2_maxFloat, b2_maxParticleIndex, b2_invalidParticleIndex, b2_minParticleSystemBufferCapacity, b2_maxTriadDistanceSquared, b2_barrierCollisionTime, b2MakeArray } from "../Common/b2Settings";
 import { b2_maxParticlePressure, b2_minParticleWeight, b2_maxParticleForce, b2_particleStride } from "../Common/b2Settings";
-import { b2Clamp, b2InvSqrt, b2Vec2, b2Rot, b2Transform } from "../Common/b2Math";
+import { b2Min, b2Max, b2Abs, b2Clamp, b2Sqrt, b2InvSqrt, b2Vec2, b2Rot, b2Transform } from "../Common/b2Math";
 import { b2Color } from "../Common/b2Draw";
 import { b2AABB, b2RayCastInput, b2RayCastOutput } from "../Collision/b2Collision";
 import { b2ShapeType, b2Shape, b2MassData } from "../Collision/Shapes/b2Shape";
@@ -328,7 +328,7 @@ export class b2ParticleContact {
   ApproximatelyEqual(rhs: b2ParticleContact): boolean {
     const MAX_WEIGHT_DIFF = 0.01; // Weight 0 ~ 1, so about 1%
     const MAX_NORMAL_DIFF_SQ = 0.01 * 0.01; // Normal length = 1, so 1%
-    return this.indexA === rhs.indexA && this.indexB === rhs.indexB && this.flags === rhs.flags && Math.abs(this.weight - rhs.weight) < MAX_WEIGHT_DIFF && b2Vec2.DistanceSquaredVV(this.normal, rhs.normal) < MAX_NORMAL_DIFF_SQ;
+    return this.indexA === rhs.indexA && this.indexB === rhs.indexB && this.flags === rhs.flags && b2Abs(this.weight - rhs.weight) < MAX_WEIGHT_DIFF && b2Vec2.DistanceSquaredVV(this.normal, rhs.normal) < MAX_NORMAL_DIFF_SQ;
   }
 }
 
@@ -1015,7 +1015,7 @@ export class b2ParticleSystem {
     let particleCount = group.GetParticleCount();
     // We create several linked lists. Each list represents a set of connected particles.
     ///ParticleListNode* nodeBuffer = (ParticleListNode*) m_world.m_stackAllocator.Allocate(sizeof(ParticleListNode) * particleCount);
-    let nodeBuffer = b2MakeArray(particleCount, (index: number) => new b2ParticleSystem.ParticleListNode());
+    let nodeBuffer: b2ParticleSystem.ParticleListNode[] = b2MakeArray(particleCount, (index: number) => new b2ParticleSystem.ParticleListNode());
     b2ParticleSystem.InitializeParticleLists(group, nodeBuffer);
     this.MergeParticleListsInContact(group, nodeBuffer);
     let survivingList = b2ParticleSystem.FindLongestParticleList(group, nodeBuffer);
@@ -1711,13 +1711,13 @@ export class b2ParticleSystem {
   ApplyForce(firstIndex: number, lastIndex: number, force: b2Vec2): void {
     // Ensure we're not trying to apply force to particles that can't move,
     // such as wall particles.
-    ///#if B2_ASSERT_ENABLED
+    // #if B2_ASSERT_ENABLED
     ///let flags = 0;
     ///for (let i = firstIndex; i < lastIndex; i++) {
     ///flags |= this.m_flagsBuffer.data[i];
     ///}
     ///b2Assert(this.ForceCanBeApplied(flags));
-    ///#endif
+    // #endif
 
     // Early out if force does nothing (optimization).
     ///const b2Vec2 distributedForce = force / (float32)(lastIndex - firstIndex);
@@ -1814,12 +1814,9 @@ export class b2ParticleSystem {
    * that contain the starting point.
    * b2RayCastCallback::ShouldQueryParticleSystem is ignored.
    *
-   * @export
-   * @return {void}
-   * @param {b2RayCastCallback} callback a user implemented
-   *      callback class.
-   * @param {b2Vec2} point1 the ray starting point
-   * @param {b2Vec2} point2 the ray ending point
+   * @param callback a user implemented callback class.
+   * @param point1 the ray starting point
+   * @param point2 the ray ending point
    */
   RayCast(callback: b2RayCastCallback, point1: b2Vec2, point2: b2Vec2): void {
     let s_aabb = b2ParticleSystem.RayCast_s_aabb;
@@ -1851,7 +1848,7 @@ export class b2ParticleSystem {
       let p2 = b2Vec2.DotVV(p, p);
       let determinant = pv * pv - v2 * (p2 - this.m_squaredDiameter);
       if (determinant >= 0) {
-        let sqrtDeterminant = Math.sqrt(determinant);
+        let sqrtDeterminant = b2Sqrt(determinant);
         // find a solution between 0 and fraction
         let t = (-pv - sqrtDeterminant) / v2;
         if (t > fraction) {
@@ -1868,7 +1865,7 @@ export class b2ParticleSystem {
         n.Normalize();
         ///float32 f = callback.ReportParticle(this, i, point1 + t * v, n, t);
         let f = callback.ReportParticle(this, i, b2Vec2.AddVMulSV(point1, t, v, s_point), n, t);
-        fraction = Math.min(fraction, f);
+        fraction = b2Min(fraction, f);
         if (fraction <= 0) {
           break;
         }
@@ -1884,11 +1881,7 @@ export class b2ParticleSystem {
   /**
    * Compute the axis-aligned bounding box for all particles
    * contained within this particle system.
-   *
-   * @export
-   * @return {void}
-   * @param {b2AABB} aabb Returns the axis-aligned bounding
-   *      box of the system.
+   * @param aabb Returns the axis-aligned bounding box of the system.
    */
   ComputeAABB(aabb: b2AABB): void {
     let particleCount = this.GetParticleCount();
@@ -1917,28 +1910,19 @@ export class b2ParticleSystem {
 
   /**
    * All particle types that require creating triads
-   *
-   * @type {number}
    */
   static k_triadFlags = b2ParticleFlag.b2_elasticParticle;
 
   /**
    * All particle types that do not produce dynamic pressure
-   *
-   * @type {number}
    */
   static k_noPressureFlags = b2ParticleFlag.b2_powderParticle | b2ParticleFlag.b2_tensileParticle;
 
   /**
    * All particle types that apply extra damping force with bodies
-   *
-   * @type {number}
    */
   static k_extraDampingFlags = b2ParticleFlag.b2_staticPressureParticle;
 
-  /**
-   * @type {number}
-   */
   static k_barrierWallFlags = b2ParticleFlag.b2_barrierParticle | b2ParticleFlag.b2_wallParticle;
 
   FreeBuffer<T>(b: T[], capacity: number): void {
@@ -2285,7 +2269,7 @@ export class b2ParticleSystem {
           pair.indexA = a;
           pair.indexB = b;
           pair.flags = contact.flags;
-          pair.strength = Math.min(
+          pair.strength = b2Min(
             groupA ? groupA.m_strength : 1,
             groupB ? groupB.m_strength : 1);
           ///pair.distance = b2Distance(pos_data[a], pos_data[b]); // TODO: this was wrong!
@@ -2347,7 +2331,7 @@ export class b2ParticleSystem {
           triad.indexB = b;
           triad.indexC = c;
           triad.flags = af | bf | cf;
-          triad.strength = Math.min(Math.min(
+          triad.strength = b2Min(b2Min(
               groupA ? groupA.m_strength : 1,
               groupB ? groupB.m_strength : 1),
             groupC ? groupC.m_strength : 1);
@@ -2621,8 +2605,8 @@ export class b2ParticleSystem {
     // The number of iterations is equal to particle number from the deepest
     // particle to the nearest surface particle, and in general it is smaller
     // than sqrt of total particle number.
-    ///int32 iterationCount = (int32)Math.sqrt((float)m_count);
-    let iterationCount = Math.sqrt(this.m_count) >> 0;
+    ///int32 iterationCount = (int32)b2Sqrt((float)m_count);
+    let iterationCount = b2Sqrt(this.m_count) >> 0;
     for (let t = 0; t < iterationCount; t++) {
       let updated = false;
       for (let k = 0; k < contactGroupsCount; k++) {
@@ -3087,12 +3071,12 @@ export class b2ParticleSystem {
       ///let p2 = p1 + step.dt * v;
       let p2_x = p1.x + step.dt * v.x;
       let p2_y = p1.y + step.dt * v.y;
-      ///aabb.lowerBound = Math.min(aabb.lowerBound, Math.min(p1, p2));
-      aabb.lowerBound.x = Math.min(aabb.lowerBound.x, Math.min(p1.x, p2_x));
-      aabb.lowerBound.y = Math.min(aabb.lowerBound.y, Math.min(p1.y, p2_y));
-      ///aabb.upperBound = Math.max(aabb.upperBound, Math.max(p1, p2));
-      aabb.upperBound.x = Math.max(aabb.upperBound.x, Math.max(p1.x, p2_x));
-      aabb.upperBound.y = Math.max(aabb.upperBound.y, Math.max(p1.y, p2_y));
+      ///aabb.lowerBound = b2Min(aabb.lowerBound, b2Min(p1, p2));
+      aabb.lowerBound.x = b2Min(aabb.lowerBound.x, b2Min(p1.x, p2_x));
+      aabb.lowerBound.y = b2Min(aabb.lowerBound.y, b2Min(p1.y, p2_y));
+      ///aabb.upperBound = b2Max(aabb.upperBound, b2Max(p1, p2));
+      aabb.upperBound.x = b2Max(aabb.upperBound.x, b2Max(p1.x, p2_x));
+      aabb.upperBound.y = b2Max(aabb.upperBound.y, b2Max(p1.y, p2_y));
     }
     let callback = new b2ParticleSystem.SolveCollisionCallback(this, step);
     this.m_world.QueryAABB(callback, aabb);
@@ -3106,8 +3090,8 @@ export class b2ParticleSystem {
       let v = vel_data[i];
       let v2 = b2Vec2.DotVV(v, v);
       if (v2 > criticalVelocitySquared) {
-        ///v *= Math.sqrt(criticalVelocitySquared / v2);
-        v.SelfMul(Math.sqrt(criticalVelocitySquared / v2));
+        ///v *= b2Sqrt(criticalVelocitySquared / v2);
+        v.SelfMul(b2Sqrt(criticalVelocitySquared / v2));
       }
     }
   }
@@ -3158,9 +3142,9 @@ export class b2ParticleSystem {
         let pb = pos_data[b];
         /// b2AABB aabb;
         let aabb = s_aabb;
-        ///aabb.lowerBound = Math.min(pa, pb);
+        ///aabb.lowerBound = b2Min(pa, pb);
         b2Vec2.MinV(pa, pb, aabb.lowerBound);
-        ///aabb.upperBound = Math.max(pa, pb);
+        ///aabb.upperBound = b2Max(pa, pb);
         b2Vec2.MaxV(pa, pb, aabb.upperBound);
         let aGroup = this.m_groupBuffer[a];
         let bGroup = this.m_groupBuffer[b];
@@ -3210,7 +3194,7 @@ export class b2ParticleSystem {
             } else {
               let det = e1 * e1 - 4 * e0 * e2;
               if (det < 0) continue;
-              let sqrtDet = Math.sqrt(det);
+              let sqrtDet = b2Sqrt(det);
               let t1 = (-e1 - sqrtDet) / (2 * e2);
               let t2 = (-e1 + sqrtDet) / (2 * e2);
               ///if (t1 > t2) b2Swap(t1, t2);
@@ -3366,8 +3350,8 @@ export class b2ParticleSystem {
     let maxPressure = b2_maxParticlePressure * criticalPressure;
     for (let i = 0; i < this.m_count; i++) {
       let w = this.m_weightBuffer[i];
-      let h = pressurePerWeight * Math.max(0.0, w - b2_minParticleWeight);
-      this.m_accumulationBuffer[i] = Math.min(h, maxPressure);
+      let h = pressurePerWeight * b2Max(0.0, w - b2_minParticleWeight);
+      this.m_accumulationBuffer[i] = b2Min(h, maxPressure);
     }
     // ignores particles which have their own repulsive force
     if (this.m_allParticleFlags & b2ParticleSystem.k_noPressureFlags) {
@@ -3442,7 +3426,7 @@ export class b2ParticleSystem {
       let v = b2Vec2.SubVV(b.GetLinearVelocityFromWorldPoint(p, b2Vec2.s_t0), vel_data[a], s_v);
       let vn = b2Vec2.DotVV(v, n);
       if (vn < 0) {
-        let damping = Math.max(linearDamping * w, Math.min(-quadraticDamping * vn, 0.5));
+        let damping = b2Max(linearDamping * w, b2Min(-quadraticDamping * vn, 0.5));
         ///b2Vec2 f = damping * m * vn * n;
         let f = b2Vec2.MulSV(damping * m * vn, n, s_f);
         ///m_velocityBuffer.data[a] += GetParticleInvMass() * f;
@@ -3461,8 +3445,8 @@ export class b2ParticleSystem {
       let v = b2Vec2.SubVV(vel_data[b], vel_data[a], s_v);
       let vn = b2Vec2.DotVV(v, n);
       if (vn < 0) {
-        ///float32 damping = Math.max(linearDamping * w, Math.min(- quadraticDamping * vn, 0.5f));
-        let damping = Math.max(linearDamping * w, Math.min(-quadraticDamping * vn, 0.5));
+        ///float32 damping = b2Max(linearDamping * w, b2Min(- quadraticDamping * vn, 0.5f));
+        let damping = b2Max(linearDamping * w, b2Min(-quadraticDamping * vn, 0.5));
         ///b2Vec2 f = damping * vn * n;
         let f = b2Vec2.MulSV(damping * vn, n, s_f);
         ///this.m_velocityBuffer.data[a] += f;
@@ -3510,8 +3494,8 @@ export class b2ParticleSystem {
           // Calculate b.m_I from public functions of b2Body.
           ///this.InitDampingParameter(&invMassB, &invInertiaB, &tangentDistanceB, b.GetMass(), b.GetInertia() - b.GetMass() * b.GetLocalCenter().LengthSquared(), b.GetWorldCenter(), p, n);
           this.InitDampingParameter(invMassB, invInertiaB, tangentDistanceB, b.GetMass(), b.GetInertia() - b.GetMass() * b.GetLocalCenter().LengthSquared(), b.GetWorldCenter(), p, n);
-          ///float32 f = damping * Math.min(w, 1.0) * this.ComputeDampingImpulse(invMassA, invInertiaA, tangentDistanceA, invMassB, invInertiaB, tangentDistanceB, vn);
-          let f = damping * Math.min(w, 1.0) * this.ComputeDampingImpulse(invMassA[0], invInertiaA[0], tangentDistanceA[0], invMassB[0], invInertiaB[0], tangentDistanceB[0], vn);
+          ///float32 f = damping * b2Min(w, 1.0) * this.ComputeDampingImpulse(invMassA, invInertiaA, tangentDistanceA, invMassB, invInertiaB, tangentDistanceB, vn);
+          let f = damping * b2Min(w, 1.0) * this.ComputeDampingImpulse(invMassA[0], invInertiaA[0], tangentDistanceA[0], invMassB[0], invInertiaB[0], tangentDistanceB[0], vn);
           ///this.ApplyDamping(invMassA, invInertiaA, tangentDistanceA, true, aGroup, a, f, n);
           this.ApplyDamping(invMassA[0], invInertiaA[0], tangentDistanceA[0], true, aGroup, a, f, n);
           ///b.ApplyLinearImpulse(-f * n, p, true);
@@ -3811,7 +3795,7 @@ export class b2ParticleSystem {
         let h = this.m_weightBuffer[a] + this.m_weightBuffer[b];
         ///b2Vec2 s = m_accumulation2Buffer[b] - m_accumulation2Buffer[a];
         let s = b2Vec2.SubVV(this.m_accumulation2Buffer[b], this.m_accumulation2Buffer[a], s_s);
-        let fn = Math.min(
+        let fn = b2Min(
           pressureStrength * (h - 2) + normalStrength * b2Vec2.DotVV(s, n),
           maxVelocityVariation) * w;
         ///b2Vec2 f = fn * n;
@@ -4144,8 +4128,8 @@ export class b2ParticleSystem {
       for (let i = group.m_firstIndex; i < group.m_lastIndex; i++) {
         let j = newIndices[i];
         if (j >= 0) {
-          firstIndex = Math.min(firstIndex, j);
-          lastIndex = Math.max(lastIndex, j + 1);
+          firstIndex = b2Min(firstIndex, j);
+          lastIndex = b2Max(lastIndex, j + 1);
         } else {
           modified = true;
         }
@@ -4751,11 +4735,11 @@ export class InsideBoundsEnumerator {
   GetNext(): number {
     while (this.m_first < this.m_last) {
       let xTag = (this.m_system.m_proxyBuffer.data[this.m_first].tag & b2ParticleSystem.xMask) >>> 0;
-      ///#if B2_ASSERT_ENABLED
+      // #if B2_ASSERT_ENABLED
       ///let yTag = (this.m_system.m_proxyBuffer.data[this.m_first].tag & b2ParticleSystem.yMask) >>> 0;
       ///b2Assert(yTag >= this.m_yLower);
       ///b2Assert(yTag <= this.m_yUpper);
-      ///#endif
+      // #endif
       if (xTag >= this.m_xLower && xTag <= this.m_xUpper) {
         return (this.m_system.m_proxyBuffer.data[this.m_first++]).index;
       }
@@ -4855,10 +4839,6 @@ export class b2ParticlePairSet extends b2ParticleSystem.FixedSetAllocator<Partic
     // TODO
   }
 
-  /**
-   * @return {number}
-   * @param {b2ParticleSystem.ParticlePair} pair
-   */
   Find(pair: b2ParticleSystem.ParticlePair): number {
     // TODO
     return b2_invalidParticleIndex;
@@ -5181,12 +5161,6 @@ export class SolveCollisionCallback extends b2FixtureParticleQueryCallback {
   static ReportFixtureAndParticle_s_v = new b2Vec2();
   static ReportFixtureAndParticle_s_f = new b2Vec2();
 
-  /**
-   * @export
-   * @return {boolean}
-   * @param {b2ParticleSystem} system
-   * @param {number} index
-   */
   ReportParticle(system: b2ParticleSystem, index: number): boolean {
     return false;
   }
@@ -5194,4 +5168,4 @@ export class SolveCollisionCallback extends b2FixtureParticleQueryCallback {
 
 }
 
-///#endif
+// #endif
