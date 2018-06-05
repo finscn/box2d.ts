@@ -17,12 +17,12 @@
  */
 System.register([], function (exports_1, context_1) {
     "use strict";
-    var __moduleName = context_1 && context_1.id;
     var FullScreenUI;
+    var __moduleName = context_1 && context_1.id;
     return {
         setters: [],
         execute: function () {
-            ///#if B2_ENABLE_PARTICLE
+            // #if B2_ENABLE_PARTICLE
             /**
              * Handles drawing and selection of full screen UI.
              */
