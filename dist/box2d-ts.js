@@ -188,7 +188,7 @@ System.register("Common/b2Math", ["Common/b2Settings"], function (exports_2, con
         return (hi - lo) * Math.random() + lo;
     }
     exports_2("b2RandomRange", b2RandomRange);
-    var b2Settings_1, b2_pi_over_180, b2_180_over_pi, b2_two_pi, b2Abs, b2Min, b2Max, b2Sqrt, b2Pow, b2Cos, b2Sin, b2Acos, b2Asin, b2Atan2, b2Vec2, b2Vec2_zero, b2AddVV, b2SubVV, b2Vec3, b2DotV3V3, b2CrossV3V3, b2Mat22, b2Mat33, b2Rot, b2MulRR, b2MulTRR, b2MulRV, b2MulTRV, b2Transform, b2Sweep;
+    var b2Settings_1, b2_pi_over_180, b2_180_over_pi, b2_two_pi, b2Abs, b2Min, b2Max, b2Sqrt, b2Pow, b2Cos, b2Sin, b2Acos, b2Asin, b2Atan2, b2Vec2, b2Vec2_zero, b2Vec3, b2Mat22, b2Mat33, b2Rot, b2Transform, b2Sweep;
     return {
         setters: [
             function (b2Settings_1_1) {
@@ -482,8 +482,6 @@ System.register("Common/b2Math", ["Common/b2Settings"], function (exports_2, con
             }());
             exports_2("b2Vec2", b2Vec2);
             exports_2("b2Vec2_zero", b2Vec2_zero = new b2Vec2(0, 0));
-            b2AddVV = b2Vec2.AddVV;
-            b2SubVV = b2Vec2.SubVV;
             b2Vec3 = (function () {
                 function b2Vec3(x, y, z) {
                     if (x === void 0) { x = 0; }
@@ -566,8 +564,6 @@ System.register("Common/b2Math", ["Common/b2Settings"], function (exports_2, con
                 return b2Vec3;
             }());
             exports_2("b2Vec3", b2Vec3);
-            b2DotV3V3 = b2Vec3.DotV3V3;
-            b2CrossV3V3 = b2Vec3.CrossV3V3;
             b2Mat22 = (function () {
                 function b2Mat22() {
                     this.ex = new b2Vec2(1, 0);
@@ -802,7 +798,7 @@ System.register("Common/b2Math", ["Common/b2Settings"], function (exports_2, con
                     M.ez.z = 0;
                 };
                 b2Mat33.prototype.GetSymInverse33 = function (M) {
-                    var det = b2DotV3V3(this.ex, b2CrossV3V3(this.ey, this.ez, b2Vec3.s_t0));
+                    var det = b2Vec3.DotV3V3(this.ex, b2Vec3.CrossV3V3(this.ey, this.ez, b2Vec3.s_t0));
                     if (det !== 0) {
                         det = 1 / det;
                     }
@@ -920,10 +916,6 @@ System.register("Common/b2Math", ["Common/b2Settings"], function (exports_2, con
                 return b2Rot;
             }());
             exports_2("b2Rot", b2Rot);
-            b2MulRR = b2Rot.MulRR;
-            b2MulTRR = b2Rot.MulTRR;
-            b2MulRV = b2Rot.MulRV;
-            b2MulTRV = b2Rot.MulTRV;
             b2Transform = (function () {
                 function b2Transform() {
                     this.p = new b2Vec2();
@@ -996,13 +988,13 @@ System.register("Common/b2Math", ["Common/b2Settings"], function (exports_2, con
                     return out;
                 };
                 b2Transform.MulXX = function (A, B, out) {
-                    b2MulRR(A.q, B.q, out.q);
-                    b2AddVV(b2MulRV(A.q, B.p, out.p), A.p, out.p);
+                    b2Rot.MulRR(A.q, B.q, out.q);
+                    b2Vec2.AddVV(b2Rot.MulRV(A.q, B.p, out.p), A.p, out.p);
                     return out;
                 };
                 b2Transform.MulTXX = function (A, B, out) {
-                    b2MulTRR(A.q, B.q, out.q);
-                    b2MulTRV(A.q, b2SubVV(B.p, A.p, out.p), out.p);
+                    b2Rot.MulTRR(A.q, B.q, out.q);
+                    b2Rot.MulTRV(A.q, b2Vec2.SubVV(B.p, A.p, out.p), out.p);
                     return out;
                 };
                 b2Transform.IDENTITY = new b2Transform();
@@ -1036,7 +1028,7 @@ System.register("Common/b2Math", ["Common/b2Settings"], function (exports_2, con
                     xf.p.y = one_minus_beta * this.c0.y + beta * this.c.y;
                     var angle = one_minus_beta * this.a0 + beta * this.a;
                     xf.q.SetAngle(angle);
-                    xf.p.SelfSub(b2MulRV(xf.q, this.localCenter, b2Vec2.s_t0));
+                    xf.p.SelfSub(b2Rot.MulRV(xf.q, this.localCenter, b2Vec2.s_t0));
                     return xf;
                 };
                 b2Sweep.prototype.Advance = function (alpha) {

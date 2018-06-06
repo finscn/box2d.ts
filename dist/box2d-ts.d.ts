@@ -83,9 +83,6 @@ declare module "Common/b2Math" {
         x: number;
         y: number;
     }
-    export interface XYZ extends XY {
-        z: number;
-    }
     export class b2Vec2 implements XY {
         static readonly ZERO: Readonly<b2Vec2>;
         static readonly UNITX: Readonly<b2Vec2>;
@@ -150,6 +147,9 @@ declare module "Common/b2Math" {
         static NegV<T extends XY>(v: XY, out: T): T;
     }
     export const b2Vec2_zero: Readonly<b2Vec2>;
+    export interface XYZ extends XY {
+        z: number;
+    }
     export class b2Vec3 implements XYZ {
         static readonly ZERO: Readonly<b2Vec3>;
         static readonly s_t0: b2Vec3;
