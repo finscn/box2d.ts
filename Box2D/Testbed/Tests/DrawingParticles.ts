@@ -18,8 +18,8 @@
 
 // #if B2_ENABLE_PARTICLE
 
-import * as box2d from "../../Box2D/Box2D";
-import * as testbed from "../Testbed";
+import * as box2d from "Box2D";
+import * as testbed from "Testbed";
 
 export class DrawingParticles extends testbed.Test {
   /**
@@ -118,7 +118,7 @@ export class DrawingParticles extends testbed.Test {
     this.m_lastGroup = null;
     this.m_drawing = true;
 
-    box2d.b2Assert((DrawingParticles.k_paramDef[0].CalculateValueMask() & DrawingParticles.Parameters.e_parameterBegin) === 0);
+    // DEBUG: box2d.b2Assert((DrawingParticles.k_paramDef[0].CalculateValueMask() & DrawingParticles.Parameters.e_parameterBegin) === 0);
     testbed.Main.SetParticleParameters(DrawingParticles.k_paramDef, DrawingParticles.k_paramDefCount);
     testbed.Main.SetRestartOnParticleParameterChange(false);
 

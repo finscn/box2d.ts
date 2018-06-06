@@ -16,8 +16,8 @@
 * 3. This notice may not be removed or altered from any source distribution.
 */
 
-import * as box2d from "../../Box2D/Box2D";
-import * as testbed from "../Testbed";
+import * as box2d from "Box2D";
+import * as testbed from "Testbed";
 
 class RayCastClosestCallback extends box2d.b2RayCastCallback {
   public m_hit: boolean = false;
@@ -103,7 +103,7 @@ class RayCastMultipleCallback extends box2d.b2RayCastCallback {
       }
     }
 
-    ///box2d.b2Assert(this.m_count < RayCastMultipleCallback.e_maxCount);
+    // DEBUG: box2d.b2Assert(this.m_count < RayCastMultipleCallback.e_maxCount);
 
     this.m_points[this.m_count].Copy(point);
     this.m_normals[this.m_count].Copy(normal);

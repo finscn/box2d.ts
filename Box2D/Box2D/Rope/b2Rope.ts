@@ -16,6 +16,7 @@
 * 3. This notice may not be removed or altered from any source distribution.
 */
 
+// DEBUG: import { b2Assert } from "../Common/b2Settings";
 import { b2_pi, b2MakeNumberArray } from "../Common/b2Settings";
 import { b2Atan2, b2Vec2 } from "../Common/b2Math";
 import { b2Color, b2Draw } from "../Common/b2Draw";
@@ -72,7 +73,7 @@ export class b2Rope {
 
   ///
   public Initialize(def: b2RopeDef): void {
-    ///b2Assert(def.count >= 3);
+    // DEBUG: b2Assert(def.count >= 3);
     this.m_count = def.count;
     // this.m_ps = (b2Vec2*)b2Alloc(this.m_count * sizeof(b2Vec2));
     this.m_ps = b2Vec2.MakeArray(this.m_count);

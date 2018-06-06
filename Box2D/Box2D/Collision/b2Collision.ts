@@ -16,6 +16,7 @@
 * 3. This notice may not be removed or altered from any source distribution.
 */
 
+// DEBUG: import { b2Assert } from "../Common/b2Settings";
 import { b2_maxFloat, b2_epsilon, b2_epsilon_sq, b2_maxManifoldPoints, b2MakeArray, b2MakeNumberArray } from "../Common/b2Settings";
 import { b2Abs, b2Min, b2Max, b2Vec2, b2Rot, b2Transform } from "../Common/b2Math";
 import { b2Shape } from "./Shapes/b2Shape";
@@ -187,7 +188,7 @@ export class b2Manifold {
 
   public Reset(): void {
     for (let i: number = 0; i < b2_maxManifoldPoints; ++i) {
-      ///b2Assert(this.points[i] instanceof b2ManifoldPoint);
+      // DEBUG: b2Assert(this.points[i] instanceof b2ManifoldPoint);
       this.points[i].Reset();
     }
     this.localNormal.SetZero();
@@ -199,7 +200,7 @@ export class b2Manifold {
   public Copy(o: b2Manifold): b2Manifold {
     this.pointCount = o.pointCount;
     for (let i: number = 0; i < b2_maxManifoldPoints; ++i) {
-      ///b2Assert(this.points[i] instanceof b2ManifoldPoint);
+      // DEBUG: b2Assert(this.points[i] instanceof b2ManifoldPoint);
       this.points[i].Copy(o.points[i]);
     }
     this.localNormal.Copy(o.localNormal);

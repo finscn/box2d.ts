@@ -18,6 +18,7 @@
 
 // #if B2_ENABLE_PARTICLE
 
+// DEBUG: import { b2Assert } from "../Common/b2Settings";
 import { b2Vec2, b2Transform, XY } from "../Common/b2Math";
 import { b2Color, RGBA } from "../Common/b2Draw";
 import { b2Shape } from "../Collision/Shapes/b2Shape";
@@ -136,7 +137,7 @@ export class b2ParticleGroup {
   }
 
   public SetGroupFlags(flags: number): void {
-    ///b2Assert((flags & b2ParticleGroupFlag.b2_particleGroupInternalMask) === 0);
+    // DEBUG: b2Assert((flags & b2ParticleGroupFlag.b2_particleGroupInternalMask) === 0);
     flags |= this.m_groupFlags & b2ParticleGroupFlag.b2_particleGroupInternalMask;
     this.m_system.SetGroupFlags(this, flags);
   }

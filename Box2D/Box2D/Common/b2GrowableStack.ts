@@ -16,6 +16,8 @@
 * 3. This notice may not be removed or altered from any source distribution.
 */
 
+// DEBUG: import { b2Assert } from "./b2Settings";
+
 /// This is a growable LIFO stack with an initial capacity of N.
 /// If the stack size exceeds the initial capacity, the heap is used
 /// to increase the size of the stack.
@@ -40,7 +42,7 @@ export class b2GrowableStack<T> {
   }
 
   public Pop(): T | null {
-    ///b2Assert(this.m_count > 0);
+    // DEBUG: b2Assert(this.m_count > 0);
     this.m_count--;
     const element: T | null = this.m_stack[this.m_count];
     this.m_stack[this.m_count] = null;

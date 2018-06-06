@@ -1,4 +1,4 @@
-declare module "Box2D/Box2D/Common/b2Settings" {
+declare module "Common/b2Settings" {
     export function b2Assert(condition: boolean, ...args: any[]): void;
     export function b2Maybe<T>(value: T | undefined, def: T): T;
     export const b2_maxFloat: number;
@@ -54,7 +54,7 @@ declare module "Box2D/Box2D/Common/b2Settings" {
     export function b2MakeNullArray<T>(length: number): Array<T | null>;
     export function b2MakeNumberArray(length: number, init?: number): number[];
 }
-declare module "Box2D/Box2D/Common/b2Math" {
+declare module "Common/b2Math" {
     export const b2_pi_over_180: number;
     export const b2_180_over_pi: number;
     export const b2_two_pi: number;
@@ -271,8 +271,8 @@ declare module "Box2D/Box2D/Common/b2Math" {
         Normalize(): void;
     }
 }
-declare module "Box2D/Box2D/Common/b2Draw" {
-    import { b2Transform, XY } from "Box2D/Box2D/Common/b2Math";
+declare module "Common/b2Draw" {
+    import { b2Transform, XY } from "Common/b2Math";
     export interface RGB {
         r: number;
         g: number;
@@ -339,7 +339,7 @@ declare module "Box2D/Box2D/Common/b2Draw" {
         DrawTransform(xf: b2Transform): void;
     }
 }
-declare module "Box2D/Box2D/Common/b2Timer" {
+declare module "Common/b2Timer" {
     export class b2Timer {
         m_start: number;
         Reset(): b2Timer;
@@ -359,7 +359,7 @@ declare module "Box2D/Box2D/Common/b2Timer" {
         Decrement(): void;
     }
 }
-declare module "Box2D/Box2D/Common/b2GrowableStack" {
+declare module "Common/b2GrowableStack" {
     export class b2GrowableStack<T> {
         m_stack: Array<T | null>;
         m_count: number;
@@ -370,17 +370,17 @@ declare module "Box2D/Box2D/Common/b2GrowableStack" {
         GetCount(): number;
     }
 }
-declare module "Box2D/Box2D/Common/b2BlockAllocator" {
+declare module "Common/b2BlockAllocator" {
     export class b2BlockAllocator {
     }
 }
-declare module "Box2D/Box2D/Common/b2StackAllocator" {
+declare module "Common/b2StackAllocator" {
     export class b2StackAllocator {
     }
 }
-declare module "Box2D/Box2D/Collision/b2Distance" {
-    import { b2Vec2, b2Transform } from "Box2D/Box2D/Common/b2Math";
-    import { b2Shape } from "Box2D/Box2D/Collision/Shapes/b2Shape";
+declare module "Collision/b2Distance" {
+    import { b2Vec2, b2Transform } from "Common/b2Math";
+    import { b2Shape } from "Collision/Shapes/b2Shape";
     export class b2DistanceProxy {
         m_buffer: b2Vec2[];
         m_vertices: b2Vec2[];
@@ -449,10 +449,10 @@ declare module "Box2D/Box2D/Collision/b2Distance" {
     }
     export function b2Distance(output: b2DistanceOutput, cache: b2SimplexCache, input: b2DistanceInput): void;
 }
-declare module "Box2D/Box2D/Collision/Shapes/b2Shape" {
-    import { b2Vec2, b2Transform } from "Box2D/Box2D/Common/b2Math";
-    import { b2AABB, b2RayCastInput, b2RayCastOutput } from "Box2D/Box2D/Collision/b2Collision";
-    import { b2DistanceProxy } from "Box2D/Box2D/Collision/b2Distance";
+declare module "Collision/Shapes/b2Shape" {
+    import { b2Vec2, b2Transform } from "Common/b2Math";
+    import { b2AABB, b2RayCastInput, b2RayCastOutput } from "Collision/b2Collision";
+    import { b2DistanceProxy } from "Collision/b2Distance";
     export class b2MassData {
         mass: number;
         readonly center: b2Vec2;
@@ -484,9 +484,9 @@ declare module "Box2D/Box2D/Collision/Shapes/b2Shape" {
         abstract Dump(log: (format: string, ...args: any[]) => void): void;
     }
 }
-declare module "Box2D/Box2D/Collision/b2Collision" {
-    import { b2Vec2, b2Transform } from "Box2D/Box2D/Common/b2Math";
-    import { b2Shape } from "Box2D/Box2D/Collision/Shapes/b2Shape";
+declare module "Collision/b2Collision" {
+    import { b2Vec2, b2Transform } from "Common/b2Math";
+    import { b2Shape } from "Collision/Shapes/b2Shape";
     export enum b2ContactFeatureType {
         e_vertex = 0,
         e_face = 1,
@@ -593,10 +593,10 @@ declare module "Box2D/Box2D/Collision/b2Collision" {
     export function b2ClipSegmentToLine(vOut: b2ClipVertex[], vIn: b2ClipVertex[], normal: b2Vec2, offset: number, vertexIndexA: number): number;
     export function b2TestOverlapShape(shapeA: b2Shape, indexA: number, shapeB: b2Shape, indexB: number, xfA: b2Transform, xfB: b2Transform): boolean;
 }
-declare module "Box2D/Box2D/Collision/b2DynamicTree" {
-    import { b2Vec2, XY } from "Box2D/Box2D/Common/b2Math";
-    import { b2GrowableStack } from "Box2D/Box2D/Common/b2GrowableStack";
-    import { b2AABB, b2RayCastInput } from "Box2D/Box2D/Collision/b2Collision";
+declare module "Collision/b2DynamicTree" {
+    import { b2Vec2, XY } from "Common/b2Math";
+    import { b2GrowableStack } from "Common/b2GrowableStack";
+    import { b2AABB, b2RayCastInput } from "Collision/b2Collision";
     export class b2TreeNode {
         m_id: number;
         readonly aabb: b2AABB;
@@ -649,9 +649,9 @@ declare module "Box2D/Box2D/Collision/b2DynamicTree" {
         ShiftOrigin(newOrigin: XY): void;
     }
 }
-declare module "Box2D/Box2D/Collision/b2TimeOfImpact" {
-    import { b2Vec2, b2Sweep } from "Box2D/Box2D/Common/b2Math";
-    import { b2DistanceProxy, b2SimplexCache } from "Box2D/Box2D/Collision/b2Distance";
+declare module "Collision/b2TimeOfImpact" {
+    import { b2Vec2, b2Sweep } from "Common/b2Math";
+    import { b2DistanceProxy, b2SimplexCache } from "Collision/b2Distance";
     export let b2_toiTime: number;
     export let b2_toiMaxTime: number;
     export let b2_toiCalls: number;
@@ -698,8 +698,8 @@ declare module "Box2D/Box2D/Collision/b2TimeOfImpact" {
     }
     export function b2TimeOfImpact(output: b2TOIOutput, input: b2TOIInput): void;
 }
-declare module "Box2D/Box2D/Dynamics/b2TimeStep" {
-    import { b2Vec2 } from "Box2D/Box2D/Common/b2Math";
+declare module "Dynamics/b2TimeStep" {
+    import { b2Vec2 } from "Common/b2Math";
     export class b2Profile {
         step: number;
         collide: number;
@@ -737,10 +737,10 @@ declare module "Box2D/Box2D/Dynamics/b2TimeStep" {
         velocities: b2Velocity[];
     }
 }
-declare module "Box2D/Box2D/Dynamics/Joints/b2Joint" {
-    import { b2Vec2, XY } from "Box2D/Box2D/Common/b2Math";
-    import { b2Body } from "Box2D/Box2D/Dynamics/b2Body";
-    import { b2SolverData } from "Box2D/Box2D/Dynamics/b2TimeStep";
+declare module "Dynamics/Joints/b2Joint" {
+    import { b2Vec2, XY } from "Common/b2Math";
+    import { b2Body } from "Dynamics/b2Body";
+    import { b2SolverData } from "Dynamics/b2TimeStep";
     export enum b2JointType {
         e_unknownJoint = 0,
         e_revoluteJoint = 1,
@@ -823,13 +823,13 @@ declare module "Box2D/Box2D/Dynamics/Joints/b2Joint" {
         abstract SolvePositionConstraints(data: b2SolverData): boolean;
     }
 }
-declare module "Box2D/Box2D/Dynamics/b2Fixture" {
-    import { b2Vec2, b2Transform } from "Box2D/Box2D/Common/b2Math";
-    import { b2BroadPhase } from "Box2D/Box2D/Collision/b2BroadPhase";
-    import { b2AABB, b2RayCastInput, b2RayCastOutput } from "Box2D/Box2D/Collision/b2Collision";
-    import { b2TreeNode } from "Box2D/Box2D/Collision/b2DynamicTree";
-    import { b2Shape, b2ShapeType, b2MassData } from "Box2D/Box2D/Collision/Shapes/b2Shape";
-    import { b2Body } from "Box2D/Box2D/Dynamics/b2Body";
+declare module "Dynamics/b2Fixture" {
+    import { b2Vec2, b2Transform } from "Common/b2Math";
+    import { b2BroadPhase } from "Collision/b2BroadPhase";
+    import { b2AABB, b2RayCastInput, b2RayCastOutput } from "Collision/b2Collision";
+    import { b2TreeNode } from "Collision/b2DynamicTree";
+    import { b2Shape, b2ShapeType, b2MassData } from "Collision/Shapes/b2Shape";
+    import { b2Body } from "Dynamics/b2Body";
     export interface b2IFilter {
         categoryBits: number;
         maskBits: number;
@@ -914,12 +914,12 @@ declare module "Box2D/Box2D/Dynamics/b2Fixture" {
         Synchronize(broadPhase: b2BroadPhase, transform1: b2Transform, transform2: b2Transform): void;
     }
 }
-declare module "Box2D/Box2D/Collision/Shapes/b2EdgeShape" {
-    import { b2Vec2, b2Transform, XY } from "Box2D/Box2D/Common/b2Math";
-    import { b2AABB, b2RayCastInput, b2RayCastOutput } from "Box2D/Box2D/Collision/b2Collision";
-    import { b2DistanceProxy } from "Box2D/Box2D/Collision/b2Distance";
-    import { b2MassData } from "Box2D/Box2D/Collision/Shapes/b2Shape";
-    import { b2Shape } from "Box2D/Box2D/Collision/Shapes/b2Shape";
+declare module "Collision/Shapes/b2EdgeShape" {
+    import { b2Vec2, b2Transform, XY } from "Common/b2Math";
+    import { b2AABB, b2RayCastInput, b2RayCastOutput } from "Collision/b2Collision";
+    import { b2DistanceProxy } from "Collision/b2Distance";
+    import { b2MassData } from "Collision/Shapes/b2Shape";
+    import { b2Shape } from "Collision/Shapes/b2Shape";
     export class b2EdgeShape extends b2Shape {
         readonly m_vertex1: b2Vec2;
         readonly m_vertex2: b2Vec2;
@@ -954,13 +954,13 @@ declare module "Box2D/Box2D/Collision/Shapes/b2EdgeShape" {
         Dump(log: (format: string, ...args: any[]) => void): void;
     }
 }
-declare module "Box2D/Box2D/Collision/Shapes/b2ChainShape" {
-    import { b2Vec2, b2Transform, XY } from "Box2D/Box2D/Common/b2Math";
-    import { b2AABB, b2RayCastInput, b2RayCastOutput } from "Box2D/Box2D/Collision/b2Collision";
-    import { b2DistanceProxy } from "Box2D/Box2D/Collision/b2Distance";
-    import { b2MassData } from "Box2D/Box2D/Collision/Shapes/b2Shape";
-    import { b2Shape } from "Box2D/Box2D/Collision/Shapes/b2Shape";
-    import { b2EdgeShape } from "Box2D/Box2D/Collision/Shapes/b2EdgeShape";
+declare module "Collision/Shapes/b2ChainShape" {
+    import { b2Vec2, b2Transform, XY } from "Common/b2Math";
+    import { b2AABB, b2RayCastInput, b2RayCastOutput } from "Collision/b2Collision";
+    import { b2DistanceProxy } from "Collision/b2Distance";
+    import { b2MassData } from "Collision/Shapes/b2Shape";
+    import { b2Shape } from "Collision/Shapes/b2Shape";
+    import { b2EdgeShape } from "Collision/Shapes/b2EdgeShape";
     export class b2ChainShape extends b2Shape {
         m_vertices: b2Vec2[];
         m_count: number;
@@ -991,12 +991,12 @@ declare module "Box2D/Box2D/Collision/Shapes/b2ChainShape" {
         Dump(log: (format: string, ...args: any[]) => void): void;
     }
 }
-declare module "Box2D/Box2D/Collision/Shapes/b2CircleShape" {
-    import { b2Vec2, b2Transform, XY } from "Box2D/Box2D/Common/b2Math";
-    import { b2AABB, b2RayCastInput, b2RayCastOutput } from "Box2D/Box2D/Collision/b2Collision";
-    import { b2DistanceProxy } from "Box2D/Box2D/Collision/b2Distance";
-    import { b2MassData } from "Box2D/Box2D/Collision/Shapes/b2Shape";
-    import { b2Shape } from "Box2D/Box2D/Collision/Shapes/b2Shape";
+declare module "Collision/Shapes/b2CircleShape" {
+    import { b2Vec2, b2Transform, XY } from "Common/b2Math";
+    import { b2AABB, b2RayCastInput, b2RayCastOutput } from "Collision/b2Collision";
+    import { b2DistanceProxy } from "Collision/b2Distance";
+    import { b2MassData } from "Collision/Shapes/b2Shape";
+    import { b2Shape } from "Collision/Shapes/b2Shape";
     export class b2CircleShape extends b2Shape {
         readonly m_p: b2Vec2;
         constructor(radius?: number);
@@ -1021,12 +1021,12 @@ declare module "Box2D/Box2D/Collision/Shapes/b2CircleShape" {
         Dump(log: (format: string, ...args: any[]) => void): void;
     }
 }
-declare module "Box2D/Box2D/Collision/Shapes/b2PolygonShape" {
-    import { b2Vec2, b2Transform, XY } from "Box2D/Box2D/Common/b2Math";
-    import { b2AABB, b2RayCastInput, b2RayCastOutput } from "Box2D/Box2D/Collision/b2Collision";
-    import { b2DistanceProxy } from "Box2D/Box2D/Collision/b2Distance";
-    import { b2MassData } from "Box2D/Box2D/Collision/Shapes/b2Shape";
-    import { b2Shape } from "Box2D/Box2D/Collision/Shapes/b2Shape";
+declare module "Collision/Shapes/b2PolygonShape" {
+    import { b2Vec2, b2Transform, XY } from "Common/b2Math";
+    import { b2AABB, b2RayCastInput, b2RayCastOutput } from "Collision/b2Collision";
+    import { b2DistanceProxy } from "Collision/b2Distance";
+    import { b2MassData } from "Collision/Shapes/b2Shape";
+    import { b2Shape } from "Collision/Shapes/b2Shape";
     export class b2PolygonShape extends b2Shape {
         readonly m_centroid: b2Vec2;
         m_vertices: b2Vec2[];
@@ -1079,11 +1079,11 @@ declare module "Box2D/Box2D/Collision/Shapes/b2PolygonShape" {
         static ComputeCentroid(vs: b2Vec2[], count: number, out: b2Vec2): b2Vec2;
     }
 }
-declare module "Box2D/Box2D/Dynamics/Joints/b2DistanceJoint" {
-    import { b2Vec2, b2Rot, XY } from "Box2D/Box2D/Common/b2Math";
-    import { b2Joint, b2JointDef, b2IJointDef } from "Box2D/Box2D/Dynamics/Joints/b2Joint";
-    import { b2SolverData } from "Box2D/Box2D/Dynamics/b2TimeStep";
-    import { b2Body } from "Box2D/Box2D/Dynamics/b2Body";
+declare module "Dynamics/Joints/b2DistanceJoint" {
+    import { b2Vec2, b2Rot, XY } from "Common/b2Math";
+    import { b2Joint, b2JointDef, b2IJointDef } from "Dynamics/Joints/b2Joint";
+    import { b2SolverData } from "Dynamics/b2TimeStep";
+    import { b2Body } from "Dynamics/b2Body";
     export interface b2IDistanceJointDef extends b2IJointDef {
         localAnchorA: XY;
         localAnchorB: XY;
@@ -1149,12 +1149,12 @@ declare module "Box2D/Box2D/Dynamics/Joints/b2DistanceJoint" {
         SolvePositionConstraints(data: b2SolverData): boolean;
     }
 }
-declare module "Box2D/Box2D/Dynamics/Joints/b2AreaJoint" {
-    import { b2Vec2, XY } from "Box2D/Box2D/Common/b2Math";
-    import { b2Joint, b2JointDef, b2IJointDef } from "Box2D/Box2D/Dynamics/Joints/b2Joint";
-    import { b2DistanceJoint } from "Box2D/Box2D/Dynamics/Joints/b2DistanceJoint";
-    import { b2SolverData } from "Box2D/Box2D/Dynamics/b2TimeStep";
-    import { b2Body } from "Box2D/Box2D/Dynamics/b2Body";
+declare module "Dynamics/Joints/b2AreaJoint" {
+    import { b2Vec2, XY } from "Common/b2Math";
+    import { b2Joint, b2JointDef, b2IJointDef } from "Dynamics/Joints/b2Joint";
+    import { b2DistanceJoint } from "Dynamics/Joints/b2DistanceJoint";
+    import { b2SolverData } from "Dynamics/b2TimeStep";
+    import { b2Body } from "Dynamics/b2Body";
     export interface b2IAreaJointDef extends b2IJointDef {
         bodies: b2Body[];
         frequencyHz?: number;
@@ -1193,11 +1193,11 @@ declare module "Box2D/Box2D/Dynamics/Joints/b2AreaJoint" {
         SolvePositionConstraints(data: b2SolverData): boolean;
     }
 }
-declare module "Box2D/Box2D/Dynamics/Joints/b2FrictionJoint" {
-    import { b2Vec2, b2Mat22, b2Rot, XY } from "Box2D/Box2D/Common/b2Math";
-    import { b2Joint, b2JointDef, b2IJointDef } from "Box2D/Box2D/Dynamics/Joints/b2Joint";
-    import { b2SolverData } from "Box2D/Box2D/Dynamics/b2TimeStep";
-    import { b2Body } from "Box2D/Box2D/Dynamics/b2Body";
+declare module "Dynamics/Joints/b2FrictionJoint" {
+    import { b2Vec2, b2Mat22, b2Rot, XY } from "Common/b2Math";
+    import { b2Joint, b2JointDef, b2IJointDef } from "Dynamics/Joints/b2Joint";
+    import { b2SolverData } from "Dynamics/b2TimeStep";
+    import { b2Body } from "Dynamics/b2Body";
     export interface b2IFrictionJointDef extends b2IJointDef {
         localAnchorA: XY;
         localAnchorB: XY;
@@ -1256,11 +1256,11 @@ declare module "Box2D/Box2D/Dynamics/Joints/b2FrictionJoint" {
         Dump(log: (format: string, ...args: any[]) => void): void;
     }
 }
-declare module "Box2D/Box2D/Dynamics/Joints/b2PrismaticJoint" {
-    import { b2Vec2, b2Mat22, b2Vec3, b2Mat33, b2Rot, XY } from "Box2D/Box2D/Common/b2Math";
-    import { b2Body } from "Box2D/Box2D/Dynamics/b2Body";
-    import { b2Joint, b2JointDef, b2LimitState, b2IJointDef } from "Box2D/Box2D/Dynamics/Joints/b2Joint";
-    import { b2SolverData } from "Box2D/Box2D/Dynamics/b2TimeStep";
+declare module "Dynamics/Joints/b2PrismaticJoint" {
+    import { b2Vec2, b2Mat22, b2Vec3, b2Mat33, b2Rot, XY } from "Common/b2Math";
+    import { b2Body } from "Dynamics/b2Body";
+    import { b2Joint, b2JointDef, b2LimitState, b2IJointDef } from "Dynamics/Joints/b2Joint";
+    import { b2SolverData } from "Dynamics/b2TimeStep";
     export interface b2IPrismaticJointDef extends b2IJointDef {
         localAnchorA?: XY;
         localAnchorB?: XY;
@@ -1370,11 +1370,11 @@ declare module "Box2D/Box2D/Dynamics/Joints/b2PrismaticJoint" {
         Dump(log: (format: string, ...args: any[]) => void): void;
     }
 }
-declare module "Box2D/Box2D/Dynamics/Joints/b2RevoluteJoint" {
-    import { b2Vec2, b2Mat22, b2Vec3, b2Mat33, b2Rot, XY } from "Box2D/Box2D/Common/b2Math";
-    import { b2Body } from "Box2D/Box2D/Dynamics/b2Body";
-    import { b2Joint, b2JointDef, b2LimitState, b2IJointDef } from "Box2D/Box2D/Dynamics/Joints/b2Joint";
-    import { b2SolverData } from "Box2D/Box2D/Dynamics/b2TimeStep";
+declare module "Dynamics/Joints/b2RevoluteJoint" {
+    import { b2Vec2, b2Mat22, b2Vec3, b2Mat33, b2Rot, XY } from "Common/b2Math";
+    import { b2Body } from "Dynamics/b2Body";
+    import { b2Joint, b2JointDef, b2LimitState, b2IJointDef } from "Dynamics/Joints/b2Joint";
+    import { b2SolverData } from "Dynamics/b2TimeStep";
     export interface b2IRevoluteJointDef extends b2IJointDef {
         localAnchorA?: XY;
         localAnchorB?: XY;
@@ -1466,11 +1466,11 @@ declare module "Box2D/Box2D/Dynamics/Joints/b2RevoluteJoint" {
         Dump(log: (format: string, ...args: any[]) => void): void;
     }
 }
-declare module "Box2D/Box2D/Dynamics/Joints/b2GearJoint" {
-    import { b2Vec2, b2Rot, XY } from "Box2D/Box2D/Common/b2Math";
-    import { b2Joint, b2JointDef, b2JointType, b2IJointDef } from "Box2D/Box2D/Dynamics/Joints/b2Joint";
-    import { b2SolverData } from "Box2D/Box2D/Dynamics/b2TimeStep";
-    import { b2Body } from "Box2D/Box2D/Dynamics/b2Body";
+declare module "Dynamics/Joints/b2GearJoint" {
+    import { b2Vec2, b2Rot, XY } from "Common/b2Math";
+    import { b2Joint, b2JointDef, b2JointType, b2IJointDef } from "Dynamics/Joints/b2Joint";
+    import { b2SolverData } from "Dynamics/b2TimeStep";
+    import { b2Body } from "Dynamics/b2Body";
     export interface b2IGearJointDef extends b2IJointDef {
         joint1: b2Joint;
         joint2: b2Joint;
@@ -1556,11 +1556,11 @@ declare module "Box2D/Box2D/Dynamics/Joints/b2GearJoint" {
         Dump(log: (format: string, ...args: any[]) => void): void;
     }
 }
-declare module "Box2D/Box2D/Dynamics/Joints/b2MotorJoint" {
-    import { b2Vec2, b2Mat22, b2Rot, XY } from "Box2D/Box2D/Common/b2Math";
-    import { b2Body } from "Box2D/Box2D/Dynamics/b2Body";
-    import { b2Joint, b2JointDef, b2IJointDef } from "Box2D/Box2D/Dynamics/Joints/b2Joint";
-    import { b2SolverData } from "Box2D/Box2D/Dynamics/b2TimeStep";
+declare module "Dynamics/Joints/b2MotorJoint" {
+    import { b2Vec2, b2Mat22, b2Rot, XY } from "Common/b2Math";
+    import { b2Body } from "Dynamics/b2Body";
+    import { b2Joint, b2JointDef, b2IJointDef } from "Dynamics/Joints/b2Joint";
+    import { b2SolverData } from "Dynamics/b2TimeStep";
     export interface b2IMotorJointDef extends b2IJointDef {
         linearOffset?: XY;
         angularOffset?: number;
@@ -1624,10 +1624,10 @@ declare module "Box2D/Box2D/Dynamics/Joints/b2MotorJoint" {
         Dump(log: (format: string, ...args: any[]) => void): void;
     }
 }
-declare module "Box2D/Box2D/Dynamics/Joints/b2MouseJoint" {
-    import { b2Vec2, b2Mat22, b2Rot, XY } from "Box2D/Box2D/Common/b2Math";
-    import { b2Joint, b2JointDef, b2IJointDef } from "Box2D/Box2D/Dynamics/Joints/b2Joint";
-    import { b2SolverData } from "Box2D/Box2D/Dynamics/b2TimeStep";
+declare module "Dynamics/Joints/b2MouseJoint" {
+    import { b2Vec2, b2Mat22, b2Rot, XY } from "Common/b2Math";
+    import { b2Joint, b2JointDef, b2IJointDef } from "Dynamics/Joints/b2Joint";
+    import { b2SolverData } from "Dynamics/b2TimeStep";
     export interface b2IMouseJointDef extends b2IJointDef {
         target?: XY;
         maxForce?: number;
@@ -1684,11 +1684,11 @@ declare module "Box2D/Box2D/Dynamics/Joints/b2MouseJoint" {
         ShiftOrigin(newOrigin: b2Vec2): void;
     }
 }
-declare module "Box2D/Box2D/Dynamics/Joints/b2PulleyJoint" {
-    import { b2Vec2, b2Rot, XY } from "Box2D/Box2D/Common/b2Math";
-    import { b2Body } from "Box2D/Box2D/Dynamics/b2Body";
-    import { b2Joint, b2JointDef, b2IJointDef } from "Box2D/Box2D/Dynamics/Joints/b2Joint";
-    import { b2SolverData } from "Box2D/Box2D/Dynamics/b2TimeStep";
+declare module "Dynamics/Joints/b2PulleyJoint" {
+    import { b2Vec2, b2Rot, XY } from "Common/b2Math";
+    import { b2Body } from "Dynamics/b2Body";
+    import { b2Joint, b2JointDef, b2IJointDef } from "Dynamics/Joints/b2Joint";
+    import { b2SolverData } from "Dynamics/b2TimeStep";
     export const b2_minPulleyLength: number;
     export interface b2IPulleyJointDef extends b2IJointDef {
         groundAnchorA?: XY;
@@ -1766,10 +1766,10 @@ declare module "Box2D/Box2D/Dynamics/Joints/b2PulleyJoint" {
         ShiftOrigin(newOrigin: b2Vec2): void;
     }
 }
-declare module "Box2D/Box2D/Dynamics/Joints/b2RopeJoint" {
-    import { b2Vec2, b2Rot, XY } from "Box2D/Box2D/Common/b2Math";
-    import { b2Joint, b2JointDef, b2LimitState, b2IJointDef } from "Box2D/Box2D/Dynamics/Joints/b2Joint";
-    import { b2SolverData } from "Box2D/Box2D/Dynamics/b2TimeStep";
+declare module "Dynamics/Joints/b2RopeJoint" {
+    import { b2Vec2, b2Rot, XY } from "Common/b2Math";
+    import { b2Joint, b2JointDef, b2LimitState, b2IJointDef } from "Dynamics/Joints/b2Joint";
+    import { b2SolverData } from "Dynamics/b2TimeStep";
     export interface b2IRopeJointDef extends b2IJointDef {
         localAnchorA?: XY;
         localAnchorB?: XY;
@@ -1825,11 +1825,11 @@ declare module "Box2D/Box2D/Dynamics/Joints/b2RopeJoint" {
         Dump(log: (format: string, ...args: any[]) => void): void;
     }
 }
-declare module "Box2D/Box2D/Dynamics/Joints/b2WeldJoint" {
-    import { b2Vec2, b2Vec3, b2Mat33, b2Rot, XY } from "Box2D/Box2D/Common/b2Math";
-    import { b2Body } from "Box2D/Box2D/Dynamics/b2Body";
-    import { b2Joint, b2JointDef, b2IJointDef } from "Box2D/Box2D/Dynamics/Joints/b2Joint";
-    import { b2SolverData } from "Box2D/Box2D/Dynamics/b2TimeStep";
+declare module "Dynamics/Joints/b2WeldJoint" {
+    import { b2Vec2, b2Vec3, b2Mat33, b2Rot, XY } from "Common/b2Math";
+    import { b2Body } from "Dynamics/b2Body";
+    import { b2Joint, b2JointDef, b2IJointDef } from "Dynamics/Joints/b2Joint";
+    import { b2SolverData } from "Dynamics/b2TimeStep";
     export interface b2IWeldJointDef extends b2IJointDef {
         localAnchorA?: XY;
         localAnchorB?: XY;
@@ -1897,11 +1897,11 @@ declare module "Box2D/Box2D/Dynamics/Joints/b2WeldJoint" {
         Dump(log: (format: string, ...args: any[]) => void): void;
     }
 }
-declare module "Box2D/Box2D/Dynamics/Joints/b2WheelJoint" {
-    import { b2Vec2, b2Rot, XY } from "Box2D/Box2D/Common/b2Math";
-    import { b2Joint, b2JointDef, b2IJointDef } from "Box2D/Box2D/Dynamics/Joints/b2Joint";
-    import { b2SolverData } from "Box2D/Box2D/Dynamics/b2TimeStep";
-    import { b2Body } from "Box2D/Box2D/Dynamics/b2Body";
+declare module "Dynamics/Joints/b2WheelJoint" {
+    import { b2Vec2, b2Rot, XY } from "Common/b2Math";
+    import { b2Joint, b2JointDef, b2IJointDef } from "Dynamics/Joints/b2Joint";
+    import { b2SolverData } from "Dynamics/b2TimeStep";
+    import { b2Body } from "Dynamics/b2Body";
     export interface b2IWheelJointDef extends b2IJointDef {
         localAnchorA?: XY;
         localAnchorB?: XY;
@@ -1999,18 +1999,18 @@ declare module "Box2D/Box2D/Dynamics/Joints/b2WheelJoint" {
         Dump(log: (format: string, ...args: any[]) => void): void;
     }
 }
-declare module "Box2D/Box2D/Dynamics/Joints/b2JointFactory" {
-    import { b2Joint, b2IJointDef } from "Box2D/Box2D/Dynamics/Joints/b2Joint";
+declare module "Dynamics/Joints/b2JointFactory" {
+    import { b2Joint, b2IJointDef } from "Dynamics/Joints/b2Joint";
     export class b2JointFactory {
         static Create(def: b2IJointDef, allocator: any): b2Joint;
         static Destroy(joint: b2Joint, allocator: any): void;
     }
 }
-declare module "Box2D/Box2D/Dynamics/Contacts/b2ContactSolver" {
-    import { b2Vec2, b2Mat22, b2Transform } from "Box2D/Box2D/Common/b2Math";
-    import { b2ManifoldType } from "Box2D/Box2D/Collision/b2Collision";
-    import { b2Contact } from "Box2D/Box2D/Dynamics/Contacts/b2Contact";
-    import { b2TimeStep, b2Position, b2Velocity } from "Box2D/Box2D/Dynamics/b2TimeStep";
+declare module "Dynamics/Contacts/b2ContactSolver" {
+    import { b2Vec2, b2Mat22, b2Transform } from "Common/b2Math";
+    import { b2ManifoldType } from "Collision/b2Collision";
+    import { b2Contact } from "Dynamics/Contacts/b2Contact";
+    import { b2TimeStep, b2Position, b2Velocity } from "Dynamics/b2TimeStep";
     export class b2VelocityConstraintPoint {
         readonly rA: b2Vec2;
         readonly rB: b2Vec2;
@@ -2121,10 +2121,10 @@ declare module "Box2D/Box2D/Dynamics/Contacts/b2ContactSolver" {
         SolveTOIPositionConstraints(toiIndexA: number, toiIndexB: number): boolean;
     }
 }
-declare module "Box2D/Box2D/Particle/b2Particle" {
-    import { b2Vec2, XY } from "Box2D/Box2D/Common/b2Math";
-    import { b2Color, RGBA } from "Box2D/Box2D/Common/b2Draw";
-    import { b2ParticleGroup } from "Box2D/Box2D/Particle/b2ParticleGroup";
+declare module "Particle/b2Particle" {
+    import { b2Vec2, XY } from "Common/b2Math";
+    import { b2Color, RGBA } from "Common/b2Draw";
+    import { b2ParticleGroup } from "Particle/b2ParticleGroup";
     export enum b2ParticleFlag {
         b2_waterParticle = 0,
         b2_zombieParticle = 2,
@@ -2170,7 +2170,7 @@ declare module "Box2D/Box2D/Particle/b2Particle" {
         SetIndex(index: number): void;
     }
 }
-declare module "Box2D/Box2D/Particle/b2StackQueue" {
+declare module "Particle/b2StackQueue" {
     export class b2StackQueue<T> {
         m_buffer: Array<T | null>;
         m_front: number;
@@ -2183,8 +2183,8 @@ declare module "Box2D/Box2D/Particle/b2StackQueue" {
         Front(): T;
     }
 }
-declare module "Box2D/Box2D/Particle/b2VoronoiDiagram" {
-    import { b2Vec2 } from "Box2D/Box2D/Common/b2Math";
+declare module "Particle/b2VoronoiDiagram" {
+    import { b2Vec2 } from "Common/b2Math";
     export class b2VoronoiDiagram {
         m_generatorBuffer: b2VoronoiDiagram.Generator[];
         m_generatorCapacity: number;
@@ -2213,20 +2213,20 @@ declare module "Box2D/Box2D/Particle/b2VoronoiDiagram" {
         }
     }
 }
-declare module "Box2D/Box2D/Particle/b2ParticleSystem" {
-    import { b2Vec2, b2Rot, b2Transform, XY } from "Box2D/Box2D/Common/b2Math";
-    import { b2Color } from "Box2D/Box2D/Common/b2Draw";
-    import { b2AABB, b2RayCastInput, b2RayCastOutput } from "Box2D/Box2D/Collision/b2Collision";
-    import { b2Shape, b2MassData } from "Box2D/Box2D/Collision/Shapes/b2Shape";
-    import { b2EdgeShape } from "Box2D/Box2D/Collision/Shapes/b2EdgeShape";
-    import { b2TimeStep } from "Box2D/Box2D/Dynamics/b2TimeStep";
-    import { b2Fixture } from "Box2D/Box2D/Dynamics/b2Fixture";
-    import { b2Body } from "Box2D/Box2D/Dynamics/b2Body";
-    import { b2World } from "Box2D/Box2D/Dynamics/b2World";
-    import { b2ContactFilter, b2ContactListener, b2QueryCallback, b2RayCastCallback } from "Box2D/Box2D/Dynamics/b2WorldCallbacks";
-    import { b2ParticleFlag, b2ParticleHandle, b2IParticleDef } from "Box2D/Box2D/Particle/b2Particle";
-    import { b2ParticleGroupFlag, b2ParticleGroup, b2IParticleGroupDef } from "Box2D/Box2D/Particle/b2ParticleGroup";
-    import { b2DistanceProxy } from "Box2D/Box2D/Collision/b2Distance";
+declare module "Particle/b2ParticleSystem" {
+    import { b2Vec2, b2Rot, b2Transform, XY } from "Common/b2Math";
+    import { b2Color } from "Common/b2Draw";
+    import { b2AABB, b2RayCastInput, b2RayCastOutput } from "Collision/b2Collision";
+    import { b2Shape, b2MassData } from "Collision/Shapes/b2Shape";
+    import { b2EdgeShape } from "Collision/Shapes/b2EdgeShape";
+    import { b2TimeStep } from "Dynamics/b2TimeStep";
+    import { b2Fixture } from "Dynamics/b2Fixture";
+    import { b2Body } from "Dynamics/b2Body";
+    import { b2World } from "Dynamics/b2World";
+    import { b2ContactFilter, b2ContactListener, b2QueryCallback, b2RayCastCallback } from "Dynamics/b2WorldCallbacks";
+    import { b2ParticleFlag, b2ParticleHandle, b2IParticleDef } from "Particle/b2Particle";
+    import { b2ParticleGroupFlag, b2ParticleGroup, b2IParticleGroupDef } from "Particle/b2ParticleGroup";
+    import { b2DistanceProxy } from "Collision/b2Distance";
     export class b2GrowableBuffer<T> {
         data: T[];
         count: number;
@@ -2756,12 +2756,12 @@ declare module "Box2D/Box2D/Particle/b2ParticleSystem" {
         }
     }
 }
-declare module "Box2D/Box2D/Particle/b2ParticleGroup" {
-    import { b2Vec2, b2Transform, XY } from "Box2D/Box2D/Common/b2Math";
-    import { b2Color, RGBA } from "Box2D/Box2D/Common/b2Draw";
-    import { b2Shape } from "Box2D/Box2D/Collision/Shapes/b2Shape";
-    import { b2ParticleFlag } from "Box2D/Box2D/Particle/b2Particle";
-    import { b2ParticleSystem } from "Box2D/Box2D/Particle/b2ParticleSystem";
+declare module "Particle/b2ParticleGroup" {
+    import { b2Vec2, b2Transform, XY } from "Common/b2Math";
+    import { b2Color, RGBA } from "Common/b2Draw";
+    import { b2Shape } from "Collision/Shapes/b2Shape";
+    import { b2ParticleFlag } from "Particle/b2Particle";
+    import { b2ParticleSystem } from "Particle/b2ParticleSystem";
     export enum b2ParticleGroupFlag {
         b2_solidParticleGroup = 1,
         b2_rigidParticleGroup = 2,
@@ -2851,14 +2851,14 @@ declare module "Box2D/Box2D/Particle/b2ParticleGroup" {
         UpdateStatistics(): void;
     }
 }
-declare module "Box2D/Box2D/Dynamics/b2WorldCallbacks" {
-    import { b2Vec2 } from "Box2D/Box2D/Common/b2Math";
-    import { b2Manifold } from "Box2D/Box2D/Collision/b2Collision";
-    import { b2Contact } from "Box2D/Box2D/Dynamics/Contacts/b2Contact";
-    import { b2Joint } from "Box2D/Box2D/Dynamics/Joints/b2Joint";
-    import { b2Fixture } from "Box2D/Box2D/Dynamics/b2Fixture";
-    import { b2ParticleGroup } from "Box2D/Box2D/Particle/b2ParticleGroup";
-    import { b2ParticleSystem, b2ParticleContact, b2ParticleBodyContact } from "Box2D/Box2D/Particle/b2ParticleSystem";
+declare module "Dynamics/b2WorldCallbacks" {
+    import { b2Vec2 } from "Common/b2Math";
+    import { b2Manifold } from "Collision/b2Collision";
+    import { b2Contact } from "Dynamics/Contacts/b2Contact";
+    import { b2Joint } from "Dynamics/Joints/b2Joint";
+    import { b2Fixture } from "Dynamics/b2Fixture";
+    import { b2ParticleGroup } from "Particle/b2ParticleGroup";
+    import { b2ParticleSystem, b2ParticleContact, b2ParticleBodyContact } from "Particle/b2ParticleSystem";
     export class b2DestructionListener {
         SayGoodbyeJoint(joint: b2Joint): void;
         SayGoodbyeFixture(fixture: b2Fixture): void;
@@ -2900,14 +2900,14 @@ declare module "Box2D/Box2D/Dynamics/b2WorldCallbacks" {
     }
     export type b2RayCastCallbackFunction = (fixture: b2Fixture, point: b2Vec2, normal: b2Vec2, fraction: number) => number;
 }
-declare module "Box2D/Box2D/Dynamics/b2Island" {
-    import { b2Vec2 } from "Box2D/Box2D/Common/b2Math";
-    import { b2Contact } from "Box2D/Box2D/Dynamics/Contacts/b2Contact";
-    import { b2ContactVelocityConstraint } from "Box2D/Box2D/Dynamics/Contacts/b2ContactSolver";
-    import { b2Joint } from "Box2D/Box2D/Dynamics/Joints/b2Joint";
-    import { b2Body } from "Box2D/Box2D/Dynamics/b2Body";
-    import { b2TimeStep, b2Profile, b2Position, b2Velocity } from "Box2D/Box2D/Dynamics/b2TimeStep";
-    import { b2ContactListener } from "Box2D/Box2D/Dynamics/b2WorldCallbacks";
+declare module "Dynamics/b2Island" {
+    import { b2Vec2 } from "Common/b2Math";
+    import { b2Contact } from "Dynamics/Contacts/b2Contact";
+    import { b2ContactVelocityConstraint } from "Dynamics/Contacts/b2ContactSolver";
+    import { b2Joint } from "Dynamics/Joints/b2Joint";
+    import { b2Body } from "Dynamics/b2Body";
+    import { b2TimeStep, b2Profile, b2Position, b2Velocity } from "Dynamics/b2TimeStep";
+    import { b2ContactListener } from "Dynamics/b2WorldCallbacks";
     export class b2Island {
         m_allocator: any;
         m_listener: b2ContactListener;
@@ -2938,8 +2938,10 @@ declare module "Box2D/Box2D/Dynamics/b2Island" {
         Report(constraints: b2ContactVelocityConstraint[]): void;
     }
 }
-declare module "Contributions/Enhancements/Controllers/b2Controller" {
-    import { b2TimeStep, b2Draw, b2Body } from "Box2D/Box2D/Box2D";
+declare module "Controllers/b2Controller" {
+    import { b2Body } from "Dynamics/b2Body";
+    import { b2TimeStep } from "Dynamics/b2TimeStep";
+    import { b2Draw } from "Common/b2Draw";
     export class b2ControllerEdge {
         controller: b2Controller;
         body: b2Body;
@@ -2964,25 +2966,25 @@ declare module "Contributions/Enhancements/Controllers/b2Controller" {
         Clear(): void;
     }
 }
-declare module "Box2D/Box2D/Dynamics/b2World" {
-    import { b2Vec2, b2Transform, XY } from "Box2D/Box2D/Common/b2Math";
-    import { b2Color, b2Draw } from "Box2D/Box2D/Common/b2Draw";
-    import { b2AABB } from "Box2D/Box2D/Collision/b2Collision";
-    import { b2Shape } from "Box2D/Box2D/Collision/Shapes/b2Shape";
-    import { b2Contact } from "Box2D/Box2D/Dynamics/Contacts/b2Contact";
-    import { b2Joint, b2JointDef } from "Box2D/Box2D/Dynamics/Joints/b2Joint";
-    import { b2Body, b2IBodyDef } from "Box2D/Box2D/Dynamics/b2Body";
-    import { b2ContactManager } from "Box2D/Box2D/Dynamics/b2ContactManager";
-    import { b2Fixture } from "Box2D/Box2D/Dynamics/b2Fixture";
-    import { b2Island } from "Box2D/Box2D/Dynamics/b2Island";
-    import { b2Profile, b2TimeStep } from "Box2D/Box2D/Dynamics/b2TimeStep";
-    import { b2ContactFilter } from "Box2D/Box2D/Dynamics/b2WorldCallbacks";
-    import { b2ContactListener } from "Box2D/Box2D/Dynamics/b2WorldCallbacks";
-    import { b2DestructionListener } from "Box2D/Box2D/Dynamics/b2WorldCallbacks";
-    import { b2QueryCallback, b2QueryCallbackFunction } from "Box2D/Box2D/Dynamics/b2WorldCallbacks";
-    import { b2RayCastCallback, b2RayCastCallbackFunction } from "Box2D/Box2D/Dynamics/b2WorldCallbacks";
-    import { b2ParticleSystemDef, b2ParticleSystem } from "Box2D/Box2D/Particle/b2ParticleSystem";
-    import { b2Controller } from "Contributions/Enhancements/Controllers/b2Controller";
+declare module "Dynamics/b2World" {
+    import { b2Vec2, b2Transform, XY } from "Common/b2Math";
+    import { b2Color, b2Draw } from "Common/b2Draw";
+    import { b2AABB } from "Collision/b2Collision";
+    import { b2Shape } from "Collision/Shapes/b2Shape";
+    import { b2Contact } from "Dynamics/Contacts/b2Contact";
+    import { b2Joint, b2JointDef } from "Dynamics/Joints/b2Joint";
+    import { b2Body, b2IBodyDef } from "Dynamics/b2Body";
+    import { b2ContactManager } from "Dynamics/b2ContactManager";
+    import { b2Fixture } from "Dynamics/b2Fixture";
+    import { b2Island } from "Dynamics/b2Island";
+    import { b2Profile, b2TimeStep } from "Dynamics/b2TimeStep";
+    import { b2ContactFilter } from "Dynamics/b2WorldCallbacks";
+    import { b2ContactListener } from "Dynamics/b2WorldCallbacks";
+    import { b2DestructionListener } from "Dynamics/b2WorldCallbacks";
+    import { b2QueryCallback, b2QueryCallbackFunction } from "Dynamics/b2WorldCallbacks";
+    import { b2RayCastCallback, b2RayCastCallbackFunction } from "Dynamics/b2WorldCallbacks";
+    import { b2ParticleSystemDef, b2ParticleSystem } from "Particle/b2ParticleSystem";
+    import { b2Controller } from "Controllers/b2Controller";
     export class b2World {
         m_newFixture: boolean;
         m_locked: boolean;
@@ -3085,14 +3087,14 @@ declare module "Box2D/Box2D/Dynamics/b2World" {
         RemoveController(controller: b2Controller): b2Controller;
     }
 }
-declare module "Box2D/Box2D/Dynamics/b2Body" {
-    import { b2Vec2, b2Transform, b2Sweep, XY } from "Box2D/Box2D/Common/b2Math";
-    import { b2Shape, b2MassData } from "Box2D/Box2D/Collision/Shapes/b2Shape";
-    import { b2ContactEdge } from "Box2D/Box2D/Dynamics/Contacts/b2Contact";
-    import { b2JointEdge } from "Box2D/Box2D/Dynamics/Joints/b2Joint";
-    import { b2Fixture, b2IFixtureDef } from "Box2D/Box2D/Dynamics/b2Fixture";
-    import { b2World } from "Box2D/Box2D/Dynamics/b2World";
-    import { b2ControllerEdge } from "Contributions/Enhancements/Controllers/b2Controller";
+declare module "Dynamics/b2Body" {
+    import { b2Vec2, b2Transform, b2Sweep, XY } from "Common/b2Math";
+    import { b2Shape, b2MassData } from "Collision/Shapes/b2Shape";
+    import { b2ContactEdge } from "Dynamics/Contacts/b2Contact";
+    import { b2JointEdge } from "Dynamics/Joints/b2Joint";
+    import { b2Fixture, b2IFixtureDef } from "Dynamics/b2Fixture";
+    import { b2World } from "Dynamics/b2World";
+    import { b2ControllerEdge } from "Controllers/b2Controller";
     export enum b2BodyType {
         b2_unknown = -1,
         b2_staticBody = 0,
@@ -3245,12 +3247,12 @@ declare module "Box2D/Box2D/Dynamics/b2Body" {
         GetControllerCount(): number;
     }
 }
-declare module "Box2D/Box2D/Dynamics/Contacts/b2Contact" {
-    import { b2Transform, b2Sweep } from "Box2D/Box2D/Common/b2Math";
-    import { b2Manifold, b2WorldManifold } from "Box2D/Box2D/Collision/b2Collision";
-    import { b2Body } from "Box2D/Box2D/Dynamics/b2Body";
-    import { b2Fixture } from "Box2D/Box2D/Dynamics/b2Fixture";
-    import { b2ContactListener } from "Box2D/Box2D/Dynamics/b2WorldCallbacks";
+declare module "Dynamics/Contacts/b2Contact" {
+    import { b2Transform, b2Sweep } from "Common/b2Math";
+    import { b2Manifold, b2WorldManifold } from "Collision/b2Collision";
+    import { b2Body } from "Dynamics/b2Body";
+    import { b2Fixture } from "Dynamics/b2Fixture";
+    import { b2ContactListener } from "Dynamics/b2WorldCallbacks";
     export function b2MixFriction(friction1: number, friction2: number): number;
     export function b2MixRestitution(restitution1: number, restitution2: number): number;
     export class b2ContactEdge {
@@ -3310,19 +3312,19 @@ declare module "Box2D/Box2D/Dynamics/Contacts/b2Contact" {
         ComputeTOI(sweepA: b2Sweep, sweepB: b2Sweep): number;
     }
 }
-declare module "Box2D/Box2D/Collision/b2CollideCircle" {
-    import { b2Transform } from "Box2D/Box2D/Common/b2Math";
-    import { b2Manifold } from "Box2D/Box2D/Collision/b2Collision";
-    import { b2CircleShape } from "Box2D/Box2D/Collision/Shapes/b2CircleShape";
-    import { b2PolygonShape } from "Box2D/Box2D/Collision/Shapes/b2PolygonShape";
+declare module "Collision/b2CollideCircle" {
+    import { b2Transform } from "Common/b2Math";
+    import { b2Manifold } from "Collision/b2Collision";
+    import { b2CircleShape } from "Collision/Shapes/b2CircleShape";
+    import { b2PolygonShape } from "Collision/Shapes/b2PolygonShape";
     export function b2CollideCircles(manifold: b2Manifold, circleA: b2CircleShape, xfA: b2Transform, circleB: b2CircleShape, xfB: b2Transform): void;
     export function b2CollidePolygonAndCircle(manifold: b2Manifold, polygonA: b2PolygonShape, xfA: b2Transform, circleB: b2CircleShape, xfB: b2Transform): void;
 }
-declare module "Box2D/Box2D/Dynamics/Contacts/b2CircleContact" {
-    import { b2Transform } from "Box2D/Box2D/Common/b2Math";
-    import { b2Manifold } from "Box2D/Box2D/Collision/b2Collision";
-    import { b2Contact } from "Box2D/Box2D/Dynamics/Contacts/b2Contact";
-    import { b2Fixture } from "Box2D/Box2D/Dynamics/b2Fixture";
+declare module "Dynamics/Contacts/b2CircleContact" {
+    import { b2Transform } from "Common/b2Math";
+    import { b2Manifold } from "Collision/b2Collision";
+    import { b2Contact } from "Dynamics/Contacts/b2Contact";
+    import { b2Fixture } from "Dynamics/b2Fixture";
     export class b2CircleContact extends b2Contact {
         constructor();
         static Create(allocator: any): b2Contact;
@@ -3331,17 +3333,17 @@ declare module "Box2D/Box2D/Dynamics/Contacts/b2CircleContact" {
         Evaluate(manifold: b2Manifold, xfA: b2Transform, xfB: b2Transform): void;
     }
 }
-declare module "Box2D/Box2D/Collision/b2CollidePolygon" {
-    import { b2Transform } from "Box2D/Box2D/Common/b2Math";
-    import { b2Manifold } from "Box2D/Box2D/Collision/b2Collision";
-    import { b2PolygonShape } from "Box2D/Box2D/Collision/Shapes/b2PolygonShape";
+declare module "Collision/b2CollidePolygon" {
+    import { b2Transform } from "Common/b2Math";
+    import { b2Manifold } from "Collision/b2Collision";
+    import { b2PolygonShape } from "Collision/Shapes/b2PolygonShape";
     export function b2CollidePolygons(manifold: b2Manifold, polyA: b2PolygonShape, xfA: b2Transform, polyB: b2PolygonShape, xfB: b2Transform): void;
 }
-declare module "Box2D/Box2D/Dynamics/Contacts/b2PolygonContact" {
-    import { b2Transform } from "Box2D/Box2D/Common/b2Math";
-    import { b2Manifold } from "Box2D/Box2D/Collision/b2Collision";
-    import { b2Contact } from "Box2D/Box2D/Dynamics/Contacts/b2Contact";
-    import { b2Fixture } from "Box2D/Box2D/Dynamics/b2Fixture";
+declare module "Dynamics/Contacts/b2PolygonContact" {
+    import { b2Transform } from "Common/b2Math";
+    import { b2Manifold } from "Collision/b2Collision";
+    import { b2Contact } from "Dynamics/Contacts/b2Contact";
+    import { b2Fixture } from "Dynamics/b2Fixture";
     export class b2PolygonContact extends b2Contact {
         constructor();
         static Create(allocator: any): b2Contact;
@@ -3350,11 +3352,11 @@ declare module "Box2D/Box2D/Dynamics/Contacts/b2PolygonContact" {
         Evaluate(manifold: b2Manifold, xfA: b2Transform, xfB: b2Transform): void;
     }
 }
-declare module "Box2D/Box2D/Dynamics/Contacts/b2PolygonAndCircleContact" {
-    import { b2Transform } from "Box2D/Box2D/Common/b2Math";
-    import { b2Manifold } from "Box2D/Box2D/Collision/b2Collision";
-    import { b2Contact } from "Box2D/Box2D/Dynamics/Contacts/b2Contact";
-    import { b2Fixture } from "Box2D/Box2D/Dynamics/b2Fixture";
+declare module "Dynamics/Contacts/b2PolygonAndCircleContact" {
+    import { b2Transform } from "Common/b2Math";
+    import { b2Manifold } from "Collision/b2Collision";
+    import { b2Contact } from "Dynamics/Contacts/b2Contact";
+    import { b2Fixture } from "Dynamics/b2Fixture";
     export class b2PolygonAndCircleContact extends b2Contact {
         constructor();
         static Create(allocator: any): b2Contact;
@@ -3363,20 +3365,20 @@ declare module "Box2D/Box2D/Dynamics/Contacts/b2PolygonAndCircleContact" {
         Evaluate(manifold: b2Manifold, xfA: b2Transform, xfB: b2Transform): void;
     }
 }
-declare module "Box2D/Box2D/Collision/b2CollideEdge" {
-    import { b2Transform } from "Box2D/Box2D/Common/b2Math";
-    import { b2Manifold } from "Box2D/Box2D/Collision/b2Collision";
-    import { b2CircleShape } from "Box2D/Box2D/Collision/Shapes/b2CircleShape";
-    import { b2PolygonShape } from "Box2D/Box2D/Collision/Shapes/b2PolygonShape";
-    import { b2EdgeShape } from "Box2D/Box2D/Collision/Shapes/b2EdgeShape";
+declare module "Collision/b2CollideEdge" {
+    import { b2Transform } from "Common/b2Math";
+    import { b2Manifold } from "Collision/b2Collision";
+    import { b2CircleShape } from "Collision/Shapes/b2CircleShape";
+    import { b2PolygonShape } from "Collision/Shapes/b2PolygonShape";
+    import { b2EdgeShape } from "Collision/Shapes/b2EdgeShape";
     export function b2CollideEdgeAndCircle(manifold: b2Manifold, edgeA: b2EdgeShape, xfA: b2Transform, circleB: b2CircleShape, xfB: b2Transform): void;
     export function b2CollideEdgeAndPolygon(manifold: b2Manifold, edgeA: b2EdgeShape, xfA: b2Transform, polygonB: b2PolygonShape, xfB: b2Transform): void;
 }
-declare module "Box2D/Box2D/Dynamics/Contacts/b2EdgeAndCircleContact" {
-    import { b2Transform } from "Box2D/Box2D/Common/b2Math";
-    import { b2Manifold } from "Box2D/Box2D/Collision/b2Collision";
-    import { b2Contact } from "Box2D/Box2D/Dynamics/Contacts/b2Contact";
-    import { b2Fixture } from "Box2D/Box2D/Dynamics/b2Fixture";
+declare module "Dynamics/Contacts/b2EdgeAndCircleContact" {
+    import { b2Transform } from "Common/b2Math";
+    import { b2Manifold } from "Collision/b2Collision";
+    import { b2Contact } from "Dynamics/Contacts/b2Contact";
+    import { b2Fixture } from "Dynamics/b2Fixture";
     export class b2EdgeAndCircleContact extends b2Contact {
         constructor();
         static Create(allocator: any): b2Contact;
@@ -3385,11 +3387,11 @@ declare module "Box2D/Box2D/Dynamics/Contacts/b2EdgeAndCircleContact" {
         Evaluate(manifold: b2Manifold, xfA: b2Transform, xfB: b2Transform): void;
     }
 }
-declare module "Box2D/Box2D/Dynamics/Contacts/b2EdgeAndPolygonContact" {
-    import { b2Transform } from "Box2D/Box2D/Common/b2Math";
-    import { b2Manifold } from "Box2D/Box2D/Collision/b2Collision";
-    import { b2Contact } from "Box2D/Box2D/Dynamics/Contacts/b2Contact";
-    import { b2Fixture } from "Box2D/Box2D/Dynamics/b2Fixture";
+declare module "Dynamics/Contacts/b2EdgeAndPolygonContact" {
+    import { b2Transform } from "Common/b2Math";
+    import { b2Manifold } from "Collision/b2Collision";
+    import { b2Contact } from "Dynamics/Contacts/b2Contact";
+    import { b2Fixture } from "Dynamics/b2Fixture";
     export class b2EdgeAndPolygonContact extends b2Contact {
         constructor();
         static Create(allocator: any): b2Contact;
@@ -3398,11 +3400,11 @@ declare module "Box2D/Box2D/Dynamics/Contacts/b2EdgeAndPolygonContact" {
         Evaluate(manifold: b2Manifold, xfA: b2Transform, xfB: b2Transform): void;
     }
 }
-declare module "Box2D/Box2D/Dynamics/Contacts/b2ChainAndCircleContact" {
-    import { b2Transform } from "Box2D/Box2D/Common/b2Math";
-    import { b2Manifold } from "Box2D/Box2D/Collision/b2Collision";
-    import { b2Contact } from "Box2D/Box2D/Dynamics/Contacts/b2Contact";
-    import { b2Fixture } from "Box2D/Box2D/Dynamics/b2Fixture";
+declare module "Dynamics/Contacts/b2ChainAndCircleContact" {
+    import { b2Transform } from "Common/b2Math";
+    import { b2Manifold } from "Collision/b2Collision";
+    import { b2Contact } from "Dynamics/Contacts/b2Contact";
+    import { b2Fixture } from "Dynamics/b2Fixture";
     export class b2ChainAndCircleContact extends b2Contact {
         constructor();
         static Create(allocator: any): b2Contact;
@@ -3412,11 +3414,11 @@ declare module "Box2D/Box2D/Dynamics/Contacts/b2ChainAndCircleContact" {
         Evaluate(manifold: b2Manifold, xfA: b2Transform, xfB: b2Transform): void;
     }
 }
-declare module "Box2D/Box2D/Dynamics/Contacts/b2ChainAndPolygonContact" {
-    import { b2Transform } from "Box2D/Box2D/Common/b2Math";
-    import { b2Manifold } from "Box2D/Box2D/Collision/b2Collision";
-    import { b2Contact } from "Box2D/Box2D/Dynamics/Contacts/b2Contact";
-    import { b2Fixture } from "Box2D/Box2D/Dynamics/b2Fixture";
+declare module "Dynamics/Contacts/b2ChainAndPolygonContact" {
+    import { b2Transform } from "Common/b2Math";
+    import { b2Manifold } from "Collision/b2Collision";
+    import { b2Contact } from "Dynamics/Contacts/b2Contact";
+    import { b2Fixture } from "Dynamics/b2Fixture";
     export class b2ChainAndPolygonContact extends b2Contact {
         constructor();
         static Create(allocator: any): b2Contact;
@@ -3426,9 +3428,9 @@ declare module "Box2D/Box2D/Dynamics/Contacts/b2ChainAndPolygonContact" {
         Evaluate(manifold: b2Manifold, xfA: b2Transform, xfB: b2Transform): void;
     }
 }
-declare module "Box2D/Box2D/Dynamics/Contacts/b2ContactFactory" {
-    import { b2Contact } from "Box2D/Box2D/Dynamics/Contacts/b2Contact";
-    import { b2Fixture } from "Box2D/Box2D/Dynamics/b2Fixture";
+declare module "Dynamics/Contacts/b2ContactFactory" {
+    import { b2Contact } from "Dynamics/Contacts/b2Contact";
+    import { b2Fixture } from "Dynamics/b2Fixture";
     export class b2ContactRegister {
         createFcn: ((allocator: any) => b2Contact) | null;
         destroyFcn: ((contact: b2Contact, allocator: any) => void) | null;
@@ -3444,12 +3446,12 @@ declare module "Box2D/Box2D/Dynamics/Contacts/b2ContactFactory" {
         Destroy(contact: b2Contact): void;
     }
 }
-declare module "Box2D/Box2D/Dynamics/b2ContactManager" {
-    import { b2BroadPhase } from "Box2D/Box2D/Collision/b2BroadPhase";
-    import { b2Contact } from "Box2D/Box2D/Dynamics/Contacts/b2Contact";
-    import { b2ContactFactory } from "Box2D/Box2D/Dynamics/Contacts/b2ContactFactory";
-    import { b2FixtureProxy } from "Box2D/Box2D/Dynamics/b2Fixture";
-    import { b2ContactFilter, b2ContactListener } from "Box2D/Box2D/Dynamics/b2WorldCallbacks";
+declare module "Dynamics/b2ContactManager" {
+    import { b2BroadPhase } from "Collision/b2BroadPhase";
+    import { b2Contact } from "Dynamics/Contacts/b2Contact";
+    import { b2ContactFactory } from "Dynamics/Contacts/b2ContactFactory";
+    import { b2FixtureProxy } from "Dynamics/b2Fixture";
+    import { b2ContactFilter, b2ContactListener } from "Dynamics/b2WorldCallbacks";
     export class b2ContactManager {
         readonly m_broadPhase: b2BroadPhase;
         m_contactList: b2Contact | null;
@@ -3465,11 +3467,11 @@ declare module "Box2D/Box2D/Dynamics/b2ContactManager" {
         Collide(): void;
     }
 }
-declare module "Box2D/Box2D/Collision/b2BroadPhase" {
-    import { b2Vec2, XY } from "Box2D/Box2D/Common/b2Math";
-    import { b2AABB, b2RayCastInput } from "Box2D/Box2D/Collision/b2Collision";
-    import { b2TreeNode, b2DynamicTree } from "Box2D/Box2D/Collision/b2DynamicTree";
-    import { b2ContactManager } from "Box2D/Box2D/Dynamics/b2ContactManager";
+declare module "Collision/b2BroadPhase" {
+    import { b2Vec2, XY } from "Common/b2Math";
+    import { b2AABB, b2RayCastInput } from "Collision/b2Collision";
+    import { b2TreeNode, b2DynamicTree } from "Collision/b2DynamicTree";
+    import { b2ContactManager } from "Dynamics/b2ContactManager";
     export class b2Pair {
         proxyA: b2TreeNode;
         proxyB: b2TreeNode;
@@ -3502,9 +3504,77 @@ declare module "Box2D/Box2D/Collision/b2BroadPhase" {
     }
     export function b2PairLessThan(pair1: b2Pair, pair2: b2Pair): number;
 }
-declare module "Box2D/Box2D/Rope/b2Rope" {
-    import { b2Vec2 } from "Box2D/Box2D/Common/b2Math";
-    import { b2Draw } from "Box2D/Box2D/Common/b2Draw";
+declare module "Controllers/b2BuoyancyController" {
+    import { b2Controller } from "Controllers/b2Controller";
+    import { b2Vec2 } from "Common/b2Math";
+    import { b2TimeStep } from "Dynamics/b2TimeStep";
+    import { b2Draw } from "Common/b2Draw";
+    export class b2BuoyancyController extends b2Controller {
+        readonly normal: b2Vec2;
+        offset: number;
+        density: number;
+        readonly velocity: b2Vec2;
+        linearDrag: number;
+        angularDrag: number;
+        useDensity: boolean;
+        useWorldGravity: boolean;
+        readonly gravity: b2Vec2;
+        Step(step: b2TimeStep): void;
+        Draw(debugDraw: b2Draw): void;
+    }
+}
+declare module "Controllers/b2ConstantAccelController" {
+    import { b2Controller } from "Controllers/b2Controller";
+    import { b2Vec2 } from "Common/b2Math";
+    import { b2TimeStep } from "Dynamics/b2TimeStep";
+    import { b2Draw } from "Common/b2Draw";
+    export class b2ConstantAccelController extends b2Controller {
+        readonly A: b2Vec2;
+        Step(step: b2TimeStep): void;
+        private static Step_s_dtA;
+        Draw(draw: b2Draw): void;
+    }
+}
+declare module "Controllers/b2ConstantForceController" {
+    import { b2Controller } from "Controllers/b2Controller";
+    import { b2Vec2 } from "Common/b2Math";
+    import { b2TimeStep } from "Dynamics/b2TimeStep";
+    import { b2Draw } from "Common/b2Draw";
+    export class b2ConstantForceController extends b2Controller {
+        readonly F: b2Vec2;
+        Step(step: b2TimeStep): void;
+        Draw(draw: b2Draw): void;
+    }
+}
+declare module "Controllers/b2GravityController" {
+    import { b2Controller } from "Controllers/b2Controller";
+    import { b2TimeStep } from "Dynamics/b2TimeStep";
+    import { b2Draw } from "Common/b2Draw";
+    export class b2GravityController extends b2Controller {
+        G: number;
+        invSqr: boolean;
+        Step(step: b2TimeStep): void;
+        private static Step_s_f;
+        Draw(draw: b2Draw): void;
+    }
+}
+declare module "Controllers/b2TensorDampingController" {
+    import { b2Controller } from "Controllers/b2Controller";
+    import { b2Mat22 } from "Common/b2Math";
+    import { b2TimeStep } from "Dynamics/b2TimeStep";
+    import { b2Draw } from "Common/b2Draw";
+    export class b2TensorDampingController extends b2Controller {
+        readonly T: b2Mat22;
+        maxTimestep: number;
+        Step(step: b2TimeStep): void;
+        private static Step_s_damping;
+        Draw(draw: b2Draw): void;
+        SetAxisAligned(xDamping: number, yDamping: number): void;
+    }
+}
+declare module "Rope/b2Rope" {
+    import { b2Vec2 } from "Common/b2Math";
+    import { b2Draw } from "Common/b2Draw";
     export class b2RopeDef {
         vertices: b2Vec2[];
         count: number;
@@ -3543,60 +3613,66 @@ declare module "Box2D/Box2D/Rope/b2Rope" {
         Draw(draw: b2Draw): void;
     }
 }
-declare module "Box2D/Box2D/Box2D" {
-    export * from "Box2D/Box2D/Common/b2Settings";
-    export * from "Box2D/Box2D/Common/b2Math";
-    export * from "Box2D/Box2D/Common/b2Draw";
-    export * from "Box2D/Box2D/Common/b2Timer";
-    export * from "Box2D/Box2D/Common/b2GrowableStack";
-    export * from "Box2D/Box2D/Common/b2BlockAllocator";
-    export * from "Box2D/Box2D/Common/b2StackAllocator";
-    export * from "Box2D/Box2D/Collision/b2Collision";
-    export * from "Box2D/Box2D/Collision/b2Distance";
-    export * from "Box2D/Box2D/Collision/b2BroadPhase";
-    export * from "Box2D/Box2D/Collision/b2DynamicTree";
-    export * from "Box2D/Box2D/Collision/b2TimeOfImpact";
-    export * from "Box2D/Box2D/Collision/b2CollideCircle";
-    export * from "Box2D/Box2D/Collision/b2CollidePolygon";
-    export * from "Box2D/Box2D/Collision/b2CollideEdge";
-    export * from "Box2D/Box2D/Collision/Shapes/b2Shape";
-    export * from "Box2D/Box2D/Collision/Shapes/b2CircleShape";
-    export * from "Box2D/Box2D/Collision/Shapes/b2PolygonShape";
-    export * from "Box2D/Box2D/Collision/Shapes/b2EdgeShape";
-    export * from "Box2D/Box2D/Collision/Shapes/b2ChainShape";
-    export * from "Box2D/Box2D/Dynamics/b2Fixture";
-    export * from "Box2D/Box2D/Dynamics/b2Body";
-    export * from "Box2D/Box2D/Dynamics/b2World";
-    export * from "Box2D/Box2D/Dynamics/b2WorldCallbacks";
-    export * from "Box2D/Box2D/Dynamics/b2Island";
-    export * from "Box2D/Box2D/Dynamics/b2TimeStep";
-    export * from "Box2D/Box2D/Dynamics/b2ContactManager";
-    export * from "Box2D/Box2D/Dynamics/Contacts/b2Contact";
-    export * from "Box2D/Box2D/Dynamics/Contacts/b2ContactFactory";
-    export * from "Box2D/Box2D/Dynamics/Contacts/b2ContactSolver";
-    export * from "Box2D/Box2D/Dynamics/Contacts/b2CircleContact";
-    export * from "Box2D/Box2D/Dynamics/Contacts/b2PolygonContact";
-    export * from "Box2D/Box2D/Dynamics/Contacts/b2PolygonAndCircleContact";
-    export * from "Box2D/Box2D/Dynamics/Contacts/b2EdgeAndCircleContact";
-    export * from "Box2D/Box2D/Dynamics/Contacts/b2EdgeAndPolygonContact";
-    export * from "Box2D/Box2D/Dynamics/Contacts/b2ChainAndCircleContact";
-    export * from "Box2D/Box2D/Dynamics/Contacts/b2ChainAndPolygonContact";
-    export * from "Box2D/Box2D/Dynamics/Joints/b2Joint";
-    export * from "Box2D/Box2D/Dynamics/Joints/b2JointFactory";
-    export * from "Box2D/Box2D/Dynamics/Joints/b2AreaJoint";
-    export * from "Box2D/Box2D/Dynamics/Joints/b2DistanceJoint";
-    export * from "Box2D/Box2D/Dynamics/Joints/b2FrictionJoint";
-    export * from "Box2D/Box2D/Dynamics/Joints/b2GearJoint";
-    export * from "Box2D/Box2D/Dynamics/Joints/b2MotorJoint";
-    export * from "Box2D/Box2D/Dynamics/Joints/b2MouseJoint";
-    export * from "Box2D/Box2D/Dynamics/Joints/b2PrismaticJoint";
-    export * from "Box2D/Box2D/Dynamics/Joints/b2PulleyJoint";
-    export * from "Box2D/Box2D/Dynamics/Joints/b2RevoluteJoint";
-    export * from "Box2D/Box2D/Dynamics/Joints/b2RopeJoint";
-    export * from "Box2D/Box2D/Dynamics/Joints/b2WeldJoint";
-    export * from "Box2D/Box2D/Dynamics/Joints/b2WheelJoint";
-    export * from "Box2D/Box2D/Particle/b2Particle";
-    export * from "Box2D/Box2D/Particle/b2ParticleGroup";
-    export * from "Box2D/Box2D/Particle/b2ParticleSystem";
-    export * from "Box2D/Box2D/Rope/b2Rope";
+declare module "Box2D" {
+    export * from "Common/b2Settings";
+    export * from "Common/b2Math";
+    export * from "Common/b2Draw";
+    export * from "Common/b2Timer";
+    export * from "Common/b2GrowableStack";
+    export * from "Common/b2BlockAllocator";
+    export * from "Common/b2StackAllocator";
+    export * from "Collision/b2Collision";
+    export * from "Collision/b2Distance";
+    export * from "Collision/b2BroadPhase";
+    export * from "Collision/b2DynamicTree";
+    export * from "Collision/b2TimeOfImpact";
+    export * from "Collision/b2CollideCircle";
+    export * from "Collision/b2CollidePolygon";
+    export * from "Collision/b2CollideEdge";
+    export * from "Collision/Shapes/b2Shape";
+    export * from "Collision/Shapes/b2CircleShape";
+    export * from "Collision/Shapes/b2PolygonShape";
+    export * from "Collision/Shapes/b2EdgeShape";
+    export * from "Collision/Shapes/b2ChainShape";
+    export * from "Dynamics/b2Fixture";
+    export * from "Dynamics/b2Body";
+    export * from "Dynamics/b2World";
+    export * from "Dynamics/b2WorldCallbacks";
+    export * from "Dynamics/b2Island";
+    export * from "Dynamics/b2TimeStep";
+    export * from "Dynamics/b2ContactManager";
+    export * from "Dynamics/Contacts/b2Contact";
+    export * from "Dynamics/Contacts/b2ContactFactory";
+    export * from "Dynamics/Contacts/b2ContactSolver";
+    export * from "Dynamics/Contacts/b2CircleContact";
+    export * from "Dynamics/Contacts/b2PolygonContact";
+    export * from "Dynamics/Contacts/b2PolygonAndCircleContact";
+    export * from "Dynamics/Contacts/b2EdgeAndCircleContact";
+    export * from "Dynamics/Contacts/b2EdgeAndPolygonContact";
+    export * from "Dynamics/Contacts/b2ChainAndCircleContact";
+    export * from "Dynamics/Contacts/b2ChainAndPolygonContact";
+    export * from "Dynamics/Joints/b2Joint";
+    export * from "Dynamics/Joints/b2JointFactory";
+    export * from "Dynamics/Joints/b2AreaJoint";
+    export * from "Dynamics/Joints/b2DistanceJoint";
+    export * from "Dynamics/Joints/b2FrictionJoint";
+    export * from "Dynamics/Joints/b2GearJoint";
+    export * from "Dynamics/Joints/b2MotorJoint";
+    export * from "Dynamics/Joints/b2MouseJoint";
+    export * from "Dynamics/Joints/b2PrismaticJoint";
+    export * from "Dynamics/Joints/b2PulleyJoint";
+    export * from "Dynamics/Joints/b2RevoluteJoint";
+    export * from "Dynamics/Joints/b2RopeJoint";
+    export * from "Dynamics/Joints/b2WeldJoint";
+    export * from "Dynamics/Joints/b2WheelJoint";
+    export * from "Controllers/b2Controller";
+    export * from "Controllers/b2BuoyancyController";
+    export * from "Controllers/b2ConstantAccelController";
+    export * from "Controllers/b2ConstantForceController";
+    export * from "Controllers/b2GravityController";
+    export * from "Controllers/b2TensorDampingController";
+    export * from "Particle/b2Particle";
+    export * from "Particle/b2ParticleGroup";
+    export * from "Particle/b2ParticleSystem";
+    export * from "Rope/b2Rope";
 }

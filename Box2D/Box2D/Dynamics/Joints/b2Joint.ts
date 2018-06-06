@@ -16,6 +16,7 @@
 * 3. This notice may not be removed or altered from any source distribution.
 */
 
+// DEBUG: import { b2Assert } from "../../Common/b2Settings";
 import { b2Maybe } from "../../Common/b2Settings";
 import { b2Vec2, XY } from "../../Common/b2Math";
 import { b2Body } from "../b2Body";
@@ -139,7 +140,7 @@ export abstract class b2Joint {
   public m_userData: any = null;
 
   constructor(def: b2IJointDef) {
-    ///b2Assert(def.bodyA !== def.bodyB);
+    // DEBUG: b2Assert(def.bodyA !== def.bodyB);
 
     this.m_type = def.type;
     this.m_edgeA = new b2JointEdge(this, def.bodyB);

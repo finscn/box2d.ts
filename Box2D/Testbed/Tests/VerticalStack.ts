@@ -16,8 +16,8 @@
 * 3. This notice may not be removed or altered from any source distribution.
 */
 
-import * as box2d from "../../Box2D/Box2D";
-import * as testbed from "../Testbed";
+import * as box2d from "Box2D";
+import * as testbed from "Testbed";
 
 export class VerticalStack extends testbed.Test {
   public static readonly e_columnCount = 1;
@@ -61,7 +61,7 @@ export class VerticalStack extends testbed.Test {
         bd.type = box2d.b2BodyType.b2_dynamicBody;
 
         const n = j * VerticalStack.e_rowCount + i;
-        box2d.b2Assert(n < VerticalStack.e_rowCount * VerticalStack.e_columnCount);
+        // DEBUG: box2d.b2Assert(n < VerticalStack.e_rowCount * VerticalStack.e_columnCount);
         this.m_indices[n] = n;
         bd.userData = this.m_indices[n];
 

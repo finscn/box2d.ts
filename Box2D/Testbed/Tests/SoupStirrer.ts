@@ -18,8 +18,8 @@
 
 // #if B2_ENABLE_PARTICLE
 
-import * as box2d from "../../Box2D/Box2D";
-import * as testbed from "../Testbed";
+import * as box2d from "Box2D";
+import * as testbed from "Testbed";
 import { Soup } from "./Soup";
 
 export class SoupStirrer extends Soup {
@@ -53,7 +53,7 @@ export class SoupStirrer extends Soup {
   }
 
   public CreateJoint() {
-    box2d.b2Assert(!this.m_joint);
+    // DEBUG: box2d.b2Assert(!this.m_joint);
     // Create a prismatic joint and connect to the ground, and have it
     // slide along the x axis.
     // Disconnect the body from this joint to have more fun.

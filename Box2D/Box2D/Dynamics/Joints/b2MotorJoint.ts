@@ -16,6 +16,8 @@
 * 3. This notice may not be removed or altered from any source distribution.
 */
 
+// DEBUG: import { b2Assert } from "../../Common/b2Settings";
+// DEBUG: import { b2IsValid } from "../../Common/b2Math";
 import { b2Maybe } from "../../Common/b2Settings";
 import { b2Clamp, b2Vec2, b2Mat22, b2Rot, XY } from "../../Common/b2Math";
 import { b2Body } from "../b2Body";
@@ -162,7 +164,7 @@ export class b2MotorJoint extends b2Joint {
   }
 
   public SetMaxForce(force: number): void {
-    ///b2Assert(b2IsValid(force) && force >= 0);
+    // DEBUG: b2Assert(b2IsValid(force) && force >= 0);
     this.m_maxForce = force;
   }
 
@@ -171,7 +173,7 @@ export class b2MotorJoint extends b2Joint {
   }
 
   public SetMaxTorque(torque: number): void {
-    ///b2Assert(b2IsValid(torque) && torque >= 0);
+    // DEBUG: b2Assert(b2IsValid(torque) && torque >= 0);
     this.m_maxTorque = torque;
   }
 

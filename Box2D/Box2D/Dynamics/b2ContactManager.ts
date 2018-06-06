@@ -16,6 +16,7 @@
 * 3. This notice may not be removed or altered from any source distribution.
 */
 
+// DEBUG: import { b2Assert } from "../Common/b2Settings";
 import { b2BroadPhase } from "../Collision/b2BroadPhase";
 import { b2TreeNode } from "../Collision/b2DynamicTree";
 import { b2Contact, b2ContactEdge } from "./Contacts/b2Contact";
@@ -41,8 +42,8 @@ export class b2ContactManager {
 
   // Broad-phase callback.
   public AddPair(proxyA: b2FixtureProxy, proxyB: b2FixtureProxy): void {
-    ///b2Assert(proxyA instanceof b2FixtureProxy);
-    ///b2Assert(proxyB instanceof b2FixtureProxy);
+    // DEBUG: b2Assert(proxyA instanceof b2FixtureProxy);
+    // DEBUG: b2Assert(proxyB instanceof b2FixtureProxy);
 
     let fixtureA: b2Fixture = proxyA.fixture;
     let fixtureB: b2Fixture = proxyB.fixture;

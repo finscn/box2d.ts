@@ -1,3 +1,4 @@
+// DEBUG: import { b2Assert } from "../../Common/b2Settings";
 import { b2_epsilon, b2_linearSlop, b2_maxLinearCorrection, b2MakeNumberArray, b2Maybe } from "../../Common/b2Settings";
 import { b2Sq, b2Sqrt, b2Vec2, XY } from "../../Common/b2Math";
 import { b2Joint, b2JointDef, b2JointType, b2IJointDef } from "./b2Joint";
@@ -56,7 +57,7 @@ export class b2AreaJoint extends b2Joint {
   constructor(def: b2IAreaJointDef) {
     super(def);
 
-    ///b2Assert(def.bodies.length >= 3, "You cannot create an area joint with less than three bodies.");
+    // DEBUG: b2Assert(def.bodies.length >= 3, "You cannot create an area joint with less than three bodies.");
 
     this.m_bodies = def.bodies;
     this.m_frequencyHz = b2Maybe(def.frequencyHz, 0);

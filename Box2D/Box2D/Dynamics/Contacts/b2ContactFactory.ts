@@ -1,3 +1,4 @@
+// DEBUG: import { b2Assert } from "../../Common/b2Settings";
 import { b2MakeArray } from "../../Common/b2Settings";
 import { b2ShapeType } from "../../Collision/Shapes/b2Shape";
 import { b2Contact } from "./b2Contact";
@@ -91,8 +92,8 @@ export class b2ContactFactory {
     const type1: b2ShapeType = fixtureA.GetType();
     const type2: b2ShapeType = fixtureB.GetType();
 
-    ///b2Assert(0 <= type1 && type1 < b2ShapeType.e_shapeTypeCount);
-    ///b2Assert(0 <= type2 && type2 < b2ShapeType.e_shapeTypeCount);
+    // DEBUG: b2Assert(0 <= type1 && type1 < b2ShapeType.e_shapeTypeCount);
+    // DEBUG: b2Assert(0 <= type2 && type2 < b2ShapeType.e_shapeTypeCount);
 
     const reg: b2ContactRegister = this.m_registers[type1][type2];
     if (reg.createFcn) {
@@ -122,8 +123,8 @@ export class b2ContactFactory {
     const typeA: b2ShapeType = fixtureA.GetType();
     const typeB: b2ShapeType = fixtureB.GetType();
 
-    ///b2Assert(0 <= typeA && typeB < b2ShapeType.e_shapeTypeCount);
-    ///b2Assert(0 <= typeA && typeB < b2ShapeType.e_shapeTypeCount);
+    // DEBUG: b2Assert(0 <= typeA && typeB < b2ShapeType.e_shapeTypeCount);
+    // DEBUG: b2Assert(0 <= typeA && typeB < b2ShapeType.e_shapeTypeCount);
 
     const reg: b2ContactRegister = this.m_registers[typeA][typeB];
     if (reg.destroyFcn) {

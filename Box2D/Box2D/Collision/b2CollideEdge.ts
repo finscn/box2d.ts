@@ -1,3 +1,4 @@
+// DEBUG: import { b2Assert } from "../Common/b2Settings";
 import { b2_maxFloat, b2_angularSlop, b2_maxPolygonVertices, b2_polygonRadius, b2_maxManifoldPoints } from "../Common/b2Settings";
 import { b2Min, b2Vec2, b2Rot, b2Transform } from "../Common/b2Math";
 import { b2ContactFeatureType, b2ContactID } from "./b2Collision";
@@ -107,7 +108,7 @@ export function b2CollideEdgeAndCircle(manifold: b2Manifold, edgeA: b2EdgeShape,
 
   // Region AB
   const den: number = b2Vec2.DotVV(e, e);
-  ///b2Assert(den > 0);
+  // DEBUG: b2Assert(den > 0);
   const P: b2Vec2 = b2CollideEdgeAndCircle_s_P;
   P.x = (1 / den) * (u * A.x + v * B.x);
   P.y = (1 / den) * (u * A.y + v * B.y);

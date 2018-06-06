@@ -8,7 +8,7 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-System.register("Box2D/Box2D/Common/b2Settings", [], function (exports_1, context_1) {
+System.register("Common/b2Settings", [], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     function b2Assert(condition) {
@@ -134,7 +134,7 @@ System.register("Box2D/Box2D/Common/b2Settings", [], function (exports_1, contex
         }
     };
 });
-System.register("Box2D/Box2D/Common/b2Math", ["Box2D/Box2D/Common/b2Settings"], function (exports_2, context_2) {
+System.register("Common/b2Math", ["Common/b2Settings"], function (exports_2, context_2) {
     "use strict";
     var __moduleName = context_2 && context_2.id;
     function b2Clamp(a, lo, hi) {
@@ -1058,7 +1058,7 @@ System.register("Box2D/Box2D/Common/b2Math", ["Box2D/Box2D/Common/b2Settings"], 
         }
     };
 });
-System.register("Box2D/Box2D/Common/b2Draw", [], function (exports_3, context_3) {
+System.register("Common/b2Draw", [], function (exports_3, context_3) {
     "use strict";
     var __moduleName = context_3 && context_3.id;
     var b2Color, b2DrawFlags, b2Draw;
@@ -1247,7 +1247,7 @@ System.register("Box2D/Box2D/Common/b2Draw", [], function (exports_3, context_3)
         }
     };
 });
-System.register("Box2D/Box2D/Common/b2Timer", [], function (exports_4, context_4) {
+System.register("Common/b2Timer", [], function (exports_4, context_4) {
     "use strict";
     var __moduleName = context_4 && context_4.id;
     var b2Timer, b2Counter;
@@ -1312,7 +1312,7 @@ System.register("Box2D/Box2D/Common/b2Timer", [], function (exports_4, context_4
         }
     };
 });
-System.register("Box2D/Box2D/Common/b2GrowableStack", [], function (exports_5, context_5) {
+System.register("Common/b2GrowableStack", [], function (exports_5, context_5) {
     "use strict";
     var __moduleName = context_5 && context_5.id;
     var b2GrowableStack;
@@ -1349,7 +1349,7 @@ System.register("Box2D/Box2D/Common/b2GrowableStack", [], function (exports_5, c
         }
     };
 });
-System.register("Box2D/Box2D/Common/b2BlockAllocator", [], function (exports_6, context_6) {
+System.register("Common/b2BlockAllocator", [], function (exports_6, context_6) {
     "use strict";
     var __moduleName = context_6 && context_6.id;
     var b2BlockAllocator;
@@ -1365,7 +1365,7 @@ System.register("Box2D/Box2D/Common/b2BlockAllocator", [], function (exports_6, 
         }
     };
 });
-System.register("Box2D/Box2D/Common/b2StackAllocator", [], function (exports_7, context_7) {
+System.register("Common/b2StackAllocator", [], function (exports_7, context_7) {
     "use strict";
     var __moduleName = context_7 && context_7.id;
     var b2StackAllocator;
@@ -1381,7 +1381,7 @@ System.register("Box2D/Box2D/Common/b2StackAllocator", [], function (exports_7, 
         }
     };
 });
-System.register("Box2D/Box2D/Collision/b2Distance", ["Box2D/Box2D/Common/b2Settings", "Box2D/Box2D/Common/b2Math"], function (exports_8, context_8) {
+System.register("Collision/b2Distance", ["Common/b2Settings", "Common/b2Math"], function (exports_8, context_8) {
     "use strict";
     var __moduleName = context_8 && context_8.id;
     function b2_gjk_reset() {
@@ -1843,7 +1843,7 @@ System.register("Box2D/Box2D/Collision/b2Distance", ["Box2D/Box2D/Common/b2Setti
         }
     };
 });
-System.register("Box2D/Box2D/Collision/Shapes/b2Shape", ["Box2D/Box2D/Common/b2Math"], function (exports_9, context_9) {
+System.register("Collision/Shapes/b2Shape", ["Common/b2Math"], function (exports_9, context_9) {
     "use strict";
     var __moduleName = context_9 && context_9.id;
     var b2Math_2, b2MassData, b2ShapeType, b2Shape;
@@ -1892,7 +1892,7 @@ System.register("Box2D/Box2D/Collision/Shapes/b2Shape", ["Box2D/Box2D/Common/b2M
         }
     };
 });
-System.register("Box2D/Box2D/Collision/b2Collision", ["Box2D/Box2D/Common/b2Settings", "Box2D/Box2D/Common/b2Math", "Box2D/Box2D/Collision/b2Distance"], function (exports_10, context_10) {
+System.register("Collision/b2Collision", ["Common/b2Settings", "Common/b2Math", "Collision/b2Distance"], function (exports_10, context_10) {
     "use strict";
     var __moduleName = context_10 && context_10.id;
     function b2GetPointStates(state1, state2, manifold1, manifold2) {
@@ -2428,7 +2428,7 @@ System.register("Box2D/Box2D/Collision/b2Collision", ["Box2D/Box2D/Common/b2Sett
         }
     };
 });
-System.register("Box2D/Box2D/Collision/b2DynamicTree", ["Box2D/Box2D/Common/b2Settings", "Box2D/Box2D/Common/b2Math", "Box2D/Box2D/Common/b2GrowableStack", "Box2D/Box2D/Collision/b2Collision"], function (exports_11, context_11) {
+System.register("Collision/b2DynamicTree", ["Common/b2Settings", "Common/b2Math", "Common/b2GrowableStack", "Collision/b2Collision"], function (exports_11, context_11) {
     "use strict";
     var __moduleName = context_11 && context_11.id;
     function verify(value) {
@@ -2907,13 +2907,13 @@ System.register("Box2D/Box2D/Collision/b2DynamicTree", ["Box2D/Box2D/Common/b2Se
                     var child1 = node.child1;
                     var child2 = node.child2;
                     if (node.IsLeaf()) {
-                        if (!child1) {
-                            throw new Error();
-                        }
-                        if (!child2) {
-                            throw new Error();
-                        }
                         return;
+                    }
+                    if (!child1) {
+                        throw new Error();
+                    }
+                    if (!child2) {
+                        throw new Error();
                     }
                     this.ValidateStructure(child1);
                     this.ValidateStructure(child2);
@@ -3004,7 +3004,7 @@ System.register("Box2D/Box2D/Collision/b2DynamicTree", ["Box2D/Box2D/Common/b2Se
         }
     };
 });
-System.register("Box2D/Box2D/Collision/b2TimeOfImpact", ["Box2D/Box2D/Common/b2Settings", "Box2D/Box2D/Common/b2Math", "Box2D/Box2D/Common/b2Timer", "Box2D/Box2D/Collision/b2Distance"], function (exports_12, context_12) {
+System.register("Collision/b2TimeOfImpact", ["Common/b2Settings", "Common/b2Math", "Common/b2Timer", "Collision/b2Distance"], function (exports_12, context_12) {
     "use strict";
     var __moduleName = context_12 && context_12.id;
     function b2_toi_reset() {
@@ -3369,7 +3369,7 @@ System.register("Box2D/Box2D/Collision/b2TimeOfImpact", ["Box2D/Box2D/Common/b2S
         }
     };
 });
-System.register("Box2D/Box2D/Dynamics/b2TimeStep", ["Box2D/Box2D/Common/b2Settings", "Box2D/Box2D/Common/b2Math"], function (exports_13, context_13) {
+System.register("Dynamics/b2TimeStep", ["Common/b2Settings", "Common/b2Math"], function (exports_13, context_13) {
     "use strict";
     var __moduleName = context_13 && context_13.id;
     var b2Settings_6, b2Math_6, b2Profile, b2TimeStep, b2Position, b2Velocity, b2SolverData;
@@ -3463,7 +3463,7 @@ System.register("Box2D/Box2D/Dynamics/b2TimeStep", ["Box2D/Box2D/Common/b2Settin
         }
     };
 });
-System.register("Box2D/Box2D/Dynamics/Joints/b2Joint", ["Box2D/Box2D/Common/b2Settings", "Box2D/Box2D/Common/b2Math"], function (exports_14, context_14) {
+System.register("Dynamics/Joints/b2Joint", ["Common/b2Settings", "Common/b2Math"], function (exports_14, context_14) {
     "use strict";
     var __moduleName = context_14 && context_14.id;
     var b2Settings_7, b2Math_7, b2JointType, b2LimitState, b2Jacobian, b2JointEdge, b2JointDef, b2Joint;
@@ -3593,7 +3593,7 @@ System.register("Box2D/Box2D/Dynamics/Joints/b2Joint", ["Box2D/Box2D/Common/b2Se
         }
     };
 });
-System.register("Box2D/Box2D/Dynamics/b2Fixture", ["Box2D/Box2D/Common/b2Settings", "Box2D/Box2D/Common/b2Math", "Box2D/Box2D/Collision/b2Collision", "Box2D/Box2D/Collision/Shapes/b2Shape"], function (exports_15, context_15) {
+System.register("Dynamics/b2Fixture", ["Common/b2Settings", "Common/b2Math", "Collision/b2Collision", "Collision/Shapes/b2Shape"], function (exports_15, context_15) {
     "use strict";
     var __moduleName = context_15 && context_15.id;
     var b2Settings_8, b2Math_8, b2Collision_2, b2Shape_1, b2Filter, b2FixtureDef, b2FixtureProxy, b2Fixture;
@@ -3827,7 +3827,7 @@ System.register("Box2D/Box2D/Dynamics/b2Fixture", ["Box2D/Box2D/Common/b2Setting
         }
     };
 });
-System.register("Box2D/Box2D/Collision/Shapes/b2EdgeShape", ["Box2D/Box2D/Common/b2Settings", "Box2D/Box2D/Common/b2Math", "Box2D/Box2D/Collision/Shapes/b2Shape"], function (exports_16, context_16) {
+System.register("Collision/Shapes/b2EdgeShape", ["Common/b2Settings", "Common/b2Math", "Collision/Shapes/b2Shape"], function (exports_16, context_16) {
     "use strict";
     var __moduleName = context_16 && context_16.id;
     var b2Settings_9, b2Math_9, b2Shape_2, b2EdgeShape;
@@ -3987,7 +3987,7 @@ System.register("Box2D/Box2D/Collision/Shapes/b2EdgeShape", ["Box2D/Box2D/Common
         }
     };
 });
-System.register("Box2D/Box2D/Collision/Shapes/b2ChainShape", ["Box2D/Box2D/Common/b2Settings", "Box2D/Box2D/Common/b2Math", "Box2D/Box2D/Collision/Shapes/b2Shape", "Box2D/Box2D/Collision/Shapes/b2EdgeShape"], function (exports_17, context_17) {
+System.register("Collision/Shapes/b2ChainShape", ["Common/b2Settings", "Common/b2Math", "Collision/Shapes/b2Shape", "Collision/Shapes/b2EdgeShape"], function (exports_17, context_17) {
     "use strict";
     var __moduleName = context_17 && context_17.id;
     var b2Settings_10, b2Math_10, b2Shape_3, b2EdgeShape_1, b2ChainShape;
@@ -4160,7 +4160,7 @@ System.register("Box2D/Box2D/Collision/Shapes/b2ChainShape", ["Box2D/Box2D/Commo
         }
     };
 });
-System.register("Box2D/Box2D/Collision/Shapes/b2CircleShape", ["Box2D/Box2D/Common/b2Settings", "Box2D/Box2D/Common/b2Math", "Box2D/Box2D/Collision/Shapes/b2Shape"], function (exports_18, context_18) {
+System.register("Collision/Shapes/b2CircleShape", ["Common/b2Settings", "Common/b2Math", "Collision/Shapes/b2Shape"], function (exports_18, context_18) {
     "use strict";
     var __moduleName = context_18 && context_18.id;
     var b2Settings_11, b2Math_11, b2Shape_4, b2CircleShape;
@@ -4285,7 +4285,7 @@ System.register("Box2D/Box2D/Collision/Shapes/b2CircleShape", ["Box2D/Box2D/Comm
         }
     };
 });
-System.register("Box2D/Box2D/Collision/Shapes/b2PolygonShape", ["Box2D/Box2D/Common/b2Settings", "Box2D/Box2D/Common/b2Math", "Box2D/Box2D/Collision/Shapes/b2Shape"], function (exports_19, context_19) {
+System.register("Collision/Shapes/b2PolygonShape", ["Common/b2Settings", "Common/b2Math", "Collision/Shapes/b2Shape"], function (exports_19, context_19) {
     "use strict";
     var __moduleName = context_19 && context_19.id;
     var b2Settings_12, b2Math_12, b2Shape_5, b2Shape_6, b2PolygonShape;
@@ -4719,7 +4719,7 @@ System.register("Box2D/Box2D/Collision/Shapes/b2PolygonShape", ["Box2D/Box2D/Com
         }
     };
 });
-System.register("Box2D/Box2D/Dynamics/Joints/b2DistanceJoint", ["Box2D/Box2D/Common/b2Settings", "Box2D/Box2D/Common/b2Math", "Box2D/Box2D/Dynamics/Joints/b2Joint"], function (exports_20, context_20) {
+System.register("Dynamics/Joints/b2DistanceJoint", ["Common/b2Settings", "Common/b2Math", "Dynamics/Joints/b2Joint"], function (exports_20, context_20) {
     "use strict";
     var __moduleName = context_20 && context_20.id;
     var b2Settings_13, b2Math_13, b2Joint_1, b2DistanceJointDef, b2DistanceJoint;
@@ -4963,7 +4963,7 @@ System.register("Box2D/Box2D/Dynamics/Joints/b2DistanceJoint", ["Box2D/Box2D/Com
         }
     };
 });
-System.register("Box2D/Box2D/Dynamics/Joints/b2AreaJoint", ["Box2D/Box2D/Common/b2Settings", "Box2D/Box2D/Common/b2Math", "Box2D/Box2D/Dynamics/Joints/b2Joint", "Box2D/Box2D/Dynamics/Joints/b2DistanceJoint"], function (exports_21, context_21) {
+System.register("Dynamics/Joints/b2AreaJoint", ["Common/b2Settings", "Common/b2Math", "Dynamics/Joints/b2Joint", "Dynamics/Joints/b2DistanceJoint"], function (exports_21, context_21) {
     "use strict";
     var __moduleName = context_21 && context_21.id;
     var b2Settings_14, b2Math_14, b2Joint_2, b2DistanceJoint_1, b2AreaJointDef, b2AreaJoint;
@@ -5159,7 +5159,7 @@ System.register("Box2D/Box2D/Dynamics/Joints/b2AreaJoint", ["Box2D/Box2D/Common/
         }
     };
 });
-System.register("Box2D/Box2D/Dynamics/Joints/b2FrictionJoint", ["Box2D/Box2D/Common/b2Settings", "Box2D/Box2D/Common/b2Math", "Box2D/Box2D/Dynamics/Joints/b2Joint"], function (exports_22, context_22) {
+System.register("Dynamics/Joints/b2FrictionJoint", ["Common/b2Settings", "Common/b2Math", "Dynamics/Joints/b2Joint"], function (exports_22, context_22) {
     "use strict";
     var __moduleName = context_22 && context_22.id;
     var b2Settings_15, b2Math_15, b2Joint_3, b2FrictionJointDef, b2FrictionJoint;
@@ -5368,7 +5368,7 @@ System.register("Box2D/Box2D/Dynamics/Joints/b2FrictionJoint", ["Box2D/Box2D/Com
         }
     };
 });
-System.register("Box2D/Box2D/Dynamics/Joints/b2PrismaticJoint", ["Box2D/Box2D/Common/b2Settings", "Box2D/Box2D/Common/b2Math", "Box2D/Box2D/Dynamics/Joints/b2Joint"], function (exports_23, context_23) {
+System.register("Dynamics/Joints/b2PrismaticJoint", ["Common/b2Settings", "Common/b2Math", "Dynamics/Joints/b2Joint"], function (exports_23, context_23) {
     "use strict";
     var __moduleName = context_23 && context_23.id;
     var b2Settings_16, b2Math_16, b2Joint_4, b2PrismaticJointDef, b2PrismaticJoint;
@@ -5853,7 +5853,7 @@ System.register("Box2D/Box2D/Dynamics/Joints/b2PrismaticJoint", ["Box2D/Box2D/Co
         }
     };
 });
-System.register("Box2D/Box2D/Dynamics/Joints/b2RevoluteJoint", ["Box2D/Box2D/Common/b2Settings", "Box2D/Box2D/Common/b2Math", "Box2D/Box2D/Dynamics/Joints/b2Joint"], function (exports_24, context_24) {
+System.register("Dynamics/Joints/b2RevoluteJoint", ["Common/b2Settings", "Common/b2Math", "Dynamics/Joints/b2Joint"], function (exports_24, context_24) {
     "use strict";
     var __moduleName = context_24 && context_24.id;
     var b2Settings_17, b2Math_17, b2Joint_5, b2RevoluteJointDef, b2RevoluteJoint;
@@ -6267,7 +6267,7 @@ System.register("Box2D/Box2D/Dynamics/Joints/b2RevoluteJoint", ["Box2D/Box2D/Com
         }
     };
 });
-System.register("Box2D/Box2D/Dynamics/Joints/b2GearJoint", ["Box2D/Box2D/Common/b2Settings", "Box2D/Box2D/Common/b2Math", "Box2D/Box2D/Dynamics/Joints/b2Joint"], function (exports_25, context_25) {
+System.register("Dynamics/Joints/b2GearJoint", ["Common/b2Settings", "Common/b2Math", "Dynamics/Joints/b2Joint"], function (exports_25, context_25) {
     "use strict";
     var __moduleName = context_25 && context_25.id;
     var b2Settings_18, b2Math_18, b2Joint_6, b2GearJointDef, b2GearJoint;
@@ -6633,7 +6633,7 @@ System.register("Box2D/Box2D/Dynamics/Joints/b2GearJoint", ["Box2D/Box2D/Common/
         }
     };
 });
-System.register("Box2D/Box2D/Dynamics/Joints/b2MotorJoint", ["Box2D/Box2D/Common/b2Settings", "Box2D/Box2D/Common/b2Math", "Box2D/Box2D/Dynamics/Joints/b2Joint"], function (exports_26, context_26) {
+System.register("Dynamics/Joints/b2MotorJoint", ["Common/b2Settings", "Common/b2Math", "Dynamics/Joints/b2Joint"], function (exports_26, context_26) {
     "use strict";
     var __moduleName = context_26 && context_26.id;
     var b2Settings_19, b2Math_19, b2Joint_7, b2MotorJointDef, b2MotorJoint;
@@ -6873,7 +6873,7 @@ System.register("Box2D/Box2D/Dynamics/Joints/b2MotorJoint", ["Box2D/Box2D/Common
         }
     };
 });
-System.register("Box2D/Box2D/Dynamics/Joints/b2MouseJoint", ["Box2D/Box2D/Common/b2Settings", "Box2D/Box2D/Common/b2Math", "Box2D/Box2D/Dynamics/Joints/b2Joint"], function (exports_27, context_27) {
+System.register("Dynamics/Joints/b2MouseJoint", ["Common/b2Settings", "Common/b2Math", "Dynamics/Joints/b2Joint"], function (exports_27, context_27) {
     "use strict";
     var __moduleName = context_27 && context_27.id;
     var b2Settings_20, b2Math_20, b2Joint_8, b2MouseJointDef, b2MouseJoint;
@@ -7054,7 +7054,7 @@ System.register("Box2D/Box2D/Dynamics/Joints/b2MouseJoint", ["Box2D/Box2D/Common
         }
     };
 });
-System.register("Box2D/Box2D/Dynamics/Joints/b2PulleyJoint", ["Box2D/Box2D/Common/b2Settings", "Box2D/Box2D/Common/b2Math", "Box2D/Box2D/Dynamics/Joints/b2Joint"], function (exports_28, context_28) {
+System.register("Dynamics/Joints/b2PulleyJoint", ["Common/b2Settings", "Common/b2Math", "Dynamics/Joints/b2Joint"], function (exports_28, context_28) {
     "use strict";
     var __moduleName = context_28 && context_28.id;
     var b2Settings_21, b2Math_21, b2Joint_9, b2_minPulleyLength, b2PulleyJointDef, b2PulleyJoint;
@@ -7343,7 +7343,7 @@ System.register("Box2D/Box2D/Dynamics/Joints/b2PulleyJoint", ["Box2D/Box2D/Commo
         }
     };
 });
-System.register("Box2D/Box2D/Dynamics/Joints/b2RopeJoint", ["Box2D/Box2D/Common/b2Settings", "Box2D/Box2D/Common/b2Math", "Box2D/Box2D/Dynamics/Joints/b2Joint"], function (exports_29, context_29) {
+System.register("Dynamics/Joints/b2RopeJoint", ["Common/b2Settings", "Common/b2Math", "Dynamics/Joints/b2Joint"], function (exports_29, context_29) {
     "use strict";
     var __moduleName = context_29 && context_29.id;
     var b2Settings_22, b2Math_22, b2Joint_10, b2RopeJointDef, b2RopeJoint;
@@ -7553,7 +7553,7 @@ System.register("Box2D/Box2D/Dynamics/Joints/b2RopeJoint", ["Box2D/Box2D/Common/
         }
     };
 });
-System.register("Box2D/Box2D/Dynamics/Joints/b2WeldJoint", ["Box2D/Box2D/Common/b2Settings", "Box2D/Box2D/Common/b2Math", "Box2D/Box2D/Dynamics/Joints/b2Joint"], function (exports_30, context_30) {
+System.register("Dynamics/Joints/b2WeldJoint", ["Common/b2Settings", "Common/b2Math", "Dynamics/Joints/b2Joint"], function (exports_30, context_30) {
     "use strict";
     var __moduleName = context_30 && context_30.id;
     var b2Settings_23, b2Math_23, b2Joint_11, b2WeldJointDef, b2WeldJoint;
@@ -7828,7 +7828,7 @@ System.register("Box2D/Box2D/Dynamics/Joints/b2WeldJoint", ["Box2D/Box2D/Common/
         }
     };
 });
-System.register("Box2D/Box2D/Dynamics/Joints/b2WheelJoint", ["Box2D/Box2D/Common/b2Settings", "Box2D/Box2D/Common/b2Math", "Box2D/Box2D/Dynamics/Joints/b2Joint"], function (exports_31, context_31) {
+System.register("Dynamics/Joints/b2WheelJoint", ["Common/b2Settings", "Common/b2Math", "Dynamics/Joints/b2Joint"], function (exports_31, context_31) {
     "use strict";
     var __moduleName = context_31 && context_31.id;
     var b2Settings_24, b2Math_24, b2Joint_12, b2WheelJointDef, b2WheelJoint;
@@ -8224,7 +8224,7 @@ System.register("Box2D/Box2D/Dynamics/Joints/b2WheelJoint", ["Box2D/Box2D/Common
         }
     };
 });
-System.register("Box2D/Box2D/Dynamics/Joints/b2JointFactory", ["Box2D/Box2D/Dynamics/Joints/b2Joint", "Box2D/Box2D/Dynamics/Joints/b2AreaJoint", "Box2D/Box2D/Dynamics/Joints/b2DistanceJoint", "Box2D/Box2D/Dynamics/Joints/b2FrictionJoint", "Box2D/Box2D/Dynamics/Joints/b2GearJoint", "Box2D/Box2D/Dynamics/Joints/b2MotorJoint", "Box2D/Box2D/Dynamics/Joints/b2MouseJoint", "Box2D/Box2D/Dynamics/Joints/b2PrismaticJoint", "Box2D/Box2D/Dynamics/Joints/b2PulleyJoint", "Box2D/Box2D/Dynamics/Joints/b2RevoluteJoint", "Box2D/Box2D/Dynamics/Joints/b2RopeJoint", "Box2D/Box2D/Dynamics/Joints/b2WeldJoint", "Box2D/Box2D/Dynamics/Joints/b2WheelJoint"], function (exports_32, context_32) {
+System.register("Dynamics/Joints/b2JointFactory", ["Dynamics/Joints/b2Joint", "Dynamics/Joints/b2AreaJoint", "Dynamics/Joints/b2DistanceJoint", "Dynamics/Joints/b2FrictionJoint", "Dynamics/Joints/b2GearJoint", "Dynamics/Joints/b2MotorJoint", "Dynamics/Joints/b2MouseJoint", "Dynamics/Joints/b2PrismaticJoint", "Dynamics/Joints/b2PulleyJoint", "Dynamics/Joints/b2RevoluteJoint", "Dynamics/Joints/b2RopeJoint", "Dynamics/Joints/b2WeldJoint", "Dynamics/Joints/b2WheelJoint"], function (exports_32, context_32) {
     "use strict";
     var __moduleName = context_32 && context_32.id;
     var b2Joint_13, b2AreaJoint_1, b2DistanceJoint_2, b2FrictionJoint_1, b2GearJoint_1, b2MotorJoint_1, b2MouseJoint_1, b2PrismaticJoint_1, b2PulleyJoint_1, b2RevoluteJoint_1, b2RopeJoint_1, b2WeldJoint_1, b2WheelJoint_1, b2JointFactory;
@@ -8326,7 +8326,7 @@ System.register("Box2D/Box2D/Dynamics/Joints/b2JointFactory", ["Box2D/Box2D/Dyna
         }
     };
 });
-System.register("Box2D/Box2D/Dynamics/Contacts/b2ContactSolver", ["Box2D/Box2D/Common/b2Settings", "Box2D/Box2D/Common/b2Math", "Box2D/Box2D/Collision/b2Collision", "Box2D/Box2D/Dynamics/b2TimeStep"], function (exports_33, context_33) {
+System.register("Dynamics/Contacts/b2ContactSolver", ["Common/b2Settings", "Common/b2Math", "Collision/b2Collision", "Dynamics/b2TimeStep"], function (exports_33, context_33) {
     "use strict";
     var __moduleName = context_33 && context_33.id;
     var b2Settings_25, b2Math_25, b2Collision_3, b2Collision_4, b2TimeStep_1, b2VelocityConstraintPoint, b2ContactVelocityConstraint, b2ContactPositionConstraint, b2ContactSolverDef, b2PositionSolverManifold, b2ContactSolver;
@@ -8954,7 +8954,7 @@ System.register("Box2D/Box2D/Dynamics/Contacts/b2ContactSolver", ["Box2D/Box2D/C
         }
     };
 });
-System.register("Box2D/Box2D/Particle/b2Particle", ["Box2D/Box2D/Common/b2Settings", "Box2D/Box2D/Common/b2Math", "Box2D/Box2D/Common/b2Draw"], function (exports_34, context_34) {
+System.register("Particle/b2Particle", ["Common/b2Settings", "Common/b2Math", "Common/b2Draw"], function (exports_34, context_34) {
     "use strict";
     var __moduleName = context_34 && context_34.id;
     function b2CalculateParticleIterations(gravity, radius, timeStep) {
@@ -9024,7 +9024,7 @@ System.register("Box2D/Box2D/Particle/b2Particle", ["Box2D/Box2D/Common/b2Settin
         }
     };
 });
-System.register("Box2D/Box2D/Particle/b2StackQueue", ["Box2D/Box2D/Common/b2Settings"], function (exports_35, context_35) {
+System.register("Particle/b2StackQueue", ["Common/b2Settings"], function (exports_35, context_35) {
     "use strict";
     var __moduleName = context_35 && context_35.id;
     var b2Settings_27, b2StackQueue;
@@ -9065,12 +9065,10 @@ System.register("Box2D/Box2D/Particle/b2StackQueue", ["Box2D/Box2D/Common/b2Sett
                     this.m_back++;
                 };
                 b2StackQueue.prototype.Pop = function () {
-                    b2Settings_27.b2Assert(this.m_front < this.m_back);
                     this.m_buffer[this.m_front] = null;
                     this.m_front++;
                 };
                 b2StackQueue.prototype.Empty = function () {
-                    b2Settings_27.b2Assert(this.m_front <= this.m_back);
                     return this.m_front === this.m_back;
                 };
                 b2StackQueue.prototype.Front = function () {
@@ -9086,7 +9084,7 @@ System.register("Box2D/Box2D/Particle/b2StackQueue", ["Box2D/Box2D/Common/b2Sett
         }
     };
 });
-System.register("Box2D/Box2D/Particle/b2VoronoiDiagram", ["Box2D/Box2D/Common/b2Settings", "Box2D/Box2D/Common/b2Math", "Box2D/Box2D/Particle/b2StackQueue"], function (exports_36, context_36) {
+System.register("Particle/b2VoronoiDiagram", ["Common/b2Settings", "Common/b2Math", "Particle/b2StackQueue"], function (exports_36, context_36) {
     "use strict";
     var __moduleName = context_36 && context_36.id;
     var b2Settings_28, b2Math_27, b2StackQueue_1, b2VoronoiDiagram;
@@ -9114,14 +9112,12 @@ System.register("Box2D/Box2D/Particle/b2VoronoiDiagram", ["Box2D/Box2D/Common/b2
                     this.m_generatorCapacity = generatorCapacity;
                 }
                 b2VoronoiDiagram.prototype.AddGenerator = function (center, tag, necessary) {
-                    b2Settings_28.b2Assert(this.m_generatorCount < this.m_generatorCapacity);
                     var g = this.m_generatorBuffer[this.m_generatorCount++];
                     g.center.Copy(center);
                     g.tag = tag;
                     g.necessary = necessary;
                 };
                 b2VoronoiDiagram.prototype.Generate = function (radius, margin) {
-                    b2Settings_28.b2Assert(this.m_diagram === null);
                     var inverseRadius = 1 / radius;
                     var lower = new b2Math_27.b2Vec2(+b2Settings_28.b2_maxFloat, +b2Settings_28.b2_maxFloat);
                     var upper = new b2Math_27.b2Vec2(-b2Settings_28.b2_maxFloat, -b2Settings_28.b2_maxFloat);
@@ -9284,7 +9280,7 @@ System.register("Box2D/Box2D/Particle/b2VoronoiDiagram", ["Box2D/Box2D/Common/b2
         }
     };
 });
-System.register("Box2D/Box2D/Particle/b2ParticleSystem", ["Box2D/Box2D/Common/b2Settings", "Box2D/Box2D/Common/b2Math", "Box2D/Box2D/Common/b2Draw", "Box2D/Box2D/Collision/b2Collision", "Box2D/Box2D/Collision/Shapes/b2Shape", "Box2D/Box2D/Collision/Shapes/b2EdgeShape", "Box2D/Box2D/Dynamics/b2TimeStep", "Box2D/Box2D/Dynamics/b2WorldCallbacks", "Box2D/Box2D/Particle/b2Particle", "Box2D/Box2D/Particle/b2ParticleGroup", "Box2D/Box2D/Particle/b2VoronoiDiagram"], function (exports_37, context_37) {
+System.register("Particle/b2ParticleSystem", ["Common/b2Settings", "Common/b2Math", "Common/b2Draw", "Collision/b2Collision", "Collision/Shapes/b2Shape", "Collision/Shapes/b2EdgeShape", "Dynamics/b2TimeStep", "Dynamics/b2WorldCallbacks", "Particle/b2Particle", "Particle/b2ParticleGroup", "Particle/b2VoronoiDiagram"], function (exports_37, context_37) {
     "use strict";
     var __moduleName = context_37 && context_37.id;
     function std_iter_swap(array, a, b) {
@@ -9454,7 +9450,6 @@ System.register("Box2D/Box2D/Particle/b2ParticleSystem", ["Box2D/Box2D/Common/b2
                     if (this.capacity >= newCapacity) {
                         return;
                     }
-                    b2Settings_29.b2Assert(this.capacity === this.data.length);
                     for (var i = this.capacity; i < newCapacity; ++i) {
                         this.data[i] = this.allocator();
                     }
@@ -9462,7 +9457,6 @@ System.register("Box2D/Box2D/Particle/b2ParticleSystem", ["Box2D/Box2D/Common/b2
                 };
                 b2GrowableBuffer.prototype.Grow = function () {
                     var newCapacity = this.capacity ? 2 * this.capacity : b2Settings_29.b2_minParticleSystemBufferCapacity;
-                    b2Settings_29.b2Assert(newCapacity > this.capacity);
                     this.Reserve(newCapacity);
                 };
                 b2GrowableBuffer.prototype.Free = function () {
@@ -9474,7 +9468,6 @@ System.register("Box2D/Box2D/Particle/b2ParticleSystem", ["Box2D/Box2D/Common/b2
                     this.count = 0;
                 };
                 b2GrowableBuffer.prototype.Shorten = function (newEnd) {
-                    b2Settings_29.b2Assert(false);
                 };
                 b2GrowableBuffer.prototype.Data = function () {
                     return this.data;
@@ -9489,14 +9482,7 @@ System.register("Box2D/Box2D/Particle/b2ParticleSystem", ["Box2D/Box2D/Common/b2
                     return this.capacity;
                 };
                 b2GrowableBuffer.prototype.RemoveIf = function (pred) {
-                    var count = 0;
-                    for (var i = 0; i < this.count; ++i) {
-                        if (!pred(this.data[i])) {
-                            count++;
-                        }
-                    }
                     this.count = std_remove_if(this.data, pred, this.count);
-                    b2Settings_29.b2Assert(count === this.count);
                 };
                 b2GrowableBuffer.prototype.Unique = function (pred) {
                     this.count = std_unique(this.data, 0, this.count, pred);
@@ -9534,7 +9520,6 @@ System.register("Box2D/Box2D/Particle/b2ParticleSystem", ["Box2D/Box2D/Common/b2
                     return false;
                 };
                 b2FixtureParticleQueryCallback.prototype.ReportFixtureAndParticle = function (fixture, childIndex, index) {
-                    b2Settings_29.b2Assert(false);
                 };
                 return b2FixtureParticleQueryCallback;
             }(b2WorldCallbacks_1.b2QueryCallback));
@@ -9548,7 +9533,6 @@ System.register("Box2D/Box2D/Particle/b2ParticleSystem", ["Box2D/Box2D/Common/b2
                     this.flags = 0;
                 }
                 b2ParticleContact.prototype.SetIndices = function (a, b) {
-                    b2Settings_29.b2Assert(a <= b2Settings_29.b2_maxParticleIndex && b <= b2Settings_29.b2_maxParticleIndex);
                     this.indexA = a;
                     this.indexB = b;
                 };
@@ -9736,7 +9720,6 @@ System.register("Box2D/Box2D/Particle/b2ParticleSystem", ["Box2D/Box2D/Common/b2
                     this.SetGravityScale(def.gravityScale);
                     this.SetRadius(def.radius);
                     this.SetMaxParticleCount(def.maxCount);
-                    b2Settings_29.b2Assert(def.lifetimeGranularity > 0.0);
                     this.m_def = def.Clone();
                     this.m_world = world;
                     this.SetDestructionByAge(this.m_def.destroyByAge);
@@ -9846,7 +9829,6 @@ System.register("Box2D/Box2D/Particle/b2ParticleSystem", ["Box2D/Box2D/Common/b2
                     if (group) {
                         if (group.m_firstIndex < group.m_lastIndex) {
                             this.RotateBuffer(group.m_firstIndex, group.m_lastIndex, index);
-                            b2Settings_29.b2Assert(group.m_lastIndex === index);
                             group.m_lastIndex = index + 1;
                         }
                         else {
@@ -9858,14 +9840,12 @@ System.register("Box2D/Box2D/Particle/b2ParticleSystem", ["Box2D/Box2D/Common/b2
                     return index;
                 };
                 b2ParticleSystem.prototype.GetParticleHandleFromIndex = function (index) {
-                    b2Settings_29.b2Assert(index >= 0 && index < this.GetParticleCount() && index !== b2Settings_29.b2_invalidParticleIndex);
                     this.m_handleIndexBuffer.data = this.RequestBuffer(this.m_handleIndexBuffer.data);
                     var handle = this.m_handleIndexBuffer.data[index];
                     if (handle) {
                         return handle;
                     }
                     handle = new b2Particle_1.b2ParticleHandle();
-                    b2Settings_29.b2Assert(handle !== null);
                     handle.SetIndex(index);
                     this.m_handleIndexBuffer.data[index] = handle;
                     return handle;
@@ -9884,7 +9864,6 @@ System.register("Box2D/Box2D/Particle/b2ParticleSystem", ["Box2D/Box2D/Common/b2
                 b2ParticleSystem.prototype.DestroyOldestParticle = function (index, callDestructionListener) {
                     if (callDestructionListener === void 0) { callDestructionListener = false; }
                     var particleCount = this.GetParticleCount();
-                    b2Settings_29.b2Assert(index >= 0 && index < particleCount);
                     if (!this.m_indexByExpirationTimeBuffer.data) {
                         throw new Error();
                     }
@@ -9960,11 +9939,8 @@ System.register("Box2D/Box2D/Particle/b2ParticleSystem", ["Box2D/Box2D/Common/b2
                     if (this.m_world.IsLocked()) {
                         throw new Error();
                     }
-                    b2Settings_29.b2Assert(groupA !== groupB);
                     this.RotateBuffer(groupB.m_firstIndex, groupB.m_lastIndex, this.m_count);
-                    b2Settings_29.b2Assert(groupB.m_lastIndex === this.m_count);
                     this.RotateBuffer(groupA.m_firstIndex, groupA.m_lastIndex, groupB.m_firstIndex);
-                    b2Settings_29.b2Assert(groupA.m_lastIndex === groupB.m_firstIndex);
                     var filter = new b2ParticleSystem.JoinParticleGroupsFilter(groupB.m_firstIndex);
                     this.UpdateContacts(true);
                     this.UpdatePairsAndTriads(groupA.m_firstIndex, groupB.m_lastIndex, filter);
@@ -10001,7 +9977,6 @@ System.register("Box2D/Box2D/Particle/b2ParticleSystem", ["Box2D/Box2D/Common/b2
                     return this.m_def.maxCount;
                 };
                 b2ParticleSystem.prototype.SetMaxParticleCount = function (count) {
-                    b2Settings_29.b2Assert(this.m_count <= count);
                     this.m_def.maxCount = count;
                 };
                 b2ParticleSystem.prototype.GetAllParticleFlags = function () {
@@ -10186,7 +10161,6 @@ System.register("Box2D/Box2D/Particle/b2ParticleSystem", ["Box2D/Box2D/Common/b2
                     return this.m_def.strictContactCheck;
                 };
                 b2ParticleSystem.prototype.SetParticleLifetime = function (index, lifetime) {
-                    b2Settings_29.b2Assert(this.ValidateParticleIndex(index));
                     var initializeExpirationTimes = this.m_indexByExpirationTimeBuffer.data === null;
                     this.m_expirationTimeBuffer.data = this.RequestBuffer(this.m_expirationTimeBuffer.data);
                     this.m_indexByExpirationTimeBuffer.data = this.RequestBuffer(this.m_indexByExpirationTimeBuffer.data);
@@ -10204,7 +10178,6 @@ System.register("Box2D/Box2D/Particle/b2ParticleSystem", ["Box2D/Box2D/Common/b2
                     }
                 };
                 b2ParticleSystem.prototype.GetParticleLifetime = function (index) {
-                    b2Settings_29.b2Assert(this.ValidateParticleIndex(index));
                     return this.ExpirationTimeToLifetime(this.GetExpirationTimeBuffer()[index]);
                 };
                 b2ParticleSystem.prototype.SetDestructionByAge = function (enable) {
@@ -10366,7 +10339,6 @@ System.register("Box2D/Box2D/Particle/b2ParticleSystem", ["Box2D/Box2D/Common/b2
                 };
                 b2ParticleSystem.prototype.ComputeAABB = function (aabb) {
                     var particleCount = this.GetParticleCount();
-                    b2Settings_29.b2Assert(aabb !== null);
                     aabb.lowerBound.x = +b2Settings_29.b2_maxFloat;
                     aabb.lowerBound.y = +b2Settings_29.b2_maxFloat;
                     aabb.upperBound.x = -b2Settings_29.b2_maxFloat;
@@ -10417,7 +10389,6 @@ System.register("Box2D/Box2D/Particle/b2ParticleSystem", ["Box2D/Box2D/Common/b2
                     return buffer;
                 };
                 b2ParticleSystem.prototype.ReallocateBuffer4 = function (buffer, oldCapacity, newCapacity, deferred) {
-                    b2Settings_29.b2Assert(newCapacity > oldCapacity);
                     return this.ReallocateBuffer5(buffer.data, buffer.userSuppliedCapacity, oldCapacity, newCapacity, deferred);
                 };
                 b2ParticleSystem.prototype.RequestBuffer = function (buffer) {
@@ -10431,7 +10402,6 @@ System.register("Box2D/Box2D/Particle/b2ParticleSystem", ["Box2D/Box2D/Common/b2
                     return buffer;
                 };
                 b2ParticleSystem.prototype.ReallocateHandleBuffers = function (newCapacity) {
-                    b2Settings_29.b2Assert(newCapacity > this.m_internalAllocatedCapacity);
                     this.m_handleIndexBuffer.data = this.ReallocateBuffer4(this.m_handleIndexBuffer, this.m_internalAllocatedCapacity, newCapacity, true);
                 };
                 b2ParticleSystem.prototype.ReallocateInternalAllocatedBuffers = function (capacity) {
@@ -10493,7 +10463,6 @@ System.register("Box2D/Box2D/Particle/b2ParticleSystem", ["Box2D/Box2D/Common/b2
                             edge = shape;
                         }
                         else {
-                            b2Settings_29.b2Assert(shape.GetType() === b2Shape_7.b2ShapeType.e_chainShape);
                             edge = s_edge;
                             shape.GetChildEdge(edge, childIndex);
                         }
@@ -10516,7 +10485,6 @@ System.register("Box2D/Box2D/Particle/b2ParticleSystem", ["Box2D/Box2D/Common/b2
                     }
                     var identity = b2Math_28.b2Transform.IDENTITY;
                     var aabb = s_aabb;
-                    b2Settings_29.b2Assert(shape.GetChildCount() === 1);
                     shape.ComputeAABB(aabb, identity, 0);
                     for (var y = Math.floor(aabb.lowerBound.y / stride) * stride; y < aabb.upperBound.y; y += stride) {
                         for (var x = Math.floor(aabb.lowerBound.x / stride) * stride; x < aabb.upperBound.x; x += stride) {
@@ -10538,7 +10506,6 @@ System.register("Box2D/Box2D/Particle/b2ParticleSystem", ["Box2D/Box2D/Common/b2
                             this.CreateParticlesFillShapeForGroup(shape, groupDef, xf);
                             break;
                         default:
-                            b2Settings_29.b2Assert(false);
                             break;
                     }
                 };
@@ -10610,8 +10577,6 @@ System.register("Box2D/Box2D/Particle/b2ParticleSystem", ["Box2D/Box2D/Common/b2
                     }
                 };
                 b2ParticleSystem.prototype.DestroyParticleGroup = function (group) {
-                    b2Settings_29.b2Assert(this.m_groupCount > 0);
-                    b2Settings_29.b2Assert(group !== null);
                     if (this.m_world.m_destructionListener) {
                         this.m_world.m_destructionListener.SayGoodbyeParticleGroup(group);
                     }
@@ -10648,7 +10613,6 @@ System.register("Box2D/Box2D/Particle/b2ParticleSystem", ["Box2D/Box2D/Common/b2
                         throw new Error();
                     }
                     var pos_data = this.m_positionBuffer.data;
-                    b2Settings_29.b2Assert(firstIndex <= lastIndex);
                     var particleFlags = 0;
                     for (var i = firstIndex; i < lastIndex; i++) {
                         particleFlags |= this.m_flagsBuffer.data[i];
@@ -10808,12 +10772,10 @@ System.register("Box2D/Box2D/Particle/b2ParticleSystem", ["Box2D/Box2D/Common/b2
                             listA = listB;
                             listB = _tmp;
                         }
-                        b2Settings_29.b2Assert(listA.count >= listB.count);
                         b2ParticleSystem.MergeParticleLists(listA, listB);
                     }
                 };
                 b2ParticleSystem.MergeParticleLists = function (listA, listB) {
-                    b2Settings_29.b2Assert(listA !== listB);
                     for (var b = listB;;) {
                         b.list = listA;
                         var nextB = b.next;
@@ -10854,9 +10816,6 @@ System.register("Box2D/Box2D/Particle/b2ParticleSystem", ["Box2D/Box2D/Common/b2
                     }
                 };
                 b2ParticleSystem.MergeParticleListAndNode = function (list, node) {
-                    b2Settings_29.b2Assert(node !== list);
-                    b2Settings_29.b2Assert(node.list === node);
-                    b2Settings_29.b2Assert(node.count === 1);
                     node.list = list;
                     node.next = list.next;
                     list.next = node;
@@ -10876,12 +10835,9 @@ System.register("Box2D/Box2D/Particle/b2ParticleSystem", ["Box2D/Box2D/Common/b2
                         if (!list.count || list === survivingList) {
                             continue;
                         }
-                        b2Settings_29.b2Assert(list.list === list);
                         var newGroup = this.CreateParticleGroup(def);
                         for (var node = list; node; node = node.next) {
                             var oldIndex = node.index;
-                            var flags = this.m_flagsBuffer.data[oldIndex];
-                            b2Settings_29.b2Assert(!(flags & b2Particle_1.b2ParticleFlag.b2_zombieParticle));
                             var newIndex = this.CloneParticle(oldIndex, newGroup);
                             this.m_flagsBuffer.data[oldIndex] |= b2Particle_1.b2ParticleFlag.b2_zombieParticle;
                             node.index = newIndex;
@@ -10951,7 +10907,6 @@ System.register("Box2D/Box2D/Particle/b2ParticleSystem", ["Box2D/Box2D/Common/b2
                         this.m_accumulationBuffer[a] += w;
                         this.m_accumulationBuffer[b] += w;
                     }
-                    b2Settings_29.b2Assert(this.m_depthBuffer !== null);
                     for (var i = 0; i < groupsToUpdateCount; i++) {
                         var group = groupsToUpdate[i];
                         for (var i_2 = group.m_firstIndex; i_2 < group.m_lastIndex; i_2++) {
@@ -11003,9 +10958,6 @@ System.register("Box2D/Box2D/Particle/b2ParticleSystem", ["Box2D/Box2D/Common/b2
                     var endProxy = this.m_proxyBuffer.count;
                     var firstProxy = std_lower_bound(this.m_proxyBuffer.data, beginProxy, endProxy, lowerTag, b2ParticleSystem.Proxy.CompareProxyTag);
                     var lastProxy = std_upper_bound(this.m_proxyBuffer.data, beginProxy, endProxy, upperTag, b2ParticleSystem.Proxy.CompareTagProxy);
-                    b2Settings_29.b2Assert(beginProxy <= firstProxy);
-                    b2Settings_29.b2Assert(firstProxy <= lastProxy);
-                    b2Settings_29.b2Assert(lastProxy <= endProxy);
                     return new b2ParticleSystem.InsideBoundsEnumerator(this, lowerTag, upperTag, firstProxy, lastProxy);
                 };
                 b2ParticleSystem.prototype.UpdateAllParticleFlags = function () {
@@ -11034,7 +10986,6 @@ System.register("Box2D/Box2D/Particle/b2ParticleSystem", ["Box2D/Box2D/Common/b2
                     }
                     var s_d = b2ParticleSystem.AddContact_s_d;
                     var pos_data = this.m_positionBuffer.data;
-                    b2Settings_29.b2Assert(contacts === this.m_contactBuffer);
                     var d = b2Math_28.b2Vec2.SubVV(pos_data[b], pos_data[a], s_d);
                     var distBtParticlesSq = b2Math_28.b2Vec2.DotVV(d, d);
                     if (distBtParticlesSq < this.m_squaredDiameter) {
@@ -11051,7 +11002,6 @@ System.register("Box2D/Box2D/Particle/b2ParticleSystem", ["Box2D/Box2D/Common/b2
                     }
                 };
                 b2ParticleSystem.prototype.FindContacts_Reference = function (contacts) {
-                    b2Settings_29.b2Assert(contacts === this.m_contactBuffer);
                     var beginProxy = 0;
                     var endProxy = this.m_proxyBuffer.count;
                     this.m_contactBuffer.count = 0;
@@ -11082,7 +11032,6 @@ System.register("Box2D/Box2D/Particle/b2ParticleSystem", ["Box2D/Box2D/Common/b2
                     this.FindContacts_Reference(contacts);
                 };
                 b2ParticleSystem.prototype.UpdateProxies_Reference = function (proxies) {
-                    b2Settings_29.b2Assert(proxies === this.m_proxyBuffer);
                     if (!this.m_positionBuffer.data) {
                         throw new Error();
                     }
@@ -11099,7 +11048,6 @@ System.register("Box2D/Box2D/Particle/b2ParticleSystem", ["Box2D/Box2D/Common/b2
                     this.UpdateProxies_Reference(proxies);
                 };
                 b2ParticleSystem.prototype.SortProxies = function (proxies) {
-                    b2Settings_29.b2Assert(proxies === this.m_proxyBuffer);
                     std_sort(this.m_proxyBuffer.data, 0, this.m_proxyBuffer.count, b2ParticleSystem.Proxy.CompareProxyProxy);
                 };
                 b2ParticleSystem.prototype.FilterContacts = function (contacts) {
@@ -11107,7 +11055,6 @@ System.register("Box2D/Box2D/Particle/b2ParticleSystem", ["Box2D/Box2D/Common/b2
                     if (contactFilter === null) {
                         return;
                     }
-                    b2Settings_29.b2Assert(contacts === this.m_contactBuffer);
                     var system = this;
                     var predicate = function (contact) {
                         return ((contact.flags & b2Particle_1.b2ParticleFlag.b2_particleContactFilterParticle) !== 0) && !contactFilter.ShouldCollideParticleParticle(system, contact.indexA, contact.indexB);
@@ -11169,7 +11116,6 @@ System.register("Box2D/Box2D/Particle/b2ParticleSystem", ["Box2D/Box2D/Common/b2
                     }
                     for (var k = 0; k < this.m_bodyContactBuffer.count; k++) {
                         var contact = this.m_bodyContactBuffer.data[k];
-                        b2Settings_29.b2Assert(contact !== null);
                         var index = -1;
                         if (index >= 0) {
                             fixtureSet.Invalidate(index);
@@ -11576,7 +11522,6 @@ System.register("Box2D/Box2D/Particle/b2ParticleSystem", ["Box2D/Box2D/Common/b2
                         }
                     }
                     if (this.m_allParticleFlags & b2Particle_1.b2ParticleFlag.b2_staticPressureParticle) {
-                        b2Settings_29.b2Assert(this.m_staticPressureBuffer !== null);
                         for (var i = 0; i < this.m_count; i++) {
                             if (this.m_flagsBuffer.data[i] & b2Particle_1.b2ParticleFlag.b2_staticPressureParticle) {
                                 this.m_accumulationBuffer[i] += this.m_staticPressureBuffer[i];
@@ -11903,7 +11848,6 @@ System.register("Box2D/Box2D/Particle/b2ParticleSystem", ["Box2D/Box2D/Common/b2
                         throw new Error();
                     }
                     var vel_data = this.m_velocityBuffer.data;
-                    b2Settings_29.b2Assert(this.m_accumulation2Buffer !== null);
                     for (var i = 0; i < this.m_count; i++) {
                         this.m_accumulation2Buffer[i] = new b2Math_28.b2Vec2();
                         this.m_accumulation2Buffer[i].SetZero();
@@ -12122,7 +12066,6 @@ System.register("Box2D/Box2D/Particle/b2ParticleSystem", ["Box2D/Box2D/Common/b2
                     for (var i = 0; i < this.m_count; i++) {
                         newIndices[i] = b2Settings_29.b2_invalidParticleIndex;
                     }
-                    b2Settings_29.b2Assert(newIndices.length === this.m_count);
                     var allParticleFlags = 0;
                     for (var i = 0; i < this.m_count; i++) {
                         var flags = this.m_flagsBuffer.data[i];
@@ -12320,7 +12263,6 @@ System.register("Box2D/Box2D/Particle/b2ParticleSystem", ["Box2D/Box2D/Common/b2
                     if (start === mid || mid === end) {
                         return;
                     }
-                    b2Settings_29.b2Assert(mid >= start && mid <= end);
                     function newIndices(i) {
                         if (i < start) {
                             return i;
@@ -12459,7 +12401,6 @@ System.register("Box2D/Box2D/Particle/b2ParticleSystem", ["Box2D/Box2D/Common/b2
                         this.m_world.m_contactManager.m_contactListener : null;
                 };
                 b2ParticleSystem.prototype.SetUserOverridableBuffer = function (buffer, newData, newCapacity) {
-                    b2Settings_29.b2Assert(((newData !== null) && (newCapacity > 0)) || ((newData === null) && (newCapacity === 0)));
                     buffer.data = newData;
                     buffer.userSuppliedCapacity = newCapacity;
                 };
@@ -12735,7 +12676,6 @@ System.register("Box2D/Box2D/Particle/b2ParticleSystem", ["Box2D/Box2D/Common/b2
                         this.m_yUpper = (upper & b2ParticleSystem.yMask) >>> 0;
                         this.m_first = first;
                         this.m_last = last;
-                        b2Settings_29.b2Assert(this.m_first <= this.m_last);
                     }
                     InsideBoundsEnumerator.prototype.GetNext = function () {
                         while (this.m_first < this.m_last) {
@@ -12863,7 +12803,6 @@ System.register("Box2D/Box2D/Particle/b2ParticleSystem", ["Box2D/Box2D/Common/b2
                         if (particleSystem !== this.m_system) {
                             return false;
                         }
-                        b2Settings_29.b2Assert(index >= 0 && index < this.m_system.m_count);
                         if (!this.m_system.m_positionBuffer.data) {
                             throw new Error();
                         }
@@ -12909,7 +12848,6 @@ System.register("Box2D/Box2D/Particle/b2ParticleSystem", ["Box2D/Box2D/Common/b2
                         return _this;
                     }
                     CompositeShape.prototype.Clone = function () {
-                        b2Settings_29.b2Assert(false);
                         throw new Error();
                     };
                     CompositeShape.prototype.GetChildCount = function () {
@@ -12924,11 +12862,9 @@ System.register("Box2D/Box2D/Particle/b2ParticleSystem", ["Box2D/Box2D/Common/b2
                         return false;
                     };
                     CompositeShape.prototype.ComputeDistance = function (xf, p, normal, childIndex) {
-                        b2Settings_29.b2Assert(false);
                         return 0;
                     };
                     CompositeShape.prototype.RayCast = function (output, input, xf, childIndex) {
-                        b2Settings_29.b2Assert(false);
                         return false;
                     };
                     CompositeShape.prototype.ComputeAABB = function (aabb, xf, childIndex) {
@@ -12937,7 +12873,6 @@ System.register("Box2D/Box2D/Particle/b2ParticleSystem", ["Box2D/Box2D/Common/b2
                         aabb.lowerBound.y = +b2Settings_29.b2_maxFloat;
                         aabb.upperBound.x = -b2Settings_29.b2_maxFloat;
                         aabb.upperBound.y = -b2Settings_29.b2_maxFloat;
-                        b2Settings_29.b2Assert(childIndex === 0);
                         for (var i = 0; i < this.m_shapeCount; i++) {
                             var childCount = this.m_shapes[i].GetChildCount();
                             for (var j = 0; j < childCount; j++) {
@@ -12948,17 +12883,13 @@ System.register("Box2D/Box2D/Particle/b2ParticleSystem", ["Box2D/Box2D/Common/b2
                         }
                     };
                     CompositeShape.prototype.ComputeMass = function (massData, density) {
-                        b2Settings_29.b2Assert(false);
                     };
                     CompositeShape.prototype.SetupDistanceProxy = function (proxy, index) {
-                        b2Settings_29.b2Assert(false);
                     };
                     CompositeShape.prototype.ComputeSubmergedArea = function (normal, offset, xf, c) {
-                        b2Settings_29.b2Assert(false);
                         return 0;
                     };
                     CompositeShape.prototype.Dump = function (log) {
-                        b2Settings_29.b2Assert(false);
                     };
                     return CompositeShape;
                 }(b2Shape_7.b2Shape));
@@ -13106,7 +13037,7 @@ System.register("Box2D/Box2D/Particle/b2ParticleSystem", ["Box2D/Box2D/Common/b2
         }
     };
 });
-System.register("Box2D/Box2D/Particle/b2ParticleGroup", ["Box2D/Box2D/Common/b2Math", "Box2D/Box2D/Common/b2Draw"], function (exports_38, context_38) {
+System.register("Particle/b2ParticleGroup", ["Common/b2Math", "Common/b2Draw"], function (exports_38, context_38) {
     "use strict";
     var __moduleName = context_38 && context_38.id;
     var b2Math_29, b2Draw_3, b2ParticleGroupFlag, b2ParticleGroupDef, b2ParticleGroup;
@@ -13297,7 +13228,7 @@ System.register("Box2D/Box2D/Particle/b2ParticleGroup", ["Box2D/Box2D/Common/b2M
         }
     };
 });
-System.register("Box2D/Box2D/Dynamics/b2WorldCallbacks", ["Box2D/Box2D/Common/b2Settings", "Box2D/Box2D/Dynamics/b2Body"], function (exports_39, context_39) {
+System.register("Dynamics/b2WorldCallbacks", ["Common/b2Settings", "Dynamics/b2Body"], function (exports_39, context_39) {
     "use strict";
     var __moduleName = context_39 && context_39.id;
     var b2Settings_31, b2Body_1, b2DestructionListener, b2ContactFilter, b2ContactImpulse, b2ContactListener, b2QueryCallback, b2RayCastCallback;
@@ -13408,7 +13339,7 @@ System.register("Box2D/Box2D/Dynamics/b2WorldCallbacks", ["Box2D/Box2D/Common/b2
         }
     };
 });
-System.register("Box2D/Box2D/Dynamics/b2Island", ["Box2D/Box2D/Common/b2Settings", "Box2D/Box2D/Common/b2Math", "Box2D/Box2D/Common/b2Timer", "Box2D/Box2D/Dynamics/Contacts/b2ContactSolver", "Box2D/Box2D/Dynamics/b2Body", "Box2D/Box2D/Dynamics/b2TimeStep", "Box2D/Box2D/Dynamics/b2WorldCallbacks"], function (exports_40, context_40) {
+System.register("Dynamics/b2Island", ["Common/b2Settings", "Common/b2Math", "Common/b2Timer", "Dynamics/Contacts/b2ContactSolver", "Dynamics/b2Body", "Dynamics/b2TimeStep", "Dynamics/b2WorldCallbacks"], function (exports_40, context_40) {
     "use strict";
     var __moduleName = context_40 && context_40.id;
     var b2Settings_32, b2Settings_33, b2Settings_34, b2Settings_35, b2Math_30, b2Timer_2, b2ContactSolver_1, b2Body_2, b2TimeStep_3, b2WorldCallbacks_2, b2Island;
@@ -13706,7 +13637,7 @@ System.register("Box2D/Box2D/Dynamics/b2Island", ["Box2D/Box2D/Common/b2Settings
         }
     };
 });
-System.register("Contributions/Enhancements/Controllers/b2Controller", [], function (exports_41, context_41) {
+System.register("Controllers/b2Controller", [], function (exports_41, context_41) {
     "use strict";
     var __moduleName = context_41 && context_41.id;
     var b2ControllerEdge, b2Controller;
@@ -13802,7 +13733,7 @@ System.register("Contributions/Enhancements/Controllers/b2Controller", [], funct
         }
     };
 });
-System.register("Box2D/Box2D/Dynamics/b2World", ["Box2D/Box2D/Common/b2Settings", "Box2D/Box2D/Common/b2Math", "Box2D/Box2D/Common/b2Timer", "Box2D/Box2D/Common/b2Draw", "Box2D/Box2D/Collision/b2Collision", "Box2D/Box2D/Collision/b2TimeOfImpact", "Box2D/Box2D/Collision/Shapes/b2Shape", "Box2D/Box2D/Dynamics/Joints/b2Joint", "Box2D/Box2D/Dynamics/Joints/b2JointFactory", "Box2D/Box2D/Dynamics/b2Body", "Box2D/Box2D/Dynamics/b2ContactManager", "Box2D/Box2D/Dynamics/b2Island", "Box2D/Box2D/Dynamics/b2TimeStep", "Box2D/Box2D/Dynamics/b2WorldCallbacks", "Box2D/Box2D/Particle/b2Particle", "Box2D/Box2D/Particle/b2ParticleSystem"], function (exports_42, context_42) {
+System.register("Dynamics/b2World", ["Common/b2Settings", "Common/b2Math", "Common/b2Timer", "Common/b2Draw", "Collision/b2Collision", "Collision/b2TimeOfImpact", "Collision/Shapes/b2Shape", "Dynamics/Joints/b2Joint", "Dynamics/Joints/b2JointFactory", "Dynamics/b2Body", "Dynamics/b2ContactManager", "Dynamics/b2Island", "Dynamics/b2TimeStep", "Dynamics/b2WorldCallbacks", "Particle/b2Particle", "Particle/b2ParticleSystem"], function (exports_42, context_42) {
     "use strict";
     var __moduleName = context_42 && context_42.id;
     var b2Settings_36, b2Math_31, b2Timer_3, b2Draw_4, b2Collision_6, b2TimeOfImpact_1, b2Shape_8, b2Joint_14, b2JointFactory_1, b2Body_3, b2ContactManager_1, b2Island_1, b2TimeStep_4, b2WorldCallbacks_3, b2WorldCallbacks_4, b2Settings_37, b2Particle_2, b2ParticleSystem_1, b2World;
@@ -14967,7 +14898,7 @@ System.register("Box2D/Box2D/Dynamics/b2World", ["Box2D/Box2D/Common/b2Settings"
         }
     };
 });
-System.register("Box2D/Box2D/Dynamics/b2Body", ["Box2D/Box2D/Common/b2Settings", "Box2D/Box2D/Common/b2Math", "Box2D/Box2D/Collision/Shapes/b2Shape", "Box2D/Box2D/Dynamics/b2Fixture"], function (exports_43, context_43) {
+System.register("Dynamics/b2Body", ["Common/b2Settings", "Common/b2Math", "Collision/Shapes/b2Shape", "Dynamics/b2Fixture"], function (exports_43, context_43) {
     "use strict";
     var __moduleName = context_43 && context_43.id;
     var b2Settings_38, b2Math_32, b2Shape_9, b2Fixture_1, b2BodyType, b2BodyDef, b2Body;
@@ -15677,7 +15608,7 @@ System.register("Box2D/Box2D/Dynamics/b2Body", ["Box2D/Box2D/Common/b2Settings",
         }
     };
 });
-System.register("Box2D/Box2D/Dynamics/Contacts/b2Contact", ["Box2D/Box2D/Common/b2Settings", "Box2D/Box2D/Common/b2Math", "Box2D/Box2D/Collision/b2Collision", "Box2D/Box2D/Collision/b2TimeOfImpact"], function (exports_44, context_44) {
+System.register("Dynamics/Contacts/b2Contact", ["Common/b2Settings", "Common/b2Math", "Collision/b2Collision", "Collision/b2TimeOfImpact"], function (exports_44, context_44) {
     "use strict";
     var __moduleName = context_44 && context_44.id;
     function b2MixFriction(friction1, friction2) {
@@ -15896,7 +15827,7 @@ System.register("Box2D/Box2D/Dynamics/Contacts/b2Contact", ["Box2D/Box2D/Common/
         }
     };
 });
-System.register("Box2D/Box2D/Collision/b2CollideCircle", ["Box2D/Box2D/Common/b2Settings", "Box2D/Box2D/Common/b2Math", "Box2D/Box2D/Collision/b2Collision"], function (exports_45, context_45) {
+System.register("Collision/b2CollideCircle", ["Common/b2Settings", "Common/b2Math", "Collision/b2Collision"], function (exports_45, context_45) {
     "use strict";
     var __moduleName = context_45 && context_45.id;
     function b2CollideCircles(manifold, circleA, xfA, circleB, xfB) {
@@ -16010,7 +15941,7 @@ System.register("Box2D/Box2D/Collision/b2CollideCircle", ["Box2D/Box2D/Common/b2
         }
     };
 });
-System.register("Box2D/Box2D/Dynamics/Contacts/b2CircleContact", ["Box2D/Box2D/Collision/b2CollideCircle", "Box2D/Box2D/Dynamics/Contacts/b2Contact"], function (exports_46, context_46) {
+System.register("Dynamics/Contacts/b2CircleContact", ["Collision/b2CollideCircle", "Dynamics/Contacts/b2Contact"], function (exports_46, context_46) {
     "use strict";
     var __moduleName = context_46 && context_46.id;
     var b2CollideCircle_1, b2Contact_1, b2CircleContact;
@@ -16048,7 +15979,7 @@ System.register("Box2D/Box2D/Dynamics/Contacts/b2CircleContact", ["Box2D/Box2D/C
         }
     };
 });
-System.register("Box2D/Box2D/Collision/b2CollidePolygon", ["Box2D/Box2D/Common/b2Settings", "Box2D/Box2D/Common/b2Math", "Box2D/Box2D/Collision/b2Collision"], function (exports_47, context_47) {
+System.register("Collision/b2CollidePolygon", ["Common/b2Settings", "Common/b2Math", "Collision/b2Collision"], function (exports_47, context_47) {
     "use strict";
     var __moduleName = context_47 && context_47.id;
     function b2EdgeSeparation(poly1, xf1, edge1, poly2, xf2) {
@@ -16291,7 +16222,7 @@ System.register("Box2D/Box2D/Collision/b2CollidePolygon", ["Box2D/Box2D/Common/b
         }
     };
 });
-System.register("Box2D/Box2D/Dynamics/Contacts/b2PolygonContact", ["Box2D/Box2D/Collision/b2CollidePolygon", "Box2D/Box2D/Dynamics/Contacts/b2Contact"], function (exports_48, context_48) {
+System.register("Dynamics/Contacts/b2PolygonContact", ["Collision/b2CollidePolygon", "Dynamics/Contacts/b2Contact"], function (exports_48, context_48) {
     "use strict";
     var __moduleName = context_48 && context_48.id;
     var b2CollidePolygon_1, b2Contact_2, b2PolygonContact;
@@ -16329,7 +16260,7 @@ System.register("Box2D/Box2D/Dynamics/Contacts/b2PolygonContact", ["Box2D/Box2D/
         }
     };
 });
-System.register("Box2D/Box2D/Dynamics/Contacts/b2PolygonAndCircleContact", ["Box2D/Box2D/Collision/b2CollideCircle", "Box2D/Box2D/Dynamics/Contacts/b2Contact"], function (exports_49, context_49) {
+System.register("Dynamics/Contacts/b2PolygonAndCircleContact", ["Collision/b2CollideCircle", "Dynamics/Contacts/b2Contact"], function (exports_49, context_49) {
     "use strict";
     var __moduleName = context_49 && context_49.id;
     var b2CollideCircle_2, b2Contact_3, b2PolygonAndCircleContact;
@@ -16367,7 +16298,7 @@ System.register("Box2D/Box2D/Dynamics/Contacts/b2PolygonAndCircleContact", ["Box
         }
     };
 });
-System.register("Box2D/Box2D/Collision/b2CollideEdge", ["Box2D/Box2D/Common/b2Settings", "Box2D/Box2D/Common/b2Math", "Box2D/Box2D/Collision/b2Collision"], function (exports_50, context_50) {
+System.register("Collision/b2CollideEdge", ["Common/b2Settings", "Common/b2Math", "Collision/b2Collision"], function (exports_50, context_50) {
     "use strict";
     var __moduleName = context_50 && context_50.id;
     function b2CollideEdgeAndCircle(manifold, edgeA, xfA, circleB, xfB) {
@@ -16902,7 +16833,7 @@ System.register("Box2D/Box2D/Collision/b2CollideEdge", ["Box2D/Box2D/Common/b2Se
         }
     };
 });
-System.register("Box2D/Box2D/Dynamics/Contacts/b2EdgeAndCircleContact", ["Box2D/Box2D/Collision/b2CollideEdge", "Box2D/Box2D/Dynamics/Contacts/b2Contact"], function (exports_51, context_51) {
+System.register("Dynamics/Contacts/b2EdgeAndCircleContact", ["Collision/b2CollideEdge", "Dynamics/Contacts/b2Contact"], function (exports_51, context_51) {
     "use strict";
     var __moduleName = context_51 && context_51.id;
     var b2CollideEdge_1, b2Contact_4, b2EdgeAndCircleContact;
@@ -16940,7 +16871,7 @@ System.register("Box2D/Box2D/Dynamics/Contacts/b2EdgeAndCircleContact", ["Box2D/
         }
     };
 });
-System.register("Box2D/Box2D/Dynamics/Contacts/b2EdgeAndPolygonContact", ["Box2D/Box2D/Collision/b2CollideEdge", "Box2D/Box2D/Dynamics/Contacts/b2Contact"], function (exports_52, context_52) {
+System.register("Dynamics/Contacts/b2EdgeAndPolygonContact", ["Collision/b2CollideEdge", "Dynamics/Contacts/b2Contact"], function (exports_52, context_52) {
     "use strict";
     var __moduleName = context_52 && context_52.id;
     var b2CollideEdge_2, b2Contact_5, b2EdgeAndPolygonContact;
@@ -16978,7 +16909,7 @@ System.register("Box2D/Box2D/Dynamics/Contacts/b2EdgeAndPolygonContact", ["Box2D
         }
     };
 });
-System.register("Box2D/Box2D/Dynamics/Contacts/b2ChainAndCircleContact", ["Box2D/Box2D/Collision/b2CollideEdge", "Box2D/Box2D/Collision/Shapes/b2EdgeShape", "Box2D/Box2D/Dynamics/Contacts/b2Contact"], function (exports_53, context_53) {
+System.register("Dynamics/Contacts/b2ChainAndCircleContact", ["Collision/b2CollideEdge", "Collision/Shapes/b2EdgeShape", "Dynamics/Contacts/b2Contact"], function (exports_53, context_53) {
     "use strict";
     var __moduleName = context_53 && context_53.id;
     var b2CollideEdge_3, b2EdgeShape_3, b2Contact_6, b2ChainAndCircleContact;
@@ -17023,7 +16954,7 @@ System.register("Box2D/Box2D/Dynamics/Contacts/b2ChainAndCircleContact", ["Box2D
         }
     };
 });
-System.register("Box2D/Box2D/Dynamics/Contacts/b2ChainAndPolygonContact", ["Box2D/Box2D/Collision/b2CollideEdge", "Box2D/Box2D/Collision/Shapes/b2EdgeShape", "Box2D/Box2D/Dynamics/Contacts/b2Contact"], function (exports_54, context_54) {
+System.register("Dynamics/Contacts/b2ChainAndPolygonContact", ["Collision/b2CollideEdge", "Collision/Shapes/b2EdgeShape", "Dynamics/Contacts/b2Contact"], function (exports_54, context_54) {
     "use strict";
     var __moduleName = context_54 && context_54.id;
     var b2CollideEdge_4, b2EdgeShape_4, b2Contact_7, b2ChainAndPolygonContact;
@@ -17068,7 +16999,7 @@ System.register("Box2D/Box2D/Dynamics/Contacts/b2ChainAndPolygonContact", ["Box2
         }
     };
 });
-System.register("Box2D/Box2D/Dynamics/Contacts/b2ContactFactory", ["Box2D/Box2D/Common/b2Settings", "Box2D/Box2D/Collision/Shapes/b2Shape", "Box2D/Box2D/Dynamics/Contacts/b2CircleContact", "Box2D/Box2D/Dynamics/Contacts/b2PolygonContact", "Box2D/Box2D/Dynamics/Contacts/b2PolygonAndCircleContact", "Box2D/Box2D/Dynamics/Contacts/b2EdgeAndCircleContact", "Box2D/Box2D/Dynamics/Contacts/b2EdgeAndPolygonContact", "Box2D/Box2D/Dynamics/Contacts/b2ChainAndCircleContact", "Box2D/Box2D/Dynamics/Contacts/b2ChainAndPolygonContact"], function (exports_55, context_55) {
+System.register("Dynamics/Contacts/b2ContactFactory", ["Common/b2Settings", "Collision/Shapes/b2Shape", "Dynamics/Contacts/b2CircleContact", "Dynamics/Contacts/b2PolygonContact", "Dynamics/Contacts/b2PolygonAndCircleContact", "Dynamics/Contacts/b2EdgeAndCircleContact", "Dynamics/Contacts/b2EdgeAndPolygonContact", "Dynamics/Contacts/b2ChainAndCircleContact", "Dynamics/Contacts/b2ChainAndPolygonContact"], function (exports_55, context_55) {
     "use strict";
     var __moduleName = context_55 && context_55.id;
     var b2Settings_43, b2Shape_10, b2CircleContact_1, b2PolygonContact_1, b2PolygonAndCircleContact_1, b2EdgeAndCircleContact_1, b2EdgeAndPolygonContact_1, b2ChainAndCircleContact_1, b2ChainAndPolygonContact_1, b2ContactRegister, b2ContactFactory;
@@ -17192,7 +17123,7 @@ System.register("Box2D/Box2D/Dynamics/Contacts/b2ContactFactory", ["Box2D/Box2D/
         }
     };
 });
-System.register("Box2D/Box2D/Dynamics/b2ContactManager", ["Box2D/Box2D/Collision/b2BroadPhase", "Box2D/Box2D/Dynamics/Contacts/b2ContactFactory", "Box2D/Box2D/Dynamics/b2Body", "Box2D/Box2D/Dynamics/b2WorldCallbacks"], function (exports_56, context_56) {
+System.register("Dynamics/b2ContactManager", ["Collision/b2BroadPhase", "Dynamics/Contacts/b2ContactFactory", "Dynamics/b2Body", "Dynamics/b2WorldCallbacks"], function (exports_56, context_56) {
     "use strict";
     var __moduleName = context_56 && context_56.id;
     var b2BroadPhase_1, b2ContactFactory_1, b2Body_4, b2WorldCallbacks_5, b2ContactManager;
@@ -17373,7 +17304,7 @@ System.register("Box2D/Box2D/Dynamics/b2ContactManager", ["Box2D/Box2D/Collision
         }
     };
 });
-System.register("Box2D/Box2D/Collision/b2BroadPhase", ["Box2D/Box2D/Collision/b2Collision", "Box2D/Box2D/Collision/b2DynamicTree"], function (exports_57, context_57) {
+System.register("Collision/b2BroadPhase", ["Collision/b2Collision", "Collision/b2DynamicTree"], function (exports_57, context_57) {
     "use strict";
     var __moduleName = context_57 && context_57.id;
     function b2PairLessThan(pair1, pair2) {
@@ -17536,20 +17467,347 @@ System.register("Box2D/Box2D/Collision/b2BroadPhase", ["Box2D/Box2D/Collision/b2
         }
     };
 });
-System.register("Box2D/Box2D/Rope/b2Rope", ["Box2D/Box2D/Common/b2Settings", "Box2D/Box2D/Common/b2Math", "Box2D/Box2D/Common/b2Draw"], function (exports_58, context_58) {
+System.register("Controllers/b2BuoyancyController", ["Controllers/b2Controller", "Common/b2Math", "Common/b2Settings", "Common/b2Draw"], function (exports_58, context_58) {
     "use strict";
     var __moduleName = context_58 && context_58.id;
-    var b2Settings_44, b2Math_37, b2Draw_5, b2RopeDef, b2Rope;
+    var b2Controller_1, b2Math_37, b2Settings_44, b2Draw_5, b2BuoyancyController;
     return {
         setters: [
-            function (b2Settings_44_1) {
-                b2Settings_44 = b2Settings_44_1;
+            function (b2Controller_1_1) {
+                b2Controller_1 = b2Controller_1_1;
             },
             function (b2Math_37_1) {
                 b2Math_37 = b2Math_37_1;
             },
+            function (b2Settings_44_1) {
+                b2Settings_44 = b2Settings_44_1;
+            },
             function (b2Draw_5_1) {
                 b2Draw_5 = b2Draw_5_1;
+            }
+        ],
+        execute: function () {
+            b2BuoyancyController = (function (_super) {
+                __extends(b2BuoyancyController, _super);
+                function b2BuoyancyController() {
+                    var _this = _super !== null && _super.apply(this, arguments) || this;
+                    _this.normal = new b2Math_37.b2Vec2(0, 1);
+                    _this.offset = 0;
+                    _this.density = 0;
+                    _this.velocity = new b2Math_37.b2Vec2(0, 0);
+                    _this.linearDrag = 0;
+                    _this.angularDrag = 0;
+                    _this.useDensity = false;
+                    _this.useWorldGravity = true;
+                    _this.gravity = new b2Math_37.b2Vec2(0, 0);
+                    return _this;
+                }
+                b2BuoyancyController.prototype.Step = function (step) {
+                    if (!this.m_bodyList) {
+                        return;
+                    }
+                    if (this.useWorldGravity) {
+                        this.gravity.Copy(this.m_bodyList.body.GetWorld().GetGravity());
+                    }
+                    for (var i = this.m_bodyList; i; i = i.nextBody) {
+                        var body = i.body;
+                        if (!body.IsAwake()) {
+                            continue;
+                        }
+                        var areac = new b2Math_37.b2Vec2();
+                        var massc = new b2Math_37.b2Vec2();
+                        var area = 0;
+                        var mass = 0;
+                        for (var fixture = body.GetFixtureList(); fixture; fixture = fixture.m_next) {
+                            var sc = new b2Math_37.b2Vec2();
+                            var sarea = fixture.GetShape().ComputeSubmergedArea(this.normal, this.offset, body.GetTransform(), sc);
+                            area += sarea;
+                            areac.x += sarea * sc.x;
+                            areac.y += sarea * sc.y;
+                            var shapeDensity = 0;
+                            if (this.useDensity) {
+                                shapeDensity = fixture.GetDensity();
+                            }
+                            else {
+                                shapeDensity = 1;
+                            }
+                            mass += sarea * shapeDensity;
+                            massc.x += sarea * sc.x * shapeDensity;
+                            massc.y += sarea * sc.y * shapeDensity;
+                        }
+                        areac.x /= area;
+                        areac.y /= area;
+                        massc.x /= mass;
+                        massc.y /= mass;
+                        if (area < b2Settings_44.b2_epsilon) {
+                            continue;
+                        }
+                        var buoyancyForce = this.gravity.Clone().SelfNeg();
+                        buoyancyForce.SelfMul(this.density * area);
+                        body.ApplyForce(buoyancyForce, massc);
+                        var dragForce = body.GetLinearVelocityFromWorldPoint(areac, new b2Math_37.b2Vec2());
+                        dragForce.SelfSub(this.velocity);
+                        dragForce.SelfMul((-this.linearDrag * area));
+                        body.ApplyForce(dragForce, areac);
+                        body.ApplyTorque((-body.GetInertia() / body.GetMass() * area * body.GetAngularVelocity() * this.angularDrag));
+                    }
+                };
+                b2BuoyancyController.prototype.Draw = function (debugDraw) {
+                    var r = 100;
+                    var p1 = new b2Math_37.b2Vec2();
+                    var p2 = new b2Math_37.b2Vec2();
+                    p1.x = this.normal.x * this.offset + this.normal.y * r;
+                    p1.y = this.normal.y * this.offset - this.normal.x * r;
+                    p2.x = this.normal.x * this.offset - this.normal.y * r;
+                    p2.y = this.normal.y * this.offset + this.normal.x * r;
+                    var color = new b2Draw_5.b2Color(0, 0, 0.8);
+                    debugDraw.DrawSegment(p1, p2, color);
+                };
+                return b2BuoyancyController;
+            }(b2Controller_1.b2Controller));
+            exports_58("b2BuoyancyController", b2BuoyancyController);
+        }
+    };
+});
+System.register("Controllers/b2ConstantAccelController", ["Controllers/b2Controller", "Common/b2Math"], function (exports_59, context_59) {
+    "use strict";
+    var __moduleName = context_59 && context_59.id;
+    var b2Controller_2, b2Math_38, b2ConstantAccelController;
+    return {
+        setters: [
+            function (b2Controller_2_1) {
+                b2Controller_2 = b2Controller_2_1;
+            },
+            function (b2Math_38_1) {
+                b2Math_38 = b2Math_38_1;
+            }
+        ],
+        execute: function () {
+            b2ConstantAccelController = (function (_super) {
+                __extends(b2ConstantAccelController, _super);
+                function b2ConstantAccelController() {
+                    var _this = _super !== null && _super.apply(this, arguments) || this;
+                    _this.A = new b2Math_38.b2Vec2(0, 0);
+                    return _this;
+                }
+                b2ConstantAccelController.prototype.Step = function (step) {
+                    var dtA = b2Math_38.b2Vec2.MulSV(step.dt, this.A, b2ConstantAccelController.Step_s_dtA);
+                    for (var i = this.m_bodyList; i; i = i.nextBody) {
+                        var body = i.body;
+                        if (!body.IsAwake()) {
+                            continue;
+                        }
+                        body.SetLinearVelocity(b2Math_38.b2Vec2.AddVV(body.GetLinearVelocity(), dtA, b2Math_38.b2Vec2.s_t0));
+                    }
+                };
+                b2ConstantAccelController.prototype.Draw = function (draw) { };
+                b2ConstantAccelController.Step_s_dtA = new b2Math_38.b2Vec2();
+                return b2ConstantAccelController;
+            }(b2Controller_2.b2Controller));
+            exports_59("b2ConstantAccelController", b2ConstantAccelController);
+        }
+    };
+});
+System.register("Controllers/b2ConstantForceController", ["Controllers/b2Controller", "Common/b2Math"], function (exports_60, context_60) {
+    "use strict";
+    var __moduleName = context_60 && context_60.id;
+    var b2Controller_3, b2Math_39, b2ConstantForceController;
+    return {
+        setters: [
+            function (b2Controller_3_1) {
+                b2Controller_3 = b2Controller_3_1;
+            },
+            function (b2Math_39_1) {
+                b2Math_39 = b2Math_39_1;
+            }
+        ],
+        execute: function () {
+            b2ConstantForceController = (function (_super) {
+                __extends(b2ConstantForceController, _super);
+                function b2ConstantForceController() {
+                    var _this = _super !== null && _super.apply(this, arguments) || this;
+                    _this.F = new b2Math_39.b2Vec2(0, 0);
+                    return _this;
+                }
+                b2ConstantForceController.prototype.Step = function (step) {
+                    for (var i = this.m_bodyList; i; i = i.nextBody) {
+                        var body = i.body;
+                        if (!body.IsAwake()) {
+                            continue;
+                        }
+                        body.ApplyForce(this.F, body.GetWorldCenter());
+                    }
+                };
+                b2ConstantForceController.prototype.Draw = function (draw) { };
+                return b2ConstantForceController;
+            }(b2Controller_3.b2Controller));
+            exports_60("b2ConstantForceController", b2ConstantForceController);
+        }
+    };
+});
+System.register("Controllers/b2GravityController", ["Controllers/b2Controller", "Common/b2Settings", "Common/b2Math"], function (exports_61, context_61) {
+    "use strict";
+    var __moduleName = context_61 && context_61.id;
+    var b2Controller_4, b2Settings_45, b2Math_40, b2GravityController;
+    return {
+        setters: [
+            function (b2Controller_4_1) {
+                b2Controller_4 = b2Controller_4_1;
+            },
+            function (b2Settings_45_1) {
+                b2Settings_45 = b2Settings_45_1;
+            },
+            function (b2Math_40_1) {
+                b2Math_40 = b2Math_40_1;
+            }
+        ],
+        execute: function () {
+            b2GravityController = (function (_super) {
+                __extends(b2GravityController, _super);
+                function b2GravityController() {
+                    var _this = _super !== null && _super.apply(this, arguments) || this;
+                    _this.G = 1;
+                    _this.invSqr = true;
+                    return _this;
+                }
+                b2GravityController.prototype.Step = function (step) {
+                    if (this.invSqr) {
+                        for (var i = this.m_bodyList; i; i = i.nextBody) {
+                            var body1 = i.body;
+                            var p1 = body1.GetWorldCenter();
+                            var mass1 = body1.GetMass();
+                            for (var j = this.m_bodyList; j && j !== i; j = j.nextBody) {
+                                var body2 = j.body;
+                                var p2 = body2.GetWorldCenter();
+                                var mass2 = body2.GetMass();
+                                var dx = p2.x - p1.x;
+                                var dy = p2.y - p1.y;
+                                var r2 = dx * dx + dy * dy;
+                                if (r2 < b2Settings_45.b2_epsilon) {
+                                    continue;
+                                }
+                                var f = b2GravityController.Step_s_f.Set(dx, dy);
+                                f.SelfMul(this.G / r2 / b2Math_40.b2Sqrt(r2) * mass1 * mass2);
+                                if (body1.IsAwake()) {
+                                    body1.ApplyForce(f, p1);
+                                }
+                                if (body2.IsAwake()) {
+                                    body2.ApplyForce(f.SelfMul(-1), p2);
+                                }
+                            }
+                        }
+                    }
+                    else {
+                        for (var i = this.m_bodyList; i; i = i.nextBody) {
+                            var body1 = i.body;
+                            var p1 = body1.GetWorldCenter();
+                            var mass1 = body1.GetMass();
+                            for (var j = this.m_bodyList; j && j !== i; j = j.nextBody) {
+                                var body2 = j.body;
+                                var p2 = body2.GetWorldCenter();
+                                var mass2 = body2.GetMass();
+                                var dx = p2.x - p1.x;
+                                var dy = p2.y - p1.y;
+                                var r2 = dx * dx + dy * dy;
+                                if (r2 < b2Settings_45.b2_epsilon) {
+                                    continue;
+                                }
+                                var f = b2GravityController.Step_s_f.Set(dx, dy);
+                                f.SelfMul(this.G / r2 * mass1 * mass2);
+                                if (body1.IsAwake()) {
+                                    body1.ApplyForce(f, p1);
+                                }
+                                if (body2.IsAwake()) {
+                                    body2.ApplyForce(f.SelfMul(-1), p2);
+                                }
+                            }
+                        }
+                    }
+                };
+                b2GravityController.prototype.Draw = function (draw) { };
+                b2GravityController.Step_s_f = new b2Math_40.b2Vec2();
+                return b2GravityController;
+            }(b2Controller_4.b2Controller));
+            exports_61("b2GravityController", b2GravityController);
+        }
+    };
+});
+System.register("Controllers/b2TensorDampingController", ["Controllers/b2Controller", "Common/b2Math", "Common/b2Settings"], function (exports_62, context_62) {
+    "use strict";
+    var __moduleName = context_62 && context_62.id;
+    var b2Controller_5, b2Math_41, b2Settings_46, b2TensorDampingController;
+    return {
+        setters: [
+            function (b2Controller_5_1) {
+                b2Controller_5 = b2Controller_5_1;
+            },
+            function (b2Math_41_1) {
+                b2Math_41 = b2Math_41_1;
+            },
+            function (b2Settings_46_1) {
+                b2Settings_46 = b2Settings_46_1;
+            }
+        ],
+        execute: function () {
+            b2TensorDampingController = (function (_super) {
+                __extends(b2TensorDampingController, _super);
+                function b2TensorDampingController() {
+                    var _this = _super !== null && _super.apply(this, arguments) || this;
+                    _this.T = new b2Math_41.b2Mat22();
+                    _this.maxTimestep = 0;
+                    return _this;
+                }
+                b2TensorDampingController.prototype.Step = function (step) {
+                    var timestep = step.dt;
+                    if (timestep <= b2Settings_46.b2_epsilon) {
+                        return;
+                    }
+                    if (timestep > this.maxTimestep && this.maxTimestep > 0) {
+                        timestep = this.maxTimestep;
+                    }
+                    for (var i = this.m_bodyList; i; i = i.nextBody) {
+                        var body = i.body;
+                        if (!body.IsAwake()) {
+                            continue;
+                        }
+                        var damping = body.GetWorldVector(b2Math_41.b2Mat22.MulMV(this.T, body.GetLocalVector(body.GetLinearVelocity(), b2Math_41.b2Vec2.s_t0), b2Math_41.b2Vec2.s_t1), b2TensorDampingController.Step_s_damping);
+                        body.SetLinearVelocity(b2Math_41.b2Vec2.AddVV(body.GetLinearVelocity(), b2Math_41.b2Vec2.MulSV(timestep, damping, b2Math_41.b2Vec2.s_t0), b2Math_41.b2Vec2.s_t1));
+                    }
+                };
+                b2TensorDampingController.prototype.Draw = function (draw) { };
+                b2TensorDampingController.prototype.SetAxisAligned = function (xDamping, yDamping) {
+                    this.T.ex.x = (-xDamping);
+                    this.T.ex.y = 0;
+                    this.T.ey.x = 0;
+                    this.T.ey.y = (-yDamping);
+                    if (xDamping > 0 || yDamping > 0) {
+                        this.maxTimestep = 1 / b2Math_41.b2Max(xDamping, yDamping);
+                    }
+                    else {
+                        this.maxTimestep = 0;
+                    }
+                };
+                b2TensorDampingController.Step_s_damping = new b2Math_41.b2Vec2();
+                return b2TensorDampingController;
+            }(b2Controller_5.b2Controller));
+            exports_62("b2TensorDampingController", b2TensorDampingController);
+        }
+    };
+});
+System.register("Rope/b2Rope", ["Common/b2Settings", "Common/b2Math", "Common/b2Draw"], function (exports_63, context_63) {
+    "use strict";
+    var __moduleName = context_63 && context_63.id;
+    var b2Settings_47, b2Math_42, b2Draw_6, b2RopeDef, b2Rope;
+    return {
+        setters: [
+            function (b2Settings_47_1) {
+                b2Settings_47 = b2Settings_47_1;
+            },
+            function (b2Math_42_1) {
+                b2Math_42 = b2Math_42_1;
+            },
+            function (b2Draw_6_1) {
+                b2Draw_6 = b2Draw_6_1;
             }
         ],
         execute: function () {
@@ -17558,14 +17816,14 @@ System.register("Box2D/Box2D/Rope/b2Rope", ["Box2D/Box2D/Common/b2Settings", "Bo
                     this.vertices = [];
                     this.count = 0;
                     this.masses = [];
-                    this.gravity = new b2Math_37.b2Vec2(0, 0);
+                    this.gravity = new b2Math_42.b2Vec2(0, 0);
                     this.damping = 0.1;
                     this.k2 = 0.9;
                     this.k3 = 0.1;
                 }
                 return b2RopeDef;
             }());
-            exports_58("b2RopeDef", b2RopeDef);
+            exports_63("b2RopeDef", b2RopeDef);
             b2Rope = (function () {
                 function b2Rope() {
                     this.m_count = 0;
@@ -17575,7 +17833,7 @@ System.register("Box2D/Box2D/Rope/b2Rope", ["Box2D/Box2D/Common/b2Settings", "Bo
                     this.m_ims = [];
                     this.m_Ls = [];
                     this.m_as = [];
-                    this.m_gravity = new b2Math_37.b2Vec2();
+                    this.m_gravity = new b2Math_42.b2Vec2();
                     this.m_damping = 0;
                     this.m_k2 = 1;
                     this.m_k3 = 0.1;
@@ -17588,10 +17846,10 @@ System.register("Box2D/Box2D/Rope/b2Rope", ["Box2D/Box2D/Common/b2Settings", "Bo
                 };
                 b2Rope.prototype.Initialize = function (def) {
                     this.m_count = def.count;
-                    this.m_ps = b2Math_37.b2Vec2.MakeArray(this.m_count);
-                    this.m_p0s = b2Math_37.b2Vec2.MakeArray(this.m_count);
-                    this.m_vs = b2Math_37.b2Vec2.MakeArray(this.m_count);
-                    this.m_ims = b2Settings_44.b2MakeNumberArray(this.m_count);
+                    this.m_ps = b2Math_42.b2Vec2.MakeArray(this.m_count);
+                    this.m_p0s = b2Math_42.b2Vec2.MakeArray(this.m_count);
+                    this.m_vs = b2Math_42.b2Vec2.MakeArray(this.m_count);
+                    this.m_ims = b2Settings_47.b2MakeNumberArray(this.m_count);
                     for (var i = 0; i < this.m_count; ++i) {
                         this.m_ps[i].Copy(def.vertices[i]);
                         this.m_p0s[i].Copy(def.vertices[i]);
@@ -17606,22 +17864,22 @@ System.register("Box2D/Box2D/Rope/b2Rope", ["Box2D/Box2D/Common/b2Settings", "Bo
                     }
                     var count2 = this.m_count - 1;
                     var count3 = this.m_count - 2;
-                    this.m_Ls = b2Settings_44.b2MakeNumberArray(count2);
-                    this.m_as = b2Settings_44.b2MakeNumberArray(count3);
+                    this.m_Ls = b2Settings_47.b2MakeNumberArray(count2);
+                    this.m_as = b2Settings_47.b2MakeNumberArray(count3);
                     for (var i = 0; i < count2; ++i) {
                         var p1 = this.m_ps[i];
                         var p2 = this.m_ps[i + 1];
-                        this.m_Ls[i] = b2Math_37.b2Vec2.DistanceVV(p1, p2);
+                        this.m_Ls[i] = b2Math_42.b2Vec2.DistanceVV(p1, p2);
                     }
                     for (var i = 0; i < count3; ++i) {
                         var p1 = this.m_ps[i];
                         var p2 = this.m_ps[i + 1];
                         var p3 = this.m_ps[i + 2];
-                        var d1 = b2Math_37.b2Vec2.SubVV(p2, p1, b2Math_37.b2Vec2.s_t0);
-                        var d2 = b2Math_37.b2Vec2.SubVV(p3, p2, b2Math_37.b2Vec2.s_t1);
-                        var a = b2Math_37.b2Vec2.CrossVV(d1, d2);
-                        var b = b2Math_37.b2Vec2.DotVV(d1, d2);
-                        this.m_as[i] = b2Math_37.b2Atan2(a, b);
+                        var d1 = b2Math_42.b2Vec2.SubVV(p2, p1, b2Math_42.b2Vec2.s_t0);
+                        var d2 = b2Math_42.b2Vec2.SubVV(p3, p2, b2Math_42.b2Vec2.s_t1);
+                        var a = b2Math_42.b2Vec2.CrossVV(d1, d2);
+                        var b = b2Math_42.b2Vec2.DotVV(d1, d2);
+                        this.m_as[i] = b2Math_42.b2Atan2(a, b);
                     }
                     this.m_gravity.Copy(def.gravity);
                     this.m_damping = def.damping;
@@ -17648,7 +17906,7 @@ System.register("Box2D/Box2D/Rope/b2Rope", ["Box2D/Box2D/Common/b2Settings", "Bo
                     }
                     var inv_h = 1 / h;
                     for (var i = 0; i < this.m_count; ++i) {
-                        b2Math_37.b2Vec2.MulSV(inv_h, b2Math_37.b2Vec2.SubVV(this.m_ps[i], this.m_p0s[i], b2Math_37.b2Vec2.s_t0), this.m_vs[i]);
+                        b2Math_42.b2Vec2.MulSV(inv_h, b2Math_42.b2Vec2.SubVV(this.m_ps[i], this.m_p0s[i], b2Math_42.b2Vec2.s_t0), this.m_vs[i]);
                     }
                 };
                 b2Rope.prototype.SolveC2 = function () {
@@ -17656,7 +17914,7 @@ System.register("Box2D/Box2D/Rope/b2Rope", ["Box2D/Box2D/Common/b2Settings", "Bo
                     for (var i = 0; i < count2; ++i) {
                         var p1 = this.m_ps[i];
                         var p2 = this.m_ps[i + 1];
-                        var d = b2Math_37.b2Vec2.SubVV(p2, p1, b2Rope.s_d);
+                        var d = b2Math_42.b2Vec2.SubVV(p2, p1, b2Rope.s_d);
                         var L = d.Normalize();
                         var im1 = this.m_ims[i];
                         var im2 = this.m_ims[i + 1];
@@ -17684,33 +17942,33 @@ System.register("Box2D/Box2D/Rope/b2Rope", ["Box2D/Box2D/Common/b2Settings", "Bo
                         var m1 = this.m_ims[i];
                         var m2 = this.m_ims[i + 1];
                         var m3 = this.m_ims[i + 2];
-                        var d1 = b2Math_37.b2Vec2.SubVV(p2, p1, b2Rope.s_d1);
-                        var d2 = b2Math_37.b2Vec2.SubVV(p3, p2, b2Rope.s_d2);
+                        var d1 = b2Math_42.b2Vec2.SubVV(p2, p1, b2Rope.s_d1);
+                        var d2 = b2Math_42.b2Vec2.SubVV(p3, p2, b2Rope.s_d2);
                         var L1sqr = d1.LengthSquared();
                         var L2sqr = d2.LengthSquared();
                         if (L1sqr * L2sqr === 0) {
                             continue;
                         }
-                        var a = b2Math_37.b2Vec2.CrossVV(d1, d2);
-                        var b = b2Math_37.b2Vec2.DotVV(d1, d2);
-                        var angle = b2Math_37.b2Atan2(a, b);
-                        var Jd1 = b2Math_37.b2Vec2.MulSV((-1 / L1sqr), d1.SelfSkew(), b2Rope.s_Jd1);
-                        var Jd2 = b2Math_37.b2Vec2.MulSV((1 / L2sqr), d2.SelfSkew(), b2Rope.s_Jd2);
-                        var J1 = b2Math_37.b2Vec2.NegV(Jd1, b2Rope.s_J1);
-                        var J2 = b2Math_37.b2Vec2.SubVV(Jd1, Jd2, b2Rope.s_J2);
+                        var a = b2Math_42.b2Vec2.CrossVV(d1, d2);
+                        var b = b2Math_42.b2Vec2.DotVV(d1, d2);
+                        var angle = b2Math_42.b2Atan2(a, b);
+                        var Jd1 = b2Math_42.b2Vec2.MulSV((-1 / L1sqr), d1.SelfSkew(), b2Rope.s_Jd1);
+                        var Jd2 = b2Math_42.b2Vec2.MulSV((1 / L2sqr), d2.SelfSkew(), b2Rope.s_Jd2);
+                        var J1 = b2Math_42.b2Vec2.NegV(Jd1, b2Rope.s_J1);
+                        var J2 = b2Math_42.b2Vec2.SubVV(Jd1, Jd2, b2Rope.s_J2);
                         var J3 = Jd2;
-                        var mass = m1 * b2Math_37.b2Vec2.DotVV(J1, J1) + m2 * b2Math_37.b2Vec2.DotVV(J2, J2) + m3 * b2Math_37.b2Vec2.DotVV(J3, J3);
+                        var mass = m1 * b2Math_42.b2Vec2.DotVV(J1, J1) + m2 * b2Math_42.b2Vec2.DotVV(J2, J2) + m3 * b2Math_42.b2Vec2.DotVV(J3, J3);
                         if (mass === 0) {
                             continue;
                         }
                         mass = 1 / mass;
                         var C = angle - this.m_as[i];
-                        while (C > b2Settings_44.b2_pi) {
-                            angle -= 2 * b2Settings_44.b2_pi;
+                        while (C > b2Settings_47.b2_pi) {
+                            angle -= 2 * b2Settings_47.b2_pi;
                             C = angle - this.m_as[i];
                         }
-                        while (C < -b2Settings_44.b2_pi) {
-                            angle += 2 * b2Settings_44.b2_pi;
+                        while (C < -b2Settings_47.b2_pi) {
+                            angle += 2 * b2Settings_47.b2_pi;
                             C = angle - this.m_as[i];
                         }
                         var impulse = -this.m_k3 * mass * C;
@@ -17720,44 +17978,44 @@ System.register("Box2D/Box2D/Rope/b2Rope", ["Box2D/Box2D/Common/b2Settings", "Bo
                     }
                 };
                 b2Rope.prototype.Draw = function (draw) {
-                    var c = new b2Draw_5.b2Color(0.4, 0.5, 0.7);
+                    var c = new b2Draw_6.b2Color(0.4, 0.5, 0.7);
                     for (var i = 0; i < this.m_count - 1; ++i) {
                         draw.DrawSegment(this.m_ps[i], this.m_ps[i + 1], c);
                     }
                 };
-                b2Rope.s_d = new b2Math_37.b2Vec2();
-                b2Rope.s_d1 = new b2Math_37.b2Vec2();
-                b2Rope.s_d2 = new b2Math_37.b2Vec2();
-                b2Rope.s_Jd1 = new b2Math_37.b2Vec2();
-                b2Rope.s_Jd2 = new b2Math_37.b2Vec2();
-                b2Rope.s_J1 = new b2Math_37.b2Vec2();
-                b2Rope.s_J2 = new b2Math_37.b2Vec2();
+                b2Rope.s_d = new b2Math_42.b2Vec2();
+                b2Rope.s_d1 = new b2Math_42.b2Vec2();
+                b2Rope.s_d2 = new b2Math_42.b2Vec2();
+                b2Rope.s_Jd1 = new b2Math_42.b2Vec2();
+                b2Rope.s_Jd2 = new b2Math_42.b2Vec2();
+                b2Rope.s_J1 = new b2Math_42.b2Vec2();
+                b2Rope.s_J2 = new b2Math_42.b2Vec2();
                 return b2Rope;
             }());
-            exports_58("b2Rope", b2Rope);
+            exports_63("b2Rope", b2Rope);
         }
     };
 });
-System.register("Box2D/Box2D/Box2D", ["Box2D/Box2D/Common/b2Settings", "Box2D/Box2D/Common/b2Math", "Box2D/Box2D/Common/b2Draw", "Box2D/Box2D/Common/b2Timer", "Box2D/Box2D/Common/b2GrowableStack", "Box2D/Box2D/Common/b2BlockAllocator", "Box2D/Box2D/Common/b2StackAllocator", "Box2D/Box2D/Collision/b2Collision", "Box2D/Box2D/Collision/b2Distance", "Box2D/Box2D/Collision/b2BroadPhase", "Box2D/Box2D/Collision/b2DynamicTree", "Box2D/Box2D/Collision/b2TimeOfImpact", "Box2D/Box2D/Collision/b2CollideCircle", "Box2D/Box2D/Collision/b2CollidePolygon", "Box2D/Box2D/Collision/b2CollideEdge", "Box2D/Box2D/Collision/Shapes/b2Shape", "Box2D/Box2D/Collision/Shapes/b2CircleShape", "Box2D/Box2D/Collision/Shapes/b2PolygonShape", "Box2D/Box2D/Collision/Shapes/b2EdgeShape", "Box2D/Box2D/Collision/Shapes/b2ChainShape", "Box2D/Box2D/Dynamics/b2Fixture", "Box2D/Box2D/Dynamics/b2Body", "Box2D/Box2D/Dynamics/b2World", "Box2D/Box2D/Dynamics/b2WorldCallbacks", "Box2D/Box2D/Dynamics/b2Island", "Box2D/Box2D/Dynamics/b2TimeStep", "Box2D/Box2D/Dynamics/b2ContactManager", "Box2D/Box2D/Dynamics/Contacts/b2Contact", "Box2D/Box2D/Dynamics/Contacts/b2ContactFactory", "Box2D/Box2D/Dynamics/Contacts/b2ContactSolver", "Box2D/Box2D/Dynamics/Contacts/b2CircleContact", "Box2D/Box2D/Dynamics/Contacts/b2PolygonContact", "Box2D/Box2D/Dynamics/Contacts/b2PolygonAndCircleContact", "Box2D/Box2D/Dynamics/Contacts/b2EdgeAndCircleContact", "Box2D/Box2D/Dynamics/Contacts/b2EdgeAndPolygonContact", "Box2D/Box2D/Dynamics/Contacts/b2ChainAndCircleContact", "Box2D/Box2D/Dynamics/Contacts/b2ChainAndPolygonContact", "Box2D/Box2D/Dynamics/Joints/b2Joint", "Box2D/Box2D/Dynamics/Joints/b2JointFactory", "Box2D/Box2D/Dynamics/Joints/b2AreaJoint", "Box2D/Box2D/Dynamics/Joints/b2DistanceJoint", "Box2D/Box2D/Dynamics/Joints/b2FrictionJoint", "Box2D/Box2D/Dynamics/Joints/b2GearJoint", "Box2D/Box2D/Dynamics/Joints/b2MotorJoint", "Box2D/Box2D/Dynamics/Joints/b2MouseJoint", "Box2D/Box2D/Dynamics/Joints/b2PrismaticJoint", "Box2D/Box2D/Dynamics/Joints/b2PulleyJoint", "Box2D/Box2D/Dynamics/Joints/b2RevoluteJoint", "Box2D/Box2D/Dynamics/Joints/b2RopeJoint", "Box2D/Box2D/Dynamics/Joints/b2WeldJoint", "Box2D/Box2D/Dynamics/Joints/b2WheelJoint", "Box2D/Box2D/Particle/b2Particle", "Box2D/Box2D/Particle/b2ParticleGroup", "Box2D/Box2D/Particle/b2ParticleSystem", "Box2D/Box2D/Rope/b2Rope"], function (exports_59, context_59) {
+System.register("Box2D", ["Common/b2Settings", "Common/b2Math", "Common/b2Draw", "Common/b2Timer", "Common/b2GrowableStack", "Common/b2BlockAllocator", "Common/b2StackAllocator", "Collision/b2Collision", "Collision/b2Distance", "Collision/b2BroadPhase", "Collision/b2DynamicTree", "Collision/b2TimeOfImpact", "Collision/b2CollideCircle", "Collision/b2CollidePolygon", "Collision/b2CollideEdge", "Collision/Shapes/b2Shape", "Collision/Shapes/b2CircleShape", "Collision/Shapes/b2PolygonShape", "Collision/Shapes/b2EdgeShape", "Collision/Shapes/b2ChainShape", "Dynamics/b2Fixture", "Dynamics/b2Body", "Dynamics/b2World", "Dynamics/b2WorldCallbacks", "Dynamics/b2Island", "Dynamics/b2TimeStep", "Dynamics/b2ContactManager", "Dynamics/Contacts/b2Contact", "Dynamics/Contacts/b2ContactFactory", "Dynamics/Contacts/b2ContactSolver", "Dynamics/Contacts/b2CircleContact", "Dynamics/Contacts/b2PolygonContact", "Dynamics/Contacts/b2PolygonAndCircleContact", "Dynamics/Contacts/b2EdgeAndCircleContact", "Dynamics/Contacts/b2EdgeAndPolygonContact", "Dynamics/Contacts/b2ChainAndCircleContact", "Dynamics/Contacts/b2ChainAndPolygonContact", "Dynamics/Joints/b2Joint", "Dynamics/Joints/b2JointFactory", "Dynamics/Joints/b2AreaJoint", "Dynamics/Joints/b2DistanceJoint", "Dynamics/Joints/b2FrictionJoint", "Dynamics/Joints/b2GearJoint", "Dynamics/Joints/b2MotorJoint", "Dynamics/Joints/b2MouseJoint", "Dynamics/Joints/b2PrismaticJoint", "Dynamics/Joints/b2PulleyJoint", "Dynamics/Joints/b2RevoluteJoint", "Dynamics/Joints/b2RopeJoint", "Dynamics/Joints/b2WeldJoint", "Dynamics/Joints/b2WheelJoint", "Controllers/b2Controller", "Controllers/b2BuoyancyController", "Controllers/b2ConstantAccelController", "Controllers/b2ConstantForceController", "Controllers/b2GravityController", "Controllers/b2TensorDampingController", "Particle/b2Particle", "Particle/b2ParticleGroup", "Particle/b2ParticleSystem", "Rope/b2Rope"], function (exports_64, context_64) {
     "use strict";
-    var __moduleName = context_59 && context_59.id;
+    var __moduleName = context_64 && context_64.id;
     function exportStar_1(m) {
         var exports = {};
         for (var n in m) {
             if (n !== "default") exports[n] = m[n];
         }
-        exports_59(exports);
+        exports_64(exports);
     }
     return {
         setters: [
-            function (b2Settings_45_1) {
-                exportStar_1(b2Settings_45_1);
+            function (b2Settings_48_1) {
+                exportStar_1(b2Settings_48_1);
             },
-            function (b2Math_38_1) {
-                exportStar_1(b2Math_38_1);
+            function (b2Math_43_1) {
+                exportStar_1(b2Math_43_1);
             },
-            function (b2Draw_6_1) {
-                exportStar_1(b2Draw_6_1);
+            function (b2Draw_7_1) {
+                exportStar_1(b2Draw_7_1);
             },
             function (b2Timer_4_1) {
                 exportStar_1(b2Timer_4_1);
@@ -17902,6 +18160,24 @@ System.register("Box2D/Box2D/Box2D", ["Box2D/Box2D/Common/b2Settings", "Box2D/Bo
             },
             function (b2WheelJoint_2_1) {
                 exportStar_1(b2WheelJoint_2_1);
+            },
+            function (b2Controller_6_1) {
+                exportStar_1(b2Controller_6_1);
+            },
+            function (b2BuoyancyController_1_1) {
+                exportStar_1(b2BuoyancyController_1_1);
+            },
+            function (b2ConstantAccelController_1_1) {
+                exportStar_1(b2ConstantAccelController_1_1);
+            },
+            function (b2ConstantForceController_1_1) {
+                exportStar_1(b2ConstantForceController_1_1);
+            },
+            function (b2GravityController_1_1) {
+                exportStar_1(b2GravityController_1_1);
+            },
+            function (b2TensorDampingController_1_1) {
+                exportStar_1(b2TensorDampingController_1_1);
             },
             function (b2Particle_3_1) {
                 exportStar_1(b2Particle_3_1);

@@ -16,6 +16,8 @@
 * 3. This notice may not be removed or altered from any source distribution.
 */
 
+// DEBUG: import { b2Assert } from "../../Common/b2Settings";
+// DEBUG: import { b2IsValid } from "../../Common/b2Math";
 import { b2_linearSlop, b2Maybe } from "../../Common/b2Settings";
 import { b2Vec2, b2Rot, b2Transform, XY } from "../../Common/b2Math";
 import { b2Joint, b2JointDef, b2JointType, b2IJointDef } from "./b2Joint";
@@ -118,8 +120,8 @@ export class b2GearJoint extends b2Joint {
     this.m_typeA = this.m_joint1.GetType();
     this.m_typeB = this.m_joint2.GetType();
 
-    ///b2Assert(this.m_typeA === b2JointType.e_revoluteJoint || this.m_typeA === b2JointType.e_prismaticJoint);
-    ///b2Assert(this.m_typeB === b2JointType.e_revoluteJoint || this.m_typeB === b2JointType.e_prismaticJoint);
+    // DEBUG: b2Assert(this.m_typeA === b2JointType.e_revoluteJoint || this.m_typeA === b2JointType.e_prismaticJoint);
+    // DEBUG: b2Assert(this.m_typeB === b2JointType.e_revoluteJoint || this.m_typeB === b2JointType.e_prismaticJoint);
 
     let coordinateA: number, coordinateB: number;
 
@@ -536,7 +538,7 @@ export class b2GearJoint extends b2Joint {
   }
 
   public SetRatio(ratio: number): void {
-    ///b2Assert(b2IsValid(ratio));
+    // DEBUG: b2Assert(b2IsValid(ratio));
     this.m_ratio = ratio;
   }
 
