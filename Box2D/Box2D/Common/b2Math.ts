@@ -128,12 +128,12 @@ export function b2RandomRange(lo: number, hi: number): number {
 }
 
 export interface XY {
-  x: number,
-  y: number
+  x: number;
+  y: number;
 }
 
 export interface XYZ extends XY {
-  z: number
+  z: number;
 }
 
 ////////////////////////////////////////////////////////////////

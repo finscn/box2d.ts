@@ -26,7 +26,7 @@ export class b2MassData {
   public mass: number = 0;
 
   /// The position of the shape's centroid relative to the shape's origin.
-  public center: b2Vec2 = new b2Vec2(0, 0);
+  public readonly center: b2Vec2 = new b2Vec2(0, 0);
 
   /// The rotational inertia of the shape about the local origin.
   public I: number = 0;
@@ -38,7 +38,7 @@ export enum b2ShapeType {
   e_edgeShape = 1,
   e_polygonShape = 2,
   e_chainShape = 3,
-  e_shapeTypeCount = 4
+  e_shapeTypeCount = 4,
 }
 
 /// A shape is used for collision detection. You can create a shape however you like.

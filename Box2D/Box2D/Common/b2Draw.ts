@@ -198,7 +198,7 @@ export enum b2DrawFlags {
   e_particleBit = 0x0020, ///< draw particles
   // #endif
   e_controllerBit = 0x0040, /// @see b2Controller list
-  e_all = 0x003f
+  e_all = 0x003f,
 }
 
 /// Implement and register this class with a b2World to provide debug drawing of physics
@@ -235,7 +235,7 @@ export class b2Draw {
   public DrawSolidCircle(center: XY, radius: number, axis: XY, color: RGBA): void {}
 
   // #if B2_ENABLE_PARTICLE
-  public DrawParticles(centers: XY[], radius: number, colors: RGBA[], count: number): void {}
+  public DrawParticles(centers: XY[], radius: number, colors: RGBA[] | null, count: number): void {}
   // #endif
 
   public DrawSegment(p1: XY, p2: XY, color: RGBA): void {}
