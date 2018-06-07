@@ -83,6 +83,9 @@ declare module "Common/b2Math" {
         x: number;
         y: number;
     }
+    export interface XYZ extends XY {
+        z: number;
+    }
     export class b2Vec2 implements XY {
         static readonly ZERO: Readonly<b2Vec2>;
         static readonly UNITX: Readonly<b2Vec2>;
@@ -147,9 +150,6 @@ declare module "Common/b2Math" {
         static NegV<T extends XY>(v: XY, out: T): T;
     }
     export const b2Vec2_zero: Readonly<b2Vec2>;
-    export interface XYZ extends XY {
-        z: number;
-    }
     export class b2Vec3 implements XYZ {
         static readonly ZERO: Readonly<b2Vec3>;
         static readonly s_t0: b2Vec3;
@@ -365,8 +365,8 @@ declare module "Common/b2GrowableStack" {
         m_count: number;
         constructor(N: number);
         Reset(): this;
-        Push(element: T | null): void;
-        Pop(): T | null;
+        Push(element: T): void;
+        Pop(): T;
         GetCount(): number;
     }
 }
@@ -587,6 +587,7 @@ declare module "Collision/b2Collision" {
         static Combine(aabb1: b2AABB, aabb2: b2AABB, out: b2AABB): b2AABB;
         Contains(aabb: b2AABB): boolean;
         RayCast(output: b2RayCastOutput, input: b2RayCastInput): boolean;
+        TestContain(point: b2Vec2): boolean;
         TestOverlap(other: b2AABB): boolean;
     }
     export function b2TestOverlapAABB(a: b2AABB, b: b2AABB): boolean;
@@ -623,8 +624,9 @@ declare module "Collision/b2DynamicTree" {
         static readonly s_aabb: b2AABB;
         GetUserData(proxy: b2TreeNode): any;
         GetFatAABB(proxy: b2TreeNode): b2AABB;
-        Query(callback: (node: b2TreeNode) => boolean, aabb: b2AABB): void;
-        RayCast(callback: (input: b2RayCastInput, node: b2TreeNode) => number, input: b2RayCastInput): void;
+        Query(aabb: b2AABB, callback: (node: b2TreeNode) => boolean): void;
+        QueryPoint(point: b2Vec2, callback: (node: b2TreeNode) => boolean): void;
+        RayCast(input: b2RayCastInput, callback: (input: b2RayCastInput, node: b2TreeNode) => number): void;
         static s_node_id: number;
         AllocateNode(): b2TreeNode;
         FreeNode(node: b2TreeNode): void;
@@ -3031,15 +3033,19 @@ declare module "Dynamics/b2World" {
         private static DrawDebugData_s_vs;
         private static DrawDebugData_s_xf;
         DrawDebugData(): void;
-        QueryAABB(callback: b2QueryCallback | b2QueryCallbackFunction, aabb: b2AABB): void;
-        private static QueryShape_s_aabb;
-        QueryShape(callback: b2QueryCallback | b2QueryCallbackFunction, shape: b2Shape, transform: b2Transform): void;
-        private static QueryPoint_s_aabb;
-        QueryPoint(callback: b2QueryCallback | b2QueryCallbackFunction, point: b2Vec2): void;
+        QueryAABB(callback: b2QueryCallback | null, aabb: b2AABB, fn?: b2QueryCallbackFunction): void;
+        QueryAllAABB(aabb: b2AABB, out?: b2Fixture[]): b2Fixture[];
+        QueryPointAABB(callback: b2QueryCallback | null, point: b2Vec2, fn?: b2QueryCallbackFunction): void;
+        QueryAllPointAABB(point: b2Vec2, out?: b2Fixture[]): b2Fixture[];
+        private static QueryFixtureShape_s_aabb;
+        QueryFixtureShape(callback: b2QueryCallback | null, shape: b2Shape, index: number, transform: b2Transform, fn?: b2QueryCallbackFunction): void;
+        QueryAllFixtureShape(shape: b2Shape, index: number, transform: b2Transform, out?: b2Fixture[]): b2Fixture[];
+        QueryFixturePoint(callback: b2QueryCallback | null, point: b2Vec2, fn?: b2QueryCallbackFunction): void;
+        QueryAllFixturePoint(point: b2Vec2, out?: b2Fixture[]): b2Fixture[];
         private static RayCast_s_input;
         private static RayCast_s_output;
         private static RayCast_s_point;
-        RayCast(callback: b2RayCastCallback | b2RayCastCallbackFunction, point1: b2Vec2, point2: b2Vec2): void;
+        RayCast(callback: b2RayCastCallback | null, point1: b2Vec2, point2: b2Vec2, fn?: b2RayCastCallbackFunction): void;
         RayCastOne(point1: b2Vec2, point2: b2Vec2): b2Fixture | null;
         RayCastAll(point1: b2Vec2, point2: b2Vec2, out?: b2Fixture[]): b2Fixture[];
         GetBodyList(): b2Body | null;
@@ -3493,8 +3499,9 @@ declare module "Collision/b2BroadPhase" {
         TestOverlap(proxyA: b2TreeNode, proxyB: b2TreeNode): boolean;
         GetProxyCount(): number;
         UpdatePairs(contactManager: b2ContactManager): void;
-        Query(callback: (node: b2TreeNode) => boolean, aabb: b2AABB): void;
-        RayCast(callback: (input: b2RayCastInput, node: b2TreeNode) => number, input: b2RayCastInput): void;
+        Query(aabb: b2AABB, callback: (node: b2TreeNode) => boolean): void;
+        QueryPoint(point: b2Vec2, callback: (node: b2TreeNode) => boolean): void;
+        RayCast(input: b2RayCastInput, callback: (input: b2RayCastInput, node: b2TreeNode) => number): void;
         GetTreeHeight(): number;
         GetTreeBalance(): number;
         GetTreeQuality(): number;

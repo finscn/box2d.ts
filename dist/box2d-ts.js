@@ -1304,18 +1304,22 @@ System.register("Common/b2Timer", [], function (exports_4, context_4) {
         }
     };
 });
-System.register("Common/b2GrowableStack", [], function (exports_5, context_5) {
+System.register("Common/b2GrowableStack", ["Common/b2Settings"], function (exports_5, context_5) {
     "use strict";
     var __moduleName = context_5 && context_5.id;
-    var b2GrowableStack;
+    var b2Settings_2, b2GrowableStack;
     return {
-        setters: [],
+        setters: [
+            function (b2Settings_2_1) {
+                b2Settings_2 = b2Settings_2_1;
+            }
+        ],
         execute: function () {
             b2GrowableStack = (function () {
                 function b2GrowableStack(N) {
                     this.m_stack = [];
                     this.m_count = 0;
-                    this.m_stack = [];
+                    this.m_stack = b2Settings_2.b2MakeArray(N, function (index) { return null; });
                     this.m_count = 0;
                 }
                 b2GrowableStack.prototype.Reset = function () {
@@ -1330,6 +1334,9 @@ System.register("Common/b2GrowableStack", [], function (exports_5, context_5) {
                     this.m_count--;
                     var element = this.m_stack[this.m_count];
                     this.m_stack[this.m_count] = null;
+                    if (element === null) {
+                        throw new Error();
+                    }
                     return element;
                 };
                 b2GrowableStack.prototype.GetCount = function () {
@@ -1395,7 +1402,7 @@ System.register("Collision/b2Distance", ["Common/b2Settings", "Common/b2Math"], 
         var saveA = b2Distance_s_saveA;
         var saveB = b2Distance_s_saveB;
         var saveCount = 0;
-        var distanceSqr1 = b2Settings_2.b2_maxFloat;
+        var distanceSqr1 = b2Settings_3.b2_maxFloat;
         var distanceSqr2 = distanceSqr1;
         var iter = 0;
         while (iter < k_maxIters) {
@@ -1423,7 +1430,7 @@ System.register("Collision/b2Distance", ["Common/b2Settings", "Common/b2Math"], 
             distanceSqr2 = p.LengthSquared();
             distanceSqr1 = distanceSqr2;
             var d = simplex.GetSearchDirection(b2Distance_s_d);
-            if (d.LengthSquared() < b2Settings_2.b2_epsilon_sq) {
+            if (d.LengthSquared() < b2Settings_3.b2_epsilon_sq) {
                 break;
             }
             var vertex = vertices[simplex.m_count];
@@ -1454,7 +1461,7 @@ System.register("Collision/b2Distance", ["Common/b2Settings", "Common/b2Math"], 
         if (input.useRadii) {
             var rA = proxyA.m_radius;
             var rB = proxyB.m_radius;
-            if (output.distance > (rA + rB) && output.distance > b2Settings_2.b2_epsilon) {
+            if (output.distance > (rA + rB) && output.distance > b2Settings_3.b2_epsilon) {
                 output.distance -= rA + rB;
                 var normal = b2Math_1.b2Vec2.SubVV(output.pointB, output.pointA, b2Distance_s_normal);
                 normal.Normalize();
@@ -1470,11 +1477,11 @@ System.register("Collision/b2Distance", ["Common/b2Settings", "Common/b2Math"], 
         }
     }
     exports_8("b2Distance", b2Distance);
-    var b2Settings_2, b2Math_1, b2DistanceProxy, b2SimplexCache, b2DistanceInput, b2DistanceOutput, b2_gjkCalls, b2_gjkIters, b2_gjkMaxIters, b2SimplexVertex, b2Simplex, b2Distance_s_simplex, b2Distance_s_saveA, b2Distance_s_saveB, b2Distance_s_p, b2Distance_s_d, b2Distance_s_normal, b2Distance_s_supportA, b2Distance_s_supportB;
+    var b2Settings_3, b2Math_1, b2DistanceProxy, b2SimplexCache, b2DistanceInput, b2DistanceOutput, b2_gjkCalls, b2_gjkIters, b2_gjkMaxIters, b2SimplexVertex, b2Simplex, b2Distance_s_simplex, b2Distance_s_saveA, b2Distance_s_saveB, b2Distance_s_p, b2Distance_s_d, b2Distance_s_normal, b2Distance_s_supportA, b2Distance_s_supportB;
     return {
         setters: [
-            function (b2Settings_2_1) {
-                b2Settings_2 = b2Settings_2_1;
+            function (b2Settings_3_1) {
+                b2Settings_3 = b2Settings_3_1;
             },
             function (b2Math_1_1) {
                 b2Math_1 = b2Math_1_1;
@@ -1633,7 +1640,7 @@ System.register("Collision/b2Distance", ["Common/b2Settings", "Common/b2Math"], 
                     if (this.m_count > 1) {
                         var metric1 = cache.metric;
                         var metric2 = this.GetMetric();
-                        if (metric2 < 0.5 * metric1 || 2 * metric1 < metric2 || metric2 < b2Settings_2.b2_epsilon) {
+                        if (metric2 < 0.5 * metric1 || 2 * metric1 < metric2 || metric2 < b2Settings_3.b2_epsilon) {
                             this.m_count = 0;
                         }
                     }
@@ -1900,7 +1907,7 @@ System.register("Collision/b2Collision", ["Common/b2Settings", "Common/b2Math", 
                 }
             }
         }
-        for (; i < b2Settings_3.b2_maxManifoldPoints; ++i) {
+        for (; i < b2Settings_4.b2_maxManifoldPoints; ++i) {
             state1[i] = b2PointState.b2_nullState;
         }
         for (i = 0; i < manifold2.pointCount; ++i) {
@@ -1914,7 +1921,7 @@ System.register("Collision/b2Collision", ["Common/b2Settings", "Common/b2Math", 
                 }
             }
         }
-        for (; i < b2Settings_3.b2_maxManifoldPoints; ++i) {
+        for (; i < b2Settings_4.b2_maxManifoldPoints; ++i) {
             state2[i] = b2PointState.b2_nullState;
         }
     }
@@ -1971,14 +1978,14 @@ System.register("Collision/b2Collision", ["Common/b2Settings", "Common/b2Math", 
         simplexCache.count = 0;
         var output = b2TestOverlapShape_s_output.Reset();
         b2Distance_1.b2Distance(output, simplexCache, input);
-        return output.distance < 10 * b2Settings_3.b2_epsilon;
+        return output.distance < 10 * b2Settings_4.b2_epsilon;
     }
     exports_10("b2TestOverlapShape", b2TestOverlapShape);
-    var b2Settings_3, b2Math_3, b2Distance_1, b2ContactFeatureType, b2ContactFeature, b2ContactID, b2ManifoldPoint, b2ManifoldType, b2Manifold, b2WorldManifold, b2PointState, b2ClipVertex, b2RayCastInput, b2RayCastOutput, b2AABB, b2TestOverlapShape_s_input, b2TestOverlapShape_s_simplexCache, b2TestOverlapShape_s_output;
+    var b2Settings_4, b2Math_3, b2Distance_1, b2ContactFeatureType, b2ContactFeature, b2ContactID, b2ManifoldPoint, b2ManifoldType, b2Manifold, b2WorldManifold, b2PointState, b2ClipVertex, b2RayCastInput, b2RayCastOutput, b2AABB, b2TestOverlapShape_s_input, b2TestOverlapShape_s_simplexCache, b2TestOverlapShape_s_output;
     return {
         setters: [
-            function (b2Settings_3_1) {
-                b2Settings_3 = b2Settings_3_1;
+            function (b2Settings_4_1) {
+                b2Settings_4 = b2Settings_4_1;
             },
             function (b2Math_3_1) {
                 b2Math_3 = b2Math_3_1;
@@ -2100,7 +2107,7 @@ System.register("Collision/b2Collision", ["Common/b2Settings", "Common/b2Math", 
                     this.id = new b2ContactID();
                 }
                 b2ManifoldPoint.MakeArray = function (length) {
-                    return b2Settings_3.b2MakeArray(length, function (i) { return new b2ManifoldPoint(); });
+                    return b2Settings_4.b2MakeArray(length, function (i) { return new b2ManifoldPoint(); });
                 };
                 b2ManifoldPoint.prototype.Reset = function () {
                     this.localPoint.SetZero();
@@ -2127,14 +2134,14 @@ System.register("Collision/b2Collision", ["Common/b2Settings", "Common/b2Math", 
             exports_10("b2ManifoldType", b2ManifoldType);
             b2Manifold = (function () {
                 function b2Manifold() {
-                    this.points = b2ManifoldPoint.MakeArray(b2Settings_3.b2_maxManifoldPoints);
+                    this.points = b2ManifoldPoint.MakeArray(b2Settings_4.b2_maxManifoldPoints);
                     this.localNormal = new b2Math_3.b2Vec2();
                     this.localPoint = new b2Math_3.b2Vec2();
                     this.type = b2ManifoldType.e_unknown;
                     this.pointCount = 0;
                 }
                 b2Manifold.prototype.Reset = function () {
-                    for (var i = 0; i < b2Settings_3.b2_maxManifoldPoints; ++i) {
+                    for (var i = 0; i < b2Settings_4.b2_maxManifoldPoints; ++i) {
                         this.points[i].Reset();
                     }
                     this.localNormal.SetZero();
@@ -2144,7 +2151,7 @@ System.register("Collision/b2Collision", ["Common/b2Settings", "Common/b2Math", 
                 };
                 b2Manifold.prototype.Copy = function (o) {
                     this.pointCount = o.pointCount;
-                    for (var i = 0; i < b2Settings_3.b2_maxManifoldPoints; ++i) {
+                    for (var i = 0; i < b2Settings_4.b2_maxManifoldPoints; ++i) {
                         this.points[i].Copy(o.points[i]);
                     }
                     this.localNormal.Copy(o.localNormal);
@@ -2161,8 +2168,8 @@ System.register("Collision/b2Collision", ["Common/b2Settings", "Common/b2Math", 
             b2WorldManifold = (function () {
                 function b2WorldManifold() {
                     this.normal = new b2Math_3.b2Vec2();
-                    this.points = b2Math_3.b2Vec2.MakeArray(b2Settings_3.b2_maxManifoldPoints);
-                    this.separations = b2Settings_3.b2MakeNumberArray(b2Settings_3.b2_maxManifoldPoints);
+                    this.points = b2Math_3.b2Vec2.MakeArray(b2Settings_4.b2_maxManifoldPoints);
+                    this.separations = b2Settings_4.b2MakeNumberArray(b2Settings_4.b2_maxManifoldPoints);
                 }
                 b2WorldManifold.prototype.Initialize = function (manifold, xfA, radiusA, xfB, radiusB) {
                     if (manifold.pointCount === 0) {
@@ -2174,7 +2181,7 @@ System.register("Collision/b2Collision", ["Common/b2Settings", "Common/b2Math", 
                                 this.normal.Set(1, 0);
                                 var pointA = b2Math_3.b2Transform.MulXV(xfA, manifold.localPoint, b2WorldManifold.Initialize_s_pointA);
                                 var pointB = b2Math_3.b2Transform.MulXV(xfB, manifold.points[0].localPoint, b2WorldManifold.Initialize_s_pointB);
-                                if (b2Math_3.b2Vec2.DistanceSquaredVV(pointA, pointB) > b2Settings_3.b2_epsilon_sq) {
+                                if (b2Math_3.b2Vec2.DistanceSquaredVV(pointA, pointB) > b2Settings_4.b2_epsilon_sq) {
                                     b2Math_3.b2Vec2.SubVV(pointB, pointA, this.normal).SelfNormalize();
                                 }
                                 var cA = b2Math_3.b2Vec2.AddVMulSV(pointA, radiusA, this.normal, b2WorldManifold.Initialize_s_cA);
@@ -2236,7 +2243,7 @@ System.register("Collision/b2Collision", ["Common/b2Settings", "Common/b2Math", 
                     this.id = new b2ContactID();
                 }
                 b2ClipVertex.MakeArray = function (length) {
-                    return b2Settings_3.b2MakeArray(length, function (i) { return new b2ClipVertex(); });
+                    return b2Settings_4.b2MakeArray(length, function (i) { return new b2ClipVertex(); });
                 };
                 b2ClipVertex.prototype.Copy = function (other) {
                     this.v.Copy(other.v);
@@ -2331,8 +2338,8 @@ System.register("Collision/b2Collision", ["Common/b2Settings", "Common/b2Math", 
                     return result;
                 };
                 b2AABB.prototype.RayCast = function (output, input) {
-                    var tmin = (-b2Settings_3.b2_maxFloat);
-                    var tmax = b2Settings_3.b2_maxFloat;
+                    var tmin = (-b2Settings_4.b2_maxFloat);
+                    var tmax = b2Settings_4.b2_maxFloat;
                     var p_x = input.p1.x;
                     var p_y = input.p1.y;
                     var d_x = input.p2.x - input.p1.x;
@@ -2340,7 +2347,7 @@ System.register("Collision/b2Collision", ["Common/b2Settings", "Common/b2Math", 
                     var absD_x = b2Math_3.b2Abs(d_x);
                     var absD_y = b2Math_3.b2Abs(d_y);
                     var normal = output.normal;
-                    if (absD_x < b2Settings_3.b2_epsilon) {
+                    if (absD_x < b2Settings_4.b2_epsilon) {
                         if (p_x < this.lowerBound.x || this.upperBound.x < p_x) {
                             return false;
                         }
@@ -2366,7 +2373,7 @@ System.register("Collision/b2Collision", ["Common/b2Settings", "Common/b2Math", 
                             return false;
                         }
                     }
-                    if (absD_y < b2Settings_3.b2_epsilon) {
+                    if (absD_y < b2Settings_4.b2_epsilon) {
                         if (p_y < this.lowerBound.y || this.upperBound.y < p_y) {
                             return false;
                         }
@@ -2396,6 +2403,15 @@ System.register("Collision/b2Collision", ["Common/b2Settings", "Common/b2Math", 
                         return false;
                     }
                     output.fraction = tmin;
+                    return true;
+                };
+                b2AABB.prototype.TestContain = function (point) {
+                    if (point.x < this.lowerBound.x || this.upperBound.x < point.x) {
+                        return false;
+                    }
+                    if (point.y < this.lowerBound.y || this.upperBound.y < point.y) {
+                        return false;
+                    }
                     return true;
                 };
                 b2AABB.prototype.TestOverlap = function (other) {
@@ -2429,11 +2445,11 @@ System.register("Collision/b2DynamicTree", ["Common/b2Settings", "Common/b2Math"
         }
         return value;
     }
-    var b2Settings_4, b2Math_4, b2GrowableStack_1, b2Collision_1, b2TreeNode, b2DynamicTree;
+    var b2Settings_5, b2Math_4, b2GrowableStack_1, b2Collision_1, b2TreeNode, b2DynamicTree;
     return {
         setters: [
-            function (b2Settings_4_1) {
-                b2Settings_4 = b2Settings_4_1;
+            function (b2Settings_5_1) {
+                b2Settings_5 = b2Settings_5_1;
             },
             function (b2Math_4_1) {
                 b2Math_4 = b2Math_4_1;
@@ -2477,7 +2493,7 @@ System.register("Collision/b2DynamicTree", ["Common/b2Settings", "Common/b2Math"
                 b2DynamicTree.prototype.GetFatAABB = function (proxy) {
                     return proxy.aabb;
                 };
-                b2DynamicTree.prototype.Query = function (callback, aabb) {
+                b2DynamicTree.prototype.Query = function (aabb, callback) {
                     if (this.m_root === null) {
                         return;
                     }
@@ -2485,9 +2501,6 @@ System.register("Collision/b2DynamicTree", ["Common/b2Settings", "Common/b2Math"
                     stack.Push(this.m_root);
                     while (stack.GetCount() > 0) {
                         var node = stack.Pop();
-                        if (node === null) {
-                            continue;
-                        }
                         if (node.aabb.TestOverlap(aabb)) {
                             if (node.IsLeaf()) {
                                 var proceed = callback(node);
@@ -2496,13 +2509,35 @@ System.register("Collision/b2DynamicTree", ["Common/b2Settings", "Common/b2Math"
                                 }
                             }
                             else {
-                                stack.Push(node.child1);
-                                stack.Push(node.child2);
+                                stack.Push(verify(node.child1));
+                                stack.Push(verify(node.child2));
                             }
                         }
                     }
                 };
-                b2DynamicTree.prototype.RayCast = function (callback, input) {
+                b2DynamicTree.prototype.QueryPoint = function (point, callback) {
+                    if (this.m_root === null) {
+                        return;
+                    }
+                    var stack = b2DynamicTree.s_stack.Reset();
+                    stack.Push(this.m_root);
+                    while (stack.GetCount() > 0) {
+                        var node = stack.Pop();
+                        if (node.aabb.TestContain(point)) {
+                            if (node.IsLeaf()) {
+                                var proceed = callback(node);
+                                if (!proceed) {
+                                    return;
+                                }
+                            }
+                            else {
+                                stack.Push(verify(node.child1));
+                                stack.Push(verify(node.child2));
+                            }
+                        }
+                    }
+                };
+                b2DynamicTree.prototype.RayCast = function (input, callback) {
                     if (this.m_root === null) {
                         return;
                     }
@@ -2524,9 +2559,6 @@ System.register("Collision/b2DynamicTree", ["Common/b2Settings", "Common/b2Math"
                     stack.Push(this.m_root);
                     while (stack.GetCount() > 0) {
                         var node = stack.Pop();
-                        if (node === null) {
-                            continue;
-                        }
                         if (!b2Collision_1.b2TestOverlapAABB(node.aabb, segmentAABB)) {
                             continue;
                         }
@@ -2556,8 +2588,8 @@ System.register("Collision/b2DynamicTree", ["Common/b2Settings", "Common/b2Math"
                             }
                         }
                         else {
-                            stack.Push(node.child1);
-                            stack.Push(node.child2);
+                            stack.Push(verify(node.child1));
+                            stack.Push(verify(node.child2));
                         }
                     }
                 };
@@ -2584,8 +2616,8 @@ System.register("Collision/b2DynamicTree", ["Common/b2Settings", "Common/b2Math"
                 };
                 b2DynamicTree.prototype.CreateProxy = function (aabb, userData) {
                     var node = this.AllocateNode();
-                    var r_x = b2Settings_4.b2_aabbExtension;
-                    var r_y = b2Settings_4.b2_aabbExtension;
+                    var r_x = b2Settings_5.b2_aabbExtension;
+                    var r_y = b2Settings_5.b2_aabbExtension;
                     node.aabb.lowerBound.x = aabb.lowerBound.x - r_x;
                     node.aabb.lowerBound.y = aabb.lowerBound.y - r_y;
                     node.aabb.upperBound.x = aabb.upperBound.x + r_x;
@@ -2604,8 +2636,8 @@ System.register("Collision/b2DynamicTree", ["Common/b2Settings", "Common/b2Math"
                         return false;
                     }
                     this.RemoveLeaf(proxy);
-                    var r_x = b2Settings_4.b2_aabbExtension + b2Settings_4.b2_aabbMultiplier * (displacement.x > 0 ? displacement.x : (-displacement.x));
-                    var r_y = b2Settings_4.b2_aabbExtension + b2Settings_4.b2_aabbMultiplier * (displacement.y > 0 ? displacement.y : (-displacement.y));
+                    var r_x = b2Settings_5.b2_aabbExtension + b2Settings_5.b2_aabbMultiplier * (displacement.x > 0 ? displacement.x : (-displacement.x));
+                    var r_y = b2Settings_5.b2_aabbExtension + b2Settings_5.b2_aabbMultiplier * (displacement.y > 0 ? displacement.y : (-displacement.y));
                     proxy.aabb.lowerBound.x = aabb.lowerBound.x - r_x;
                     proxy.aabb.lowerBound.y = aabb.lowerBound.y - r_y;
                     proxy.aabb.upperBound.x = aabb.upperBound.x + r_x;
@@ -2622,17 +2654,9 @@ System.register("Collision/b2DynamicTree", ["Common/b2Settings", "Common/b2Math"
                     }
                     var leafAABB = leaf.aabb;
                     var index = this.m_root;
-                    var child1;
-                    var child2;
                     while (!index.IsLeaf()) {
-                        child1 = index.child1;
-                        child2 = index.child2;
-                        if (!child1) {
-                            throw new Error();
-                        }
-                        if (!child2) {
-                            throw new Error();
-                        }
+                        var child1 = verify(index.child1);
+                        var child2 = verify(index.child2);
                         var area = index.aabb.GetPerimeter();
                         var combinedAABB = b2DynamicTree.s_combinedAABB;
                         combinedAABB.Combine2(index.aabb, leafAABB);
@@ -2703,14 +2727,8 @@ System.register("Collision/b2DynamicTree", ["Common/b2Settings", "Common/b2Math"
                     var index2 = leaf.parent;
                     while (index2 !== null) {
                         index2 = this.Balance(index2);
-                        child1 = index2.child1;
-                        child2 = index2.child2;
-                        if (!child1) {
-                            throw new Error();
-                        }
-                        if (!child2) {
-                            throw new Error();
-                        }
+                        var child1 = verify(index2.child1);
+                        var child2 = verify(index2.child2);
                         index2.height = 1 + b2Math_4.b2Max(child1.height, child2.height);
                         index2.aabb.Combine2(child1.aabb, child2.aabb);
                         index2 = index2.parent;
@@ -2721,20 +2739,14 @@ System.register("Collision/b2DynamicTree", ["Common/b2Settings", "Common/b2Math"
                         this.m_root = null;
                         return;
                     }
-                    var parent = leaf.parent;
-                    if (!parent) {
-                        throw new Error();
-                    }
+                    var parent = verify(leaf.parent);
                     var grandParent = parent && parent.parent;
                     var sibling;
                     if (parent.child1 === leaf) {
-                        sibling = parent.child2;
+                        sibling = verify(parent.child2);
                     }
                     else {
-                        sibling = parent.child1;
-                    }
-                    if (!sibling) {
-                        throw new Error();
+                        sibling = verify(parent.child1);
                     }
                     if (grandParent) {
                         if (grandParent.child1 === parent) {
@@ -2748,14 +2760,8 @@ System.register("Collision/b2DynamicTree", ["Common/b2Settings", "Common/b2Math"
                         var index = grandParent;
                         while (index) {
                             index = this.Balance(index);
-                            var child1 = index.child1;
-                            var child2 = index.child2;
-                            if (!child1) {
-                                throw new Error();
-                            }
-                            if (!child2) {
-                                throw new Error();
-                            }
+                            var child1 = verify(index.child1);
+                            var child2 = verify(index.child2);
                             index.aabb.Combine2(child1.aabb, child2.aabb);
                             index.height = 1 + b2Math_4.b2Max(child1.height, child2.height);
                             index = index.parent;
@@ -2896,17 +2902,11 @@ System.register("Collision/b2DynamicTree", ["Common/b2Settings", "Common/b2Math"
                     if (index === this.m_root) {
                     }
                     var node = index;
-                    var child1 = node.child1;
-                    var child2 = node.child2;
                     if (node.IsLeaf()) {
                         return;
                     }
-                    if (!child1) {
-                        throw new Error();
-                    }
-                    if (!child2) {
-                        throw new Error();
-                    }
+                    var child1 = verify(node.child1);
+                    var child2 = verify(node.child2);
                     this.ValidateStructure(child1);
                     this.ValidateStructure(child2);
                 };
@@ -2915,17 +2915,11 @@ System.register("Collision/b2DynamicTree", ["Common/b2Settings", "Common/b2Math"
                         return;
                     }
                     var node = index;
-                    var child1 = node.child1;
-                    var child2 = node.child2;
                     if (node.IsLeaf()) {
                         return;
                     }
-                    if (!child1) {
-                        throw new Error();
-                    }
-                    if (!child2) {
-                        throw new Error();
-                    }
+                    var child1 = verify(node.child1);
+                    var child2 = verify(node.child2);
                     var aabb = b2DynamicTree.s_aabb;
                     aabb.Combine2(child1.aabb, child2.aabb);
                     this.ValidateMetrics(child1);
@@ -2946,14 +2940,8 @@ System.register("Collision/b2DynamicTree", ["Common/b2Settings", "Common/b2Math"
                     if (node.height <= 1) {
                         return maxBalance;
                     }
-                    var child1 = node.child1;
-                    var child2 = node.child2;
-                    if (!child1) {
-                        throw new Error();
-                    }
-                    if (!child2) {
-                        throw new Error();
-                    }
+                    var child1 = verify(node.child1);
+                    var child2 = verify(node.child2);
                     var balance = b2Math_4.b2Abs(child2.height - child1.height);
                     return b2Math_4.b2Max(maxBalance, balance);
                 };
@@ -3022,8 +3010,8 @@ System.register("Collision/b2TimeOfImpact", ["Common/b2Settings", "Common/b2Math
         sweepB.Normalize();
         var tMax = input.tMax;
         var totalRadius = proxyA.m_radius + proxyB.m_radius;
-        var target = b2Math_5.b2Max(b2Settings_5.b2_linearSlop, totalRadius - 3 * b2Settings_5.b2_linearSlop);
-        var tolerance = 0.25 * b2Settings_5.b2_linearSlop;
+        var target = b2Math_5.b2Max(b2Settings_6.b2_linearSlop, totalRadius - 3 * b2Settings_6.b2_linearSlop);
+        var tolerance = 0.25 * b2Settings_6.b2_linearSlop;
         var t1 = 0;
         var k_maxIterations = 20;
         var iter = 0;
@@ -3116,7 +3104,7 @@ System.register("Collision/b2TimeOfImpact", ["Common/b2Settings", "Common/b2Math
                 }
                 exports_12("b2_toiMaxRootIters", b2_toiMaxRootIters = b2Math_5.b2Max(b2_toiMaxRootIters, rootIterCount));
                 ++pushBackIter;
-                if (pushBackIter === b2Settings_5.b2_maxPolygonVertices) {
+                if (pushBackIter === b2Settings_6.b2_maxPolygonVertices) {
                     break;
                 }
             }
@@ -3137,11 +3125,11 @@ System.register("Collision/b2TimeOfImpact", ["Common/b2Settings", "Common/b2Math
         exports_12("b2_toiTime", b2_toiTime += time);
     }
     exports_12("b2TimeOfImpact", b2TimeOfImpact);
-    var b2Settings_5, b2Math_5, b2Timer_1, b2Distance_2, b2_toiTime, b2_toiMaxTime, b2_toiCalls, b2_toiIters, b2_toiMaxIters, b2_toiRootIters, b2_toiMaxRootIters, b2TimeOfImpact_s_xfA, b2TimeOfImpact_s_xfB, b2TimeOfImpact_s_pointA, b2TimeOfImpact_s_pointB, b2TimeOfImpact_s_normal, b2TimeOfImpact_s_axisA, b2TimeOfImpact_s_axisB, b2TOIInput, b2TOIOutputState, b2TOIOutput, b2SeparationFunctionType, b2SeparationFunction, b2TimeOfImpact_s_timer, b2TimeOfImpact_s_cache, b2TimeOfImpact_s_distanceInput, b2TimeOfImpact_s_distanceOutput, b2TimeOfImpact_s_fcn, b2TimeOfImpact_s_indexA, b2TimeOfImpact_s_indexB, b2TimeOfImpact_s_sweepA, b2TimeOfImpact_s_sweepB;
+    var b2Settings_6, b2Math_5, b2Timer_1, b2Distance_2, b2_toiTime, b2_toiMaxTime, b2_toiCalls, b2_toiIters, b2_toiMaxIters, b2_toiRootIters, b2_toiMaxRootIters, b2TimeOfImpact_s_xfA, b2TimeOfImpact_s_xfB, b2TimeOfImpact_s_pointA, b2TimeOfImpact_s_pointB, b2TimeOfImpact_s_normal, b2TimeOfImpact_s_axisA, b2TimeOfImpact_s_axisB, b2TOIInput, b2TOIOutputState, b2TOIOutput, b2SeparationFunctionType, b2SeparationFunction, b2TimeOfImpact_s_timer, b2TimeOfImpact_s_cache, b2TimeOfImpact_s_distanceInput, b2TimeOfImpact_s_distanceOutput, b2TimeOfImpact_s_fcn, b2TimeOfImpact_s_indexA, b2TimeOfImpact_s_indexB, b2TimeOfImpact_s_sweepA, b2TimeOfImpact_s_sweepB;
     return {
         setters: [
-            function (b2Settings_5_1) {
-                b2Settings_5 = b2Settings_5_1;
+            function (b2Settings_6_1) {
+                b2Settings_6 = b2Settings_6_1;
             },
             function (b2Math_5_1) {
                 b2Math_5 = b2Math_5_1;
@@ -3364,11 +3352,11 @@ System.register("Collision/b2TimeOfImpact", ["Common/b2Settings", "Common/b2Math
 System.register("Dynamics/b2TimeStep", ["Common/b2Settings", "Common/b2Math"], function (exports_13, context_13) {
     "use strict";
     var __moduleName = context_13 && context_13.id;
-    var b2Settings_6, b2Math_6, b2Profile, b2TimeStep, b2Position, b2Velocity, b2SolverData;
+    var b2Settings_7, b2Math_6, b2Profile, b2TimeStep, b2Position, b2Velocity, b2SolverData;
     return {
         setters: [
-            function (b2Settings_6_1) {
-                b2Settings_6 = b2Settings_6_1;
+            function (b2Settings_7_1) {
+                b2Settings_7 = b2Settings_7_1;
             },
             function (b2Math_6_1) {
                 b2Math_6 = b2Math_6_1;
@@ -3429,7 +3417,7 @@ System.register("Dynamics/b2TimeStep", ["Common/b2Settings", "Common/b2Math"], f
                     this.a = 0;
                 }
                 b2Position.MakeArray = function (length) {
-                    return b2Settings_6.b2MakeArray(length, function (i) { return new b2Position(); });
+                    return b2Settings_7.b2MakeArray(length, function (i) { return new b2Position(); });
                 };
                 return b2Position;
             }());
@@ -3440,7 +3428,7 @@ System.register("Dynamics/b2TimeStep", ["Common/b2Settings", "Common/b2Math"], f
                     this.w = 0;
                 }
                 b2Velocity.MakeArray = function (length) {
-                    return b2Settings_6.b2MakeArray(length, function (i) { return new b2Velocity(); });
+                    return b2Settings_7.b2MakeArray(length, function (i) { return new b2Velocity(); });
                 };
                 return b2Velocity;
             }());
@@ -3458,11 +3446,11 @@ System.register("Dynamics/b2TimeStep", ["Common/b2Settings", "Common/b2Math"], f
 System.register("Dynamics/Joints/b2Joint", ["Common/b2Settings", "Common/b2Math"], function (exports_14, context_14) {
     "use strict";
     var __moduleName = context_14 && context_14.id;
-    var b2Settings_7, b2Math_7, b2JointType, b2LimitState, b2Jacobian, b2JointEdge, b2JointDef, b2Joint;
+    var b2Settings_8, b2Math_7, b2JointType, b2LimitState, b2Jacobian, b2JointEdge, b2JointDef, b2Joint;
     return {
         setters: [
-            function (b2Settings_7_1) {
-                b2Settings_7 = b2Settings_7_1;
+            function (b2Settings_8_1) {
+                b2Settings_8 = b2Settings_8_1;
             },
             function (b2Math_7_1) {
                 b2Math_7 = b2Math_7_1;
@@ -3547,7 +3535,7 @@ System.register("Dynamics/Joints/b2Joint", ["Common/b2Settings", "Common/b2Math"
                     this.m_edgeB = new b2JointEdge(this, def.bodyA);
                     this.m_bodyA = def.bodyA;
                     this.m_bodyB = def.bodyB;
-                    this.m_collideConnected = b2Settings_7.b2Maybe(def.collideConnected, false);
+                    this.m_collideConnected = b2Settings_8.b2Maybe(def.collideConnected, false);
                     this.m_userData = def.userData;
                 }
                 b2Joint.prototype.GetType = function () {
@@ -3588,11 +3576,11 @@ System.register("Dynamics/Joints/b2Joint", ["Common/b2Settings", "Common/b2Math"
 System.register("Dynamics/b2Fixture", ["Common/b2Settings", "Common/b2Math", "Collision/b2Collision", "Collision/Shapes/b2Shape"], function (exports_15, context_15) {
     "use strict";
     var __moduleName = context_15 && context_15.id;
-    var b2Settings_8, b2Math_8, b2Collision_2, b2Shape_1, b2Filter, b2FixtureDef, b2FixtureProxy, b2Fixture;
+    var b2Settings_9, b2Math_8, b2Collision_2, b2Shape_1, b2Filter, b2FixtureDef, b2FixtureProxy, b2Fixture;
     return {
         setters: [
-            function (b2Settings_8_1) {
-                b2Settings_8 = b2Settings_8_1;
+            function (b2Settings_9_1) {
+                b2Settings_9 = b2Settings_9_1;
             },
             function (b2Math_8_1) {
                 b2Math_8 = b2Math_8_1;
@@ -3766,14 +3754,14 @@ System.register("Dynamics/b2Fixture", ["Common/b2Settings", "Common/b2Math", "Co
                 b2Fixture.prototype.Create = function (def) {
                     var _this = this;
                     this.m_userData = def.userData;
-                    this.m_friction = b2Settings_8.b2Maybe(def.friction, 0.2);
-                    this.m_restitution = b2Settings_8.b2Maybe(def.restitution, 0);
+                    this.m_friction = b2Settings_9.b2Maybe(def.friction, 0.2);
+                    this.m_restitution = b2Settings_9.b2Maybe(def.restitution, 0);
                     this.m_next = null;
-                    this.m_filter.Copy(b2Settings_8.b2Maybe(def.filter, b2Filter.DEFAULT));
-                    this.m_isSensor = b2Settings_8.b2Maybe(def.isSensor, false);
-                    this.m_proxies = b2Settings_8.b2MakeArray(this.m_shape.GetChildCount(), function (i) { return new b2FixtureProxy(_this); });
+                    this.m_filter.Copy(b2Settings_9.b2Maybe(def.filter, b2Filter.DEFAULT));
+                    this.m_isSensor = b2Settings_9.b2Maybe(def.isSensor, false);
+                    this.m_proxies = b2Settings_9.b2MakeArray(this.m_shape.GetChildCount(), function (i) { return new b2FixtureProxy(_this); });
                     this.m_proxyCount = 0;
-                    this.m_density = b2Settings_8.b2Maybe(def.density, 0);
+                    this.m_density = b2Settings_9.b2Maybe(def.density, 0);
                 };
                 b2Fixture.prototype.Destroy = function () {
                 };
@@ -3822,11 +3810,11 @@ System.register("Dynamics/b2Fixture", ["Common/b2Settings", "Common/b2Math", "Co
 System.register("Collision/Shapes/b2EdgeShape", ["Common/b2Settings", "Common/b2Math", "Collision/Shapes/b2Shape"], function (exports_16, context_16) {
     "use strict";
     var __moduleName = context_16 && context_16.id;
-    var b2Settings_9, b2Math_9, b2Shape_2, b2EdgeShape;
+    var b2Settings_10, b2Math_9, b2Shape_2, b2EdgeShape;
     return {
         setters: [
-            function (b2Settings_9_1) {
-                b2Settings_9 = b2Settings_9_1;
+            function (b2Settings_10_1) {
+                b2Settings_10 = b2Settings_10_1;
             },
             function (b2Math_9_1) {
                 b2Math_9 = b2Math_9_1;
@@ -3839,7 +3827,7 @@ System.register("Collision/Shapes/b2EdgeShape", ["Common/b2Settings", "Common/b2
             b2EdgeShape = (function (_super) {
                 __extends(b2EdgeShape, _super);
                 function b2EdgeShape() {
-                    var _this = _super.call(this, b2Shape_2.b2ShapeType.e_edgeShape, b2Settings_9.b2_polygonRadius) || this;
+                    var _this = _super.call(this, b2Shape_2.b2ShapeType.e_edgeShape, b2Settings_10.b2_polygonRadius) || this;
                     _this.m_vertex1 = new b2Math_9.b2Vec2();
                     _this.m_vertex2 = new b2Math_9.b2Vec2();
                     _this.m_vertex0 = new b2Math_9.b2Vec2();
@@ -3982,11 +3970,11 @@ System.register("Collision/Shapes/b2EdgeShape", ["Common/b2Settings", "Common/b2
 System.register("Collision/Shapes/b2ChainShape", ["Common/b2Settings", "Common/b2Math", "Collision/Shapes/b2Shape", "Collision/Shapes/b2EdgeShape"], function (exports_17, context_17) {
     "use strict";
     var __moduleName = context_17 && context_17.id;
-    var b2Settings_10, b2Math_10, b2Shape_3, b2EdgeShape_1, b2ChainShape;
+    var b2Settings_11, b2Math_10, b2Shape_3, b2EdgeShape_1, b2ChainShape;
     return {
         setters: [
-            function (b2Settings_10_1) {
-                b2Settings_10 = b2Settings_10_1;
+            function (b2Settings_11_1) {
+                b2Settings_11 = b2Settings_11_1;
             },
             function (b2Math_10_1) {
                 b2Math_10 = b2Math_10_1;
@@ -4002,7 +3990,7 @@ System.register("Collision/Shapes/b2ChainShape", ["Common/b2Settings", "Common/b
             b2ChainShape = (function (_super) {
                 __extends(b2ChainShape, _super);
                 function b2ChainShape() {
-                    var _this = _super.call(this, b2Shape_3.b2ShapeType.e_chainShape, b2Settings_10.b2_polygonRadius) || this;
+                    var _this = _super.call(this, b2Shape_3.b2ShapeType.e_chainShape, b2Settings_11.b2_polygonRadius) || this;
                     _this.m_vertices = [];
                     _this.m_count = 0;
                     _this.m_prevVertex = new b2Math_10.b2Vec2();
@@ -4132,7 +4120,7 @@ System.register("Collision/Shapes/b2ChainShape", ["Common/b2Settings", "Common/b
                 };
                 b2ChainShape.prototype.Dump = function (log) {
                     log("    const shape: b2ChainShape = new b2ChainShape();\n");
-                    log("    const vs: b2Vec2[] = b2Vec2.MakeArray(%d);\n", b2Settings_10.b2_maxPolygonVertices);
+                    log("    const vs: b2Vec2[] = b2Vec2.MakeArray(%d);\n", b2Settings_11.b2_maxPolygonVertices);
                     for (var i = 0; i < this.m_count; ++i) {
                         log("    vs[%d].Set(%.15f, %.15f);\n", i, this.m_vertices[i].x, this.m_vertices[i].y);
                     }
@@ -4155,11 +4143,11 @@ System.register("Collision/Shapes/b2ChainShape", ["Common/b2Settings", "Common/b
 System.register("Collision/Shapes/b2CircleShape", ["Common/b2Settings", "Common/b2Math", "Collision/Shapes/b2Shape"], function (exports_18, context_18) {
     "use strict";
     var __moduleName = context_18 && context_18.id;
-    var b2Settings_11, b2Math_11, b2Shape_4, b2CircleShape;
+    var b2Settings_12, b2Math_11, b2Shape_4, b2CircleShape;
     return {
         setters: [
-            function (b2Settings_11_1) {
-                b2Settings_11 = b2Settings_11_1;
+            function (b2Settings_12_1) {
+                b2Settings_12 = b2Settings_12_1;
             },
             function (b2Math_11_1) {
                 b2Math_11 = b2Math_11_1;
@@ -4212,7 +4200,7 @@ System.register("Collision/Shapes/b2CircleShape", ["Common/b2Settings", "Common/
                     var c = b2Math_11.b2Vec2.DotVV(s, r);
                     var rr = b2Math_11.b2Vec2.DotVV(r, r);
                     var sigma = c * c - rr * b;
-                    if (sigma < 0 || rr < b2Settings_11.b2_epsilon) {
+                    if (sigma < 0 || rr < b2Settings_12.b2_epsilon) {
                         return false;
                     }
                     var a = (-(c + b2Math_11.b2Sqrt(sigma)));
@@ -4231,7 +4219,7 @@ System.register("Collision/Shapes/b2CircleShape", ["Common/b2Settings", "Common/
                 };
                 b2CircleShape.prototype.ComputeMass = function (massData, density) {
                     var radius_sq = b2Math_11.b2Sq(this.m_radius);
-                    massData.mass = density * b2Settings_11.b2_pi * radius_sq;
+                    massData.mass = density * b2Settings_12.b2_pi * radius_sq;
                     massData.center.Copy(this.m_p);
                     massData.I = massData.mass * (0.5 * radius_sq + b2Math_11.b2Vec2.DotVV(this.m_p, this.m_p));
                 };
@@ -4244,16 +4232,16 @@ System.register("Collision/Shapes/b2CircleShape", ["Common/b2Settings", "Common/
                 b2CircleShape.prototype.ComputeSubmergedArea = function (normal, offset, xf, c) {
                     var p = b2Math_11.b2Transform.MulXV(xf, this.m_p, new b2Math_11.b2Vec2());
                     var l = (-(b2Math_11.b2Vec2.DotVV(normal, p) - offset));
-                    if (l < (-this.m_radius) + b2Settings_11.b2_epsilon) {
+                    if (l < (-this.m_radius) + b2Settings_12.b2_epsilon) {
                         return 0;
                     }
                     if (l > this.m_radius) {
                         c.Copy(p);
-                        return b2Settings_11.b2_pi * this.m_radius * this.m_radius;
+                        return b2Settings_12.b2_pi * this.m_radius * this.m_radius;
                     }
                     var r2 = this.m_radius * this.m_radius;
                     var l2 = l * l;
-                    var area = r2 * (b2Math_11.b2Asin(l / this.m_radius) + b2Settings_11.b2_pi / 2) + l * b2Math_11.b2Sqrt(r2 - l2);
+                    var area = r2 * (b2Math_11.b2Asin(l / this.m_radius) + b2Settings_12.b2_pi / 2) + l * b2Math_11.b2Sqrt(r2 - l2);
                     var com = (-2 / 3 * b2Math_11.b2Pow(r2 - l2, 1.5) / area);
                     c.x = p.x + normal.x * com;
                     c.y = p.y + normal.y * com;
@@ -4280,11 +4268,11 @@ System.register("Collision/Shapes/b2CircleShape", ["Common/b2Settings", "Common/
 System.register("Collision/Shapes/b2PolygonShape", ["Common/b2Settings", "Common/b2Math", "Collision/Shapes/b2Shape"], function (exports_19, context_19) {
     "use strict";
     var __moduleName = context_19 && context_19.id;
-    var b2Settings_12, b2Math_12, b2Shape_5, b2Shape_6, b2PolygonShape;
+    var b2Settings_13, b2Math_12, b2Shape_5, b2Shape_6, b2PolygonShape;
     return {
         setters: [
-            function (b2Settings_12_1) {
-                b2Settings_12 = b2Settings_12_1;
+            function (b2Settings_13_1) {
+                b2Settings_13 = b2Settings_13_1;
             },
             function (b2Math_12_1) {
                 b2Math_12 = b2Math_12_1;
@@ -4298,7 +4286,7 @@ System.register("Collision/Shapes/b2PolygonShape", ["Common/b2Settings", "Common
             b2PolygonShape = (function (_super) {
                 __extends(b2PolygonShape, _super);
                 function b2PolygonShape() {
-                    var _this = _super.call(this, b2Shape_6.b2ShapeType.e_polygonShape, b2Settings_12.b2_polygonRadius) || this;
+                    var _this = _super.call(this, b2Shape_6.b2ShapeType.e_polygonShape, b2Settings_13.b2_polygonRadius) || this;
                     _this.m_centroid = new b2Math_12.b2Vec2(0, 0);
                     _this.m_vertices = [];
                     _this.m_normals = [];
@@ -4329,14 +4317,14 @@ System.register("Collision/Shapes/b2PolygonShape", ["Common/b2Settings", "Common
                     if (count < 3) {
                         return this.SetAsBox(1, 1);
                     }
-                    var n = b2Math_12.b2Min(count, b2Settings_12.b2_maxPolygonVertices);
+                    var n = b2Math_12.b2Min(count, b2Settings_13.b2_maxPolygonVertices);
                     var ps = b2PolygonShape.Set_s_ps;
                     var tempCount = 0;
                     for (var i = 0; i < n; ++i) {
                         var v = vertices[start + i];
                         var unique = true;
                         for (var j = 0; j < tempCount; ++j) {
-                            if (b2Math_12.b2Vec2.DistanceSquaredVV(v, ps[j]) < ((0.5 * b2Settings_12.b2_linearSlop) * (0.5 * b2Settings_12.b2_linearSlop))) {
+                            if (b2Math_12.b2Vec2.DistanceSquaredVV(v, ps[j]) < ((0.5 * b2Settings_13.b2_linearSlop) * (0.5 * b2Settings_13.b2_linearSlop))) {
                                 unique = false;
                                 break;
                             }
@@ -4442,7 +4430,7 @@ System.register("Collision/Shapes/b2PolygonShape", ["Common/b2Settings", "Common
                 };
                 b2PolygonShape.prototype.ComputeDistance = function (xf, p, normal, childIndex) {
                     var pLocal = b2Math_12.b2Transform.MulTXV(xf, p, b2PolygonShape.ComputeDistance_s_pLocal);
-                    var maxDistance = -b2Settings_12.b2_maxFloat;
+                    var maxDistance = -b2Settings_13.b2_maxFloat;
                     var normalForMaxDistance = b2PolygonShape.ComputeDistance_s_normalForMaxDistance.Copy(pLocal);
                     for (var i = 0; i < this.m_count; ++i) {
                         var dot = b2Math_12.b2Vec2.DotVV(this.m_normals[i], b2Math_12.b2Vec2.SubVV(pLocal, this.m_vertices[i], b2Math_12.b2Vec2.s_t0));
@@ -4582,7 +4570,7 @@ System.register("Collision/Shapes/b2PolygonShape", ["Common/b2Settings", "Common
                     var lastSubmerged = false;
                     for (var i_1 = 0; i_1 < this.m_count; ++i_1) {
                         depths[i_1] = b2Math_12.b2Vec2.DotVV(normalL, this.m_vertices[i_1]) - offsetL;
-                        var isSubmerged = depths[i_1] < (-b2Settings_12.b2_epsilon);
+                        var isSubmerged = depths[i_1] < (-b2Settings_13.b2_epsilon);
                         if (i_1 > 0) {
                             if (isSubmerged) {
                                 if (!lastSubmerged) {
@@ -4650,7 +4638,7 @@ System.register("Collision/Shapes/b2PolygonShape", ["Common/b2Settings", "Common
                 };
                 b2PolygonShape.prototype.Dump = function (log) {
                     log("    const shape: b2PolygonShape = new b2PolygonShape();\n");
-                    log("    const vs: b2Vec2[] = b2Vec2.MakeArray(%d);\n", b2Settings_12.b2_maxPolygonVertices);
+                    log("    const vs: b2Vec2[] = b2Vec2.MakeArray(%d);\n", b2Settings_13.b2_maxPolygonVertices);
                     for (var i = 0; i < this.m_count; ++i) {
                         log("    vs[%d].Set(%.15f, %.15f);\n", i, this.m_vertices[i].x, this.m_vertices[i].y);
                     }
@@ -4677,8 +4665,8 @@ System.register("Collision/Shapes/b2PolygonShape", ["Common/b2Settings", "Common
                     c.SelfMul(1 / area);
                     return c;
                 };
-                b2PolygonShape.Set_s_ps = b2Math_12.b2Vec2.MakeArray(b2Settings_12.b2_maxPolygonVertices);
-                b2PolygonShape.Set_s_hull = b2Settings_12.b2MakeNumberArray(b2Settings_12.b2_maxPolygonVertices);
+                b2PolygonShape.Set_s_ps = b2Math_12.b2Vec2.MakeArray(b2Settings_13.b2_maxPolygonVertices);
+                b2PolygonShape.Set_s_hull = b2Settings_13.b2MakeNumberArray(b2Settings_13.b2_maxPolygonVertices);
                 b2PolygonShape.Set_s_r = new b2Math_12.b2Vec2();
                 b2PolygonShape.Set_s_v = new b2Math_12.b2Vec2();
                 b2PolygonShape.TestPoint_s_pLocal = new b2Math_12.b2Vec2();
@@ -4697,7 +4685,7 @@ System.register("Collision/Shapes/b2PolygonShape", ["Common/b2Settings", "Common
                 b2PolygonShape.Validate_s_e = new b2Math_12.b2Vec2();
                 b2PolygonShape.Validate_s_v = new b2Math_12.b2Vec2();
                 b2PolygonShape.ComputeSubmergedArea_s_normalL = new b2Math_12.b2Vec2();
-                b2PolygonShape.ComputeSubmergedArea_s_depths = b2Settings_12.b2MakeNumberArray(b2Settings_12.b2_maxPolygonVertices);
+                b2PolygonShape.ComputeSubmergedArea_s_depths = b2Settings_13.b2MakeNumberArray(b2Settings_13.b2_maxPolygonVertices);
                 b2PolygonShape.ComputeSubmergedArea_s_md = new b2Shape_5.b2MassData();
                 b2PolygonShape.ComputeSubmergedArea_s_intoVec = new b2Math_12.b2Vec2();
                 b2PolygonShape.ComputeSubmergedArea_s_outoVec = new b2Math_12.b2Vec2();
@@ -4714,11 +4702,11 @@ System.register("Collision/Shapes/b2PolygonShape", ["Common/b2Settings", "Common
 System.register("Dynamics/Joints/b2DistanceJoint", ["Common/b2Settings", "Common/b2Math", "Dynamics/Joints/b2Joint"], function (exports_20, context_20) {
     "use strict";
     var __moduleName = context_20 && context_20.id;
-    var b2Settings_13, b2Math_13, b2Joint_1, b2DistanceJointDef, b2DistanceJoint;
+    var b2Settings_14, b2Math_13, b2Joint_1, b2DistanceJointDef, b2DistanceJoint;
     return {
         setters: [
-            function (b2Settings_13_1) {
-                b2Settings_13 = b2Settings_13_1;
+            function (b2Settings_14_1) {
+                b2Settings_14 = b2Settings_14_1;
             },
             function (b2Math_13_1) {
                 b2Math_13 = b2Math_13_1;
@@ -4779,8 +4767,8 @@ System.register("Dynamics/Joints/b2DistanceJoint", ["Common/b2Settings", "Common
                     _this.m_qB = new b2Math_13.b2Rot();
                     _this.m_lalcA = new b2Math_13.b2Vec2();
                     _this.m_lalcB = new b2Math_13.b2Vec2();
-                    _this.m_frequencyHz = b2Settings_13.b2Maybe(def.frequencyHz, 0);
-                    _this.m_dampingRatio = b2Settings_13.b2Maybe(def.dampingRatio, 0);
+                    _this.m_frequencyHz = b2Settings_14.b2Maybe(def.frequencyHz, 0);
+                    _this.m_dampingRatio = b2Settings_14.b2Maybe(def.dampingRatio, 0);
                     _this.m_localAnchorA.Copy(def.localAnchorA);
                     _this.m_localAnchorB.Copy(def.localAnchorB);
                     _this.m_length = def.length;
@@ -4859,7 +4847,7 @@ System.register("Dynamics/Joints/b2DistanceJoint", ["Common/b2Settings", "Common
                     this.m_u.x = cB.x + this.m_rB.x - cA.x - this.m_rA.x;
                     this.m_u.y = cB.y + this.m_rB.y - cA.y - this.m_rA.y;
                     var length = this.m_u.Length();
-                    if (length > b2Settings_13.b2_linearSlop) {
+                    if (length > b2Settings_14.b2_linearSlop) {
                         this.m_u.SelfMul(1 / length);
                     }
                     else {
@@ -4871,7 +4859,7 @@ System.register("Dynamics/Joints/b2DistanceJoint", ["Common/b2Settings", "Common
                     this.m_mass = invMass !== 0 ? 1 / invMass : 0;
                     if (this.m_frequencyHz > 0) {
                         var C = length - this.m_length;
-                        var omega = 2 * b2Settings_13.b2_pi * this.m_frequencyHz;
+                        var omega = 2 * b2Settings_14.b2_pi * this.m_frequencyHz;
                         var d = 2 * this.m_mass * this.m_dampingRatio * omega;
                         var k = this.m_mass * omega * omega;
                         var h = data.step.dt;
@@ -4933,7 +4921,7 @@ System.register("Dynamics/Joints/b2DistanceJoint", ["Common/b2Settings", "Common
                     u.y = cB.y + rB.y - cA.y - rA.y;
                     var length = this.m_u.Normalize();
                     var C = length - this.m_length;
-                    C = b2Math_13.b2Clamp(C, (-b2Settings_13.b2_maxLinearCorrection), b2Settings_13.b2_maxLinearCorrection);
+                    C = b2Math_13.b2Clamp(C, (-b2Settings_14.b2_maxLinearCorrection), b2Settings_14.b2_maxLinearCorrection);
                     var impulse = (-this.m_mass * C);
                     var P = b2Math_13.b2Vec2.MulSV(impulse, u, b2DistanceJoint.SolvePositionConstraints_s_P);
                     cA.SelfMulSub(this.m_invMassA, P);
@@ -4942,7 +4930,7 @@ System.register("Dynamics/Joints/b2DistanceJoint", ["Common/b2Settings", "Common
                     aB += this.m_invIB * b2Math_13.b2Vec2.CrossVV(rB, P);
                     data.positions[this.m_indexA].a = aA;
                     data.positions[this.m_indexB].a = aB;
-                    return b2Math_13.b2Abs(C) < b2Settings_13.b2_linearSlop;
+                    return b2Math_13.b2Abs(C) < b2Settings_14.b2_linearSlop;
                 };
                 b2DistanceJoint.InitVelocityConstraints_s_P = new b2Math_13.b2Vec2();
                 b2DistanceJoint.SolveVelocityConstraints_s_vpA = new b2Math_13.b2Vec2();
@@ -4958,11 +4946,11 @@ System.register("Dynamics/Joints/b2DistanceJoint", ["Common/b2Settings", "Common
 System.register("Dynamics/Joints/b2AreaJoint", ["Common/b2Settings", "Common/b2Math", "Dynamics/Joints/b2Joint", "Dynamics/Joints/b2DistanceJoint"], function (exports_21, context_21) {
     "use strict";
     var __moduleName = context_21 && context_21.id;
-    var b2Settings_14, b2Math_14, b2Joint_2, b2DistanceJoint_1, b2AreaJointDef, b2AreaJoint;
+    var b2Settings_15, b2Math_14, b2Joint_2, b2DistanceJoint_1, b2AreaJointDef, b2AreaJoint;
     return {
         setters: [
-            function (b2Settings_14_1) {
-                b2Settings_14 = b2Settings_14_1;
+            function (b2Settings_15_1) {
+                b2Settings_15 = b2Settings_15_1;
             },
             function (b2Math_14_1) {
                 b2Math_14 = b2Math_14_1;
@@ -5005,9 +4993,9 @@ System.register("Dynamics/Joints/b2AreaJoint", ["Common/b2Settings", "Common/b2M
                     _this.m_impulse = 0;
                     _this.m_targetArea = 0;
                     _this.m_bodies = def.bodies;
-                    _this.m_frequencyHz = b2Settings_14.b2Maybe(def.frequencyHz, 0);
-                    _this.m_dampingRatio = b2Settings_14.b2Maybe(def.dampingRatio, 0);
-                    _this.m_targetLengths = b2Settings_14.b2MakeNumberArray(def.bodies.length);
+                    _this.m_frequencyHz = b2Settings_15.b2Maybe(def.frequencyHz, 0);
+                    _this.m_dampingRatio = b2Settings_15.b2Maybe(def.dampingRatio, 0);
+                    _this.m_targetLengths = b2Settings_15.b2MakeNumberArray(def.bodies.length);
                     _this.m_normals = b2Math_14.b2Vec2.MakeArray(def.bodies.length);
                     _this.m_joints = [];
                     _this.m_deltas = b2Math_14.b2Vec2.MakeArray(def.bodies.length);
@@ -5115,7 +5103,7 @@ System.register("Dynamics/Joints/b2AreaJoint", ["Common/b2Settings", "Common/b2M
                         var next_c = data.positions[next.m_islandIndex].c;
                         var delta = b2Math_14.b2Vec2.SubVV(next_c, body_c, this.m_delta);
                         var dist = delta.Length();
-                        if (dist < b2Settings_14.b2_epsilon) {
+                        if (dist < b2Settings_15.b2_epsilon) {
                             dist = 1;
                         }
                         this.m_normals[i].x = delta.y / dist;
@@ -5134,10 +5122,10 @@ System.register("Dynamics/Joints/b2AreaJoint", ["Common/b2Settings", "Common/b2M
                         var delta = b2Math_14.b2Vec2.AddVV(this.m_normals[i], this.m_normals[next_i], this.m_delta);
                         delta.SelfMul(toExtrude);
                         var norm_sq = delta.LengthSquared();
-                        if (norm_sq > b2Math_14.b2Sq(b2Settings_14.b2_maxLinearCorrection)) {
-                            delta.SelfMul(b2Settings_14.b2_maxLinearCorrection / b2Math_14.b2Sqrt(norm_sq));
+                        if (norm_sq > b2Math_14.b2Sq(b2Settings_15.b2_maxLinearCorrection)) {
+                            delta.SelfMul(b2Settings_15.b2_maxLinearCorrection / b2Math_14.b2Sqrt(norm_sq));
                         }
-                        if (norm_sq > b2Math_14.b2Sq(b2Settings_14.b2_linearSlop)) {
+                        if (norm_sq > b2Math_14.b2Sq(b2Settings_15.b2_linearSlop)) {
                             done = false;
                         }
                         body_c.x += delta.x;
@@ -5154,11 +5142,11 @@ System.register("Dynamics/Joints/b2AreaJoint", ["Common/b2Settings", "Common/b2M
 System.register("Dynamics/Joints/b2FrictionJoint", ["Common/b2Settings", "Common/b2Math", "Dynamics/Joints/b2Joint"], function (exports_22, context_22) {
     "use strict";
     var __moduleName = context_22 && context_22.id;
-    var b2Settings_15, b2Math_15, b2Joint_3, b2FrictionJointDef, b2FrictionJoint;
+    var b2Settings_16, b2Math_15, b2Joint_3, b2FrictionJointDef, b2FrictionJoint;
     return {
         setters: [
-            function (b2Settings_15_1) {
-                b2Settings_15 = b2Settings_15_1;
+            function (b2Settings_16_1) {
+                b2Settings_16 = b2Settings_16_1;
             },
             function (b2Math_15_1) {
                 b2Math_15 = b2Math_15_1;
@@ -5217,8 +5205,8 @@ System.register("Dynamics/Joints/b2FrictionJoint", ["Common/b2Settings", "Common
                     _this.m_localAnchorA.Copy(def.localAnchorA);
                     _this.m_localAnchorB.Copy(def.localAnchorB);
                     _this.m_linearImpulse.SetZero();
-                    _this.m_maxForce = b2Settings_15.b2Maybe(def.maxForce, 0);
-                    _this.m_maxTorque = b2Settings_15.b2Maybe(def.maxTorque, 0);
+                    _this.m_maxForce = b2Settings_16.b2Maybe(def.maxForce, 0);
+                    _this.m_maxTorque = b2Settings_16.b2Maybe(def.maxTorque, 0);
                     _this.m_linearMass.SetZero();
                     return _this;
                 }
@@ -5363,11 +5351,11 @@ System.register("Dynamics/Joints/b2FrictionJoint", ["Common/b2Settings", "Common
 System.register("Dynamics/Joints/b2PrismaticJoint", ["Common/b2Settings", "Common/b2Math", "Dynamics/Joints/b2Joint"], function (exports_23, context_23) {
     "use strict";
     var __moduleName = context_23 && context_23.id;
-    var b2Settings_16, b2Math_16, b2Joint_4, b2PrismaticJointDef, b2PrismaticJoint;
+    var b2Settings_17, b2Math_16, b2Joint_4, b2PrismaticJointDef, b2PrismaticJoint;
     return {
         setters: [
-            function (b2Settings_16_1) {
-                b2Settings_16 = b2Settings_16_1;
+            function (b2Settings_17_1) {
+                b2Settings_17 = b2Settings_17_1;
             },
             function (b2Math_16_1) {
                 b2Math_16 = b2Math_16_1;
@@ -5446,17 +5434,17 @@ System.register("Dynamics/Joints/b2PrismaticJoint", ["Common/b2Settings", "Commo
                     _this.m_lalcB = new b2Math_16.b2Vec2();
                     _this.m_rA = new b2Math_16.b2Vec2();
                     _this.m_rB = new b2Math_16.b2Vec2();
-                    _this.m_localAnchorA.Copy(b2Settings_16.b2Maybe(def.localAnchorA, b2Math_16.b2Vec2.ZERO));
-                    _this.m_localAnchorB.Copy(b2Settings_16.b2Maybe(def.localAnchorB, b2Math_16.b2Vec2.ZERO));
-                    _this.m_localXAxisA.Copy(b2Settings_16.b2Maybe(def.localAxisA, new b2Math_16.b2Vec2(1, 0))).SelfNormalize();
+                    _this.m_localAnchorA.Copy(b2Settings_17.b2Maybe(def.localAnchorA, b2Math_16.b2Vec2.ZERO));
+                    _this.m_localAnchorB.Copy(b2Settings_17.b2Maybe(def.localAnchorB, b2Math_16.b2Vec2.ZERO));
+                    _this.m_localXAxisA.Copy(b2Settings_17.b2Maybe(def.localAxisA, new b2Math_16.b2Vec2(1, 0))).SelfNormalize();
                     b2Math_16.b2Vec2.CrossOneV(_this.m_localXAxisA, _this.m_localYAxisA);
-                    _this.m_referenceAngle = b2Settings_16.b2Maybe(def.referenceAngle, 0);
-                    _this.m_lowerTranslation = b2Settings_16.b2Maybe(def.lowerTranslation, 0);
-                    _this.m_upperTranslation = b2Settings_16.b2Maybe(def.upperTranslation, 0);
-                    _this.m_maxMotorForce = b2Settings_16.b2Maybe(def.maxMotorForce, 0);
-                    _this.m_motorSpeed = b2Settings_16.b2Maybe(def.motorSpeed, 0);
-                    _this.m_enableLimit = b2Settings_16.b2Maybe(def.enableLimit, false);
-                    _this.m_enableMotor = b2Settings_16.b2Maybe(def.enableMotor, false);
+                    _this.m_referenceAngle = b2Settings_17.b2Maybe(def.referenceAngle, 0);
+                    _this.m_lowerTranslation = b2Settings_17.b2Maybe(def.lowerTranslation, 0);
+                    _this.m_upperTranslation = b2Settings_17.b2Maybe(def.upperTranslation, 0);
+                    _this.m_maxMotorForce = b2Settings_17.b2Maybe(def.maxMotorForce, 0);
+                    _this.m_motorSpeed = b2Settings_17.b2Maybe(def.motorSpeed, 0);
+                    _this.m_enableLimit = b2Settings_17.b2Maybe(def.enableLimit, false);
+                    _this.m_enableMotor = b2Settings_17.b2Maybe(def.enableMotor, false);
                     return _this;
                 }
                 b2PrismaticJoint.prototype.InitVelocityConstraints = function (data) {
@@ -5512,7 +5500,7 @@ System.register("Dynamics/Joints/b2PrismaticJoint", ["Common/b2Settings", "Commo
                     }
                     if (this.m_enableLimit) {
                         var jointTranslation = b2Math_16.b2Vec2.DotVV(this.m_axis, d);
-                        if (b2Math_16.b2Abs(this.m_upperTranslation - this.m_lowerTranslation) < 2 * b2Settings_16.b2_linearSlop) {
+                        if (b2Math_16.b2Abs(this.m_upperTranslation - this.m_lowerTranslation) < 2 * b2Settings_17.b2_linearSlop) {
                             this.m_limitState = b2Joint_4.b2LimitState.e_equalLimits;
                         }
                         else if (jointTranslation <= this.m_lowerTranslation) {
@@ -5651,18 +5639,18 @@ System.register("Dynamics/Joints/b2PrismaticJoint", ["Common/b2Settings", "Commo
                     var C2 = 0;
                     if (this.m_enableLimit) {
                         var translation = b2Math_16.b2Vec2.DotVV(axis, d);
-                        if (b2Math_16.b2Abs(this.m_upperTranslation - this.m_lowerTranslation) < 2 * b2Settings_16.b2_linearSlop) {
-                            C2 = b2Math_16.b2Clamp(translation, (-b2Settings_16.b2_maxLinearCorrection), b2Settings_16.b2_maxLinearCorrection);
+                        if (b2Math_16.b2Abs(this.m_upperTranslation - this.m_lowerTranslation) < 2 * b2Settings_17.b2_linearSlop) {
+                            C2 = b2Math_16.b2Clamp(translation, (-b2Settings_17.b2_maxLinearCorrection), b2Settings_17.b2_maxLinearCorrection);
                             linearError = b2Math_16.b2Max(linearError, b2Math_16.b2Abs(translation));
                             active = true;
                         }
                         else if (translation <= this.m_lowerTranslation) {
-                            C2 = b2Math_16.b2Clamp(translation - this.m_lowerTranslation + b2Settings_16.b2_linearSlop, (-b2Settings_16.b2_maxLinearCorrection), 0);
+                            C2 = b2Math_16.b2Clamp(translation - this.m_lowerTranslation + b2Settings_17.b2_linearSlop, (-b2Settings_17.b2_maxLinearCorrection), 0);
                             linearError = b2Math_16.b2Max(linearError, this.m_lowerTranslation - translation);
                             active = true;
                         }
                         else if (translation >= this.m_upperTranslation) {
-                            C2 = b2Math_16.b2Clamp(translation - this.m_upperTranslation - b2Settings_16.b2_linearSlop, 0, b2Settings_16.b2_maxLinearCorrection);
+                            C2 = b2Math_16.b2Clamp(translation - this.m_upperTranslation - b2Settings_17.b2_linearSlop, 0, b2Settings_17.b2_maxLinearCorrection);
                             linearError = b2Math_16.b2Max(linearError, translation - this.m_upperTranslation);
                             active = true;
                         }
@@ -5707,7 +5695,7 @@ System.register("Dynamics/Joints/b2PrismaticJoint", ["Common/b2Settings", "Commo
                     aB += iB * LB;
                     data.positions[this.m_indexA].a = aA;
                     data.positions[this.m_indexB].a = aB;
-                    return linearError <= b2Settings_16.b2_linearSlop && angularError <= b2Settings_16.b2_angularSlop;
+                    return linearError <= b2Settings_17.b2_linearSlop && angularError <= b2Settings_17.b2_angularSlop;
                 };
                 b2PrismaticJoint.prototype.GetAnchorA = function (out) {
                     return this.m_bodyA.GetWorldPoint(this.m_localAnchorA, out);
@@ -5848,11 +5836,11 @@ System.register("Dynamics/Joints/b2PrismaticJoint", ["Common/b2Settings", "Commo
 System.register("Dynamics/Joints/b2RevoluteJoint", ["Common/b2Settings", "Common/b2Math", "Dynamics/Joints/b2Joint"], function (exports_24, context_24) {
     "use strict";
     var __moduleName = context_24 && context_24.id;
-    var b2Settings_17, b2Math_17, b2Joint_5, b2RevoluteJointDef, b2RevoluteJoint;
+    var b2Settings_18, b2Math_17, b2Joint_5, b2RevoluteJointDef, b2RevoluteJoint;
     return {
         setters: [
-            function (b2Settings_17_1) {
-                b2Settings_17 = b2Settings_17_1;
+            function (b2Settings_18_1) {
+                b2Settings_18 = b2Settings_18_1;
             },
             function (b2Math_17_1) {
                 b2Math_17 = b2Math_17_1;
@@ -5920,17 +5908,17 @@ System.register("Dynamics/Joints/b2RevoluteJoint", ["Common/b2Settings", "Common
                     _this.m_lalcA = new b2Math_17.b2Vec2();
                     _this.m_lalcB = new b2Math_17.b2Vec2();
                     _this.m_K = new b2Math_17.b2Mat22();
-                    _this.m_localAnchorA.Copy(b2Settings_17.b2Maybe(def.localAnchorA, b2Math_17.b2Vec2.ZERO));
-                    _this.m_localAnchorB.Copy(b2Settings_17.b2Maybe(def.localAnchorB, b2Math_17.b2Vec2.ZERO));
-                    _this.m_referenceAngle = b2Settings_17.b2Maybe(def.referenceAngle, 0);
+                    _this.m_localAnchorA.Copy(b2Settings_18.b2Maybe(def.localAnchorA, b2Math_17.b2Vec2.ZERO));
+                    _this.m_localAnchorB.Copy(b2Settings_18.b2Maybe(def.localAnchorB, b2Math_17.b2Vec2.ZERO));
+                    _this.m_referenceAngle = b2Settings_18.b2Maybe(def.referenceAngle, 0);
                     _this.m_impulse.SetZero();
                     _this.m_motorImpulse = 0;
-                    _this.m_lowerAngle = b2Settings_17.b2Maybe(def.lowerAngle, 0);
-                    _this.m_upperAngle = b2Settings_17.b2Maybe(def.upperAngle, 0);
-                    _this.m_maxMotorTorque = b2Settings_17.b2Maybe(def.maxMotorTorque, 0);
-                    _this.m_motorSpeed = b2Settings_17.b2Maybe(def.motorSpeed, 0);
-                    _this.m_enableLimit = b2Settings_17.b2Maybe(def.enableLimit, false);
-                    _this.m_enableMotor = b2Settings_17.b2Maybe(def.enableMotor, false);
+                    _this.m_lowerAngle = b2Settings_18.b2Maybe(def.lowerAngle, 0);
+                    _this.m_upperAngle = b2Settings_18.b2Maybe(def.upperAngle, 0);
+                    _this.m_maxMotorTorque = b2Settings_18.b2Maybe(def.maxMotorTorque, 0);
+                    _this.m_motorSpeed = b2Settings_18.b2Maybe(def.motorSpeed, 0);
+                    _this.m_enableLimit = b2Settings_18.b2Maybe(def.enableLimit, false);
+                    _this.m_enableMotor = b2Settings_18.b2Maybe(def.enableMotor, false);
                     _this.m_limitState = b2Joint_5.b2LimitState.e_inactiveLimit;
                     return _this;
                 }
@@ -5975,7 +5963,7 @@ System.register("Dynamics/Joints/b2RevoluteJoint", ["Common/b2Settings", "Common
                     }
                     if (this.m_enableLimit && !fixedRotation) {
                         var jointAngle = aB - aA - this.m_referenceAngle;
-                        if (b2Math_17.b2Abs(this.m_upperAngle - this.m_lowerAngle) < 2 * b2Settings_17.b2_angularSlop) {
+                        if (b2Math_17.b2Abs(this.m_upperAngle - this.m_lowerAngle) < 2 * b2Settings_18.b2_angularSlop) {
                             this.m_limitState = b2Joint_5.b2LimitState.e_equalLimits;
                         }
                         else if (jointAngle <= this.m_lowerAngle) {
@@ -6105,20 +6093,20 @@ System.register("Dynamics/Joints/b2RevoluteJoint", ["Common/b2Settings", "Common
                         var angle = aB - aA - this.m_referenceAngle;
                         var limitImpulse = 0;
                         if (this.m_limitState === b2Joint_5.b2LimitState.e_equalLimits) {
-                            var C = b2Math_17.b2Clamp(angle - this.m_lowerAngle, -b2Settings_17.b2_maxAngularCorrection, b2Settings_17.b2_maxAngularCorrection);
+                            var C = b2Math_17.b2Clamp(angle - this.m_lowerAngle, -b2Settings_18.b2_maxAngularCorrection, b2Settings_18.b2_maxAngularCorrection);
                             limitImpulse = -this.m_motorMass * C;
                             angularError = b2Math_17.b2Abs(C);
                         }
                         else if (this.m_limitState === b2Joint_5.b2LimitState.e_atLowerLimit) {
                             var C = angle - this.m_lowerAngle;
                             angularError = -C;
-                            C = b2Math_17.b2Clamp(C + b2Settings_17.b2_angularSlop, -b2Settings_17.b2_maxAngularCorrection, 0);
+                            C = b2Math_17.b2Clamp(C + b2Settings_18.b2_angularSlop, -b2Settings_18.b2_maxAngularCorrection, 0);
                             limitImpulse = -this.m_motorMass * C;
                         }
                         else if (this.m_limitState === b2Joint_5.b2LimitState.e_atUpperLimit) {
                             var C = angle - this.m_upperAngle;
                             angularError = C;
-                            C = b2Math_17.b2Clamp(C - b2Settings_17.b2_angularSlop, 0, b2Settings_17.b2_maxAngularCorrection);
+                            C = b2Math_17.b2Clamp(C - b2Settings_18.b2_angularSlop, 0, b2Settings_18.b2_maxAngularCorrection);
                             limitImpulse = -this.m_motorMass * C;
                         }
                         aA -= this.m_invIA * limitImpulse;
@@ -6148,7 +6136,7 @@ System.register("Dynamics/Joints/b2RevoluteJoint", ["Common/b2Settings", "Common
                     }
                     data.positions[this.m_indexA].a = aA;
                     data.positions[this.m_indexB].a = aB;
-                    return positionError <= b2Settings_17.b2_linearSlop && angularError <= b2Settings_17.b2_angularSlop;
+                    return positionError <= b2Settings_18.b2_linearSlop && angularError <= b2Settings_18.b2_angularSlop;
                 };
                 b2RevoluteJoint.prototype.GetAnchorA = function (out) {
                     return this.m_bodyA.GetWorldPoint(this.m_localAnchorA, out);
@@ -6262,11 +6250,11 @@ System.register("Dynamics/Joints/b2RevoluteJoint", ["Common/b2Settings", "Common
 System.register("Dynamics/Joints/b2GearJoint", ["Common/b2Settings", "Common/b2Math", "Dynamics/Joints/b2Joint"], function (exports_25, context_25) {
     "use strict";
     var __moduleName = context_25 && context_25.id;
-    var b2Settings_18, b2Math_18, b2Joint_6, b2GearJointDef, b2GearJoint;
+    var b2Settings_19, b2Math_18, b2Joint_6, b2GearJointDef, b2GearJoint;
     return {
         setters: [
-            function (b2Settings_18_1) {
-                b2Settings_18 = b2Settings_18_1;
+            function (b2Settings_19_1) {
+                b2Settings_19 = b2Settings_19_1;
             },
             function (b2Math_18_1) {
                 b2Math_18 = b2Math_18_1;
@@ -6387,7 +6375,7 @@ System.register("Dynamics/Joints/b2GearJoint", ["Common/b2Settings", "Common/b2M
                         var pB = b2Math_18.b2Rot.MulTRV(xfD.q, b2Math_18.b2Vec2.AddVV(b2Math_18.b2Rot.MulRV(xfB.q, _this.m_localAnchorB, b2Math_18.b2Vec2.s_t0), b2Math_18.b2Vec2.SubVV(xfB.p, xfD.p, b2Math_18.b2Vec2.s_t1), b2Math_18.b2Vec2.s_t0), b2Math_18.b2Vec2.s_t0);
                         coordinateB = b2Math_18.b2Vec2.DotVV(b2Math_18.b2Vec2.SubVV(pB, pD, b2Math_18.b2Vec2.s_t0), _this.m_localAxisD);
                     }
-                    _this.m_ratio = b2Settings_18.b2Maybe(def.ratio, 1);
+                    _this.m_ratio = b2Settings_19.b2Maybe(def.ratio, 1);
                     _this.m_constant = coordinateA + _this.m_ratio * coordinateB;
                     _this.m_impulse = 0;
                     return _this;
@@ -6573,7 +6561,7 @@ System.register("Dynamics/Joints/b2GearJoint", ["Common/b2Settings", "Common/b2M
                     data.positions[this.m_indexB].a = aB;
                     data.positions[this.m_indexC].a = aC;
                     data.positions[this.m_indexD].a = aD;
-                    return linearError < b2Settings_18.b2_linearSlop;
+                    return linearError < b2Settings_19.b2_linearSlop;
                 };
                 b2GearJoint.prototype.GetAnchorA = function (out) {
                     return this.m_bodyA.GetWorldPoint(this.m_localAnchorA, out);
@@ -6628,11 +6616,11 @@ System.register("Dynamics/Joints/b2GearJoint", ["Common/b2Settings", "Common/b2M
 System.register("Dynamics/Joints/b2MotorJoint", ["Common/b2Settings", "Common/b2Math", "Dynamics/Joints/b2Joint"], function (exports_26, context_26) {
     "use strict";
     var __moduleName = context_26 && context_26.id;
-    var b2Settings_19, b2Math_19, b2Joint_7, b2MotorJointDef, b2MotorJoint;
+    var b2Settings_20, b2Math_19, b2Joint_7, b2MotorJointDef, b2MotorJoint;
     return {
         setters: [
-            function (b2Settings_19_1) {
-                b2Settings_19 = b2Settings_19_1;
+            function (b2Settings_20_1) {
+                b2Settings_20 = b2Settings_20_1;
             },
             function (b2Math_19_1) {
                 b2Math_19 = b2Math_19_1;
@@ -6692,11 +6680,11 @@ System.register("Dynamics/Joints/b2MotorJoint", ["Common/b2Settings", "Common/b2
                     _this.m_qA = new b2Math_19.b2Rot();
                     _this.m_qB = new b2Math_19.b2Rot();
                     _this.m_K = new b2Math_19.b2Mat22();
-                    _this.m_linearOffset.Copy(b2Settings_19.b2Maybe(def.linearOffset, b2Math_19.b2Vec2.ZERO));
+                    _this.m_linearOffset.Copy(b2Settings_20.b2Maybe(def.linearOffset, b2Math_19.b2Vec2.ZERO));
                     _this.m_linearImpulse.SetZero();
-                    _this.m_maxForce = b2Settings_19.b2Maybe(def.maxForce, 0);
-                    _this.m_maxTorque = b2Settings_19.b2Maybe(def.maxTorque, 0);
-                    _this.m_correctionFactor = b2Settings_19.b2Maybe(def.correctionFactor, 0.3);
+                    _this.m_maxForce = b2Settings_20.b2Maybe(def.maxForce, 0);
+                    _this.m_maxTorque = b2Settings_20.b2Maybe(def.maxTorque, 0);
+                    _this.m_correctionFactor = b2Settings_20.b2Maybe(def.correctionFactor, 0.3);
                     return _this;
                 }
                 b2MotorJoint.prototype.GetAnchorA = function (out) {
@@ -6868,11 +6856,11 @@ System.register("Dynamics/Joints/b2MotorJoint", ["Common/b2Settings", "Common/b2
 System.register("Dynamics/Joints/b2MouseJoint", ["Common/b2Settings", "Common/b2Math", "Dynamics/Joints/b2Joint"], function (exports_27, context_27) {
     "use strict";
     var __moduleName = context_27 && context_27.id;
-    var b2Settings_20, b2Math_20, b2Joint_8, b2MouseJointDef, b2MouseJoint;
+    var b2Settings_21, b2Math_20, b2Joint_8, b2MouseJointDef, b2MouseJoint;
     return {
         setters: [
-            function (b2Settings_20_1) {
-                b2Settings_20 = b2Settings_20_1;
+            function (b2Settings_21_1) {
+                b2Settings_21 = b2Settings_21_1;
             },
             function (b2Math_20_1) {
                 b2Math_20 = b2Math_20_1;
@@ -6918,12 +6906,12 @@ System.register("Dynamics/Joints/b2MouseJoint", ["Common/b2Settings", "Common/b2
                     _this.m_qB = new b2Math_20.b2Rot();
                     _this.m_lalcB = new b2Math_20.b2Vec2();
                     _this.m_K = new b2Math_20.b2Mat22();
-                    _this.m_targetA.Copy(b2Settings_20.b2Maybe(def.target, b2Math_20.b2Vec2.ZERO));
+                    _this.m_targetA.Copy(b2Settings_21.b2Maybe(def.target, b2Math_20.b2Vec2.ZERO));
                     b2Math_20.b2Transform.MulTXV(_this.m_bodyB.GetTransform(), _this.m_targetA, _this.m_localAnchorB);
-                    _this.m_maxForce = b2Settings_20.b2Maybe(def.maxForce, 0);
+                    _this.m_maxForce = b2Settings_21.b2Maybe(def.maxForce, 0);
                     _this.m_impulse.SetZero();
-                    _this.m_frequencyHz = b2Settings_20.b2Maybe(def.frequencyHz, 0);
-                    _this.m_dampingRatio = b2Settings_20.b2Maybe(def.dampingRatio, 0);
+                    _this.m_frequencyHz = b2Settings_21.b2Maybe(def.frequencyHz, 0);
+                    _this.m_dampingRatio = b2Settings_21.b2Maybe(def.dampingRatio, 0);
                     _this.m_beta = 0;
                     _this.m_gamma = 0;
                     return _this;
@@ -6966,7 +6954,7 @@ System.register("Dynamics/Joints/b2MouseJoint", ["Common/b2Settings", "Common/b2
                     var wB = data.velocities[this.m_indexB].w;
                     var qB = this.m_qB.SetAngle(aB);
                     var mass = this.m_bodyB.GetMass();
-                    var omega = 2 * b2Settings_20.b2_pi * this.m_frequencyHz;
+                    var omega = 2 * b2Settings_21.b2_pi * this.m_frequencyHz;
                     var d = 2 * mass * this.m_dampingRatio * omega;
                     var k = mass * (omega * omega);
                     var h = data.step.dt;
@@ -7049,11 +7037,11 @@ System.register("Dynamics/Joints/b2MouseJoint", ["Common/b2Settings", "Common/b2
 System.register("Dynamics/Joints/b2PulleyJoint", ["Common/b2Settings", "Common/b2Math", "Dynamics/Joints/b2Joint"], function (exports_28, context_28) {
     "use strict";
     var __moduleName = context_28 && context_28.id;
-    var b2Settings_21, b2Math_21, b2Joint_9, b2_minPulleyLength, b2PulleyJointDef, b2PulleyJoint;
+    var b2Settings_22, b2Math_21, b2Joint_9, b2_minPulleyLength, b2PulleyJointDef, b2PulleyJoint;
     return {
         setters: [
-            function (b2Settings_21_1) {
-                b2Settings_21 = b2Settings_21_1;
+            function (b2Settings_22_1) {
+                b2Settings_22 = b2Settings_22_1;
             },
             function (b2Math_21_1) {
                 b2Math_21 = b2Math_21_1;
@@ -7122,14 +7110,14 @@ System.register("Dynamics/Joints/b2PulleyJoint", ["Common/b2Settings", "Common/b
                     _this.m_qB = new b2Math_21.b2Rot();
                     _this.m_lalcA = new b2Math_21.b2Vec2();
                     _this.m_lalcB = new b2Math_21.b2Vec2();
-                    _this.m_groundAnchorA.Copy(b2Settings_21.b2Maybe(def.groundAnchorA, new b2Math_21.b2Vec2(-1, 1)));
-                    _this.m_groundAnchorB.Copy(b2Settings_21.b2Maybe(def.groundAnchorB, new b2Math_21.b2Vec2(1, 0)));
-                    _this.m_localAnchorA.Copy(b2Settings_21.b2Maybe(def.localAnchorA, new b2Math_21.b2Vec2(-1, 0)));
-                    _this.m_localAnchorB.Copy(b2Settings_21.b2Maybe(def.localAnchorB, new b2Math_21.b2Vec2(1, 0)));
-                    _this.m_lengthA = b2Settings_21.b2Maybe(def.lengthA, 0);
-                    _this.m_lengthB = b2Settings_21.b2Maybe(def.lengthB, 0);
-                    _this.m_ratio = b2Settings_21.b2Maybe(def.ratio, 1);
-                    _this.m_constant = b2Settings_21.b2Maybe(def.lengthA, 0) + _this.m_ratio * b2Settings_21.b2Maybe(def.lengthB, 0);
+                    _this.m_groundAnchorA.Copy(b2Settings_22.b2Maybe(def.groundAnchorA, new b2Math_21.b2Vec2(-1, 1)));
+                    _this.m_groundAnchorB.Copy(b2Settings_22.b2Maybe(def.groundAnchorB, new b2Math_21.b2Vec2(1, 0)));
+                    _this.m_localAnchorA.Copy(b2Settings_22.b2Maybe(def.localAnchorA, new b2Math_21.b2Vec2(-1, 0)));
+                    _this.m_localAnchorB.Copy(b2Settings_22.b2Maybe(def.localAnchorB, new b2Math_21.b2Vec2(1, 0)));
+                    _this.m_lengthA = b2Settings_22.b2Maybe(def.lengthA, 0);
+                    _this.m_lengthB = b2Settings_22.b2Maybe(def.lengthB, 0);
+                    _this.m_ratio = b2Settings_22.b2Maybe(def.ratio, 1);
+                    _this.m_constant = b2Settings_22.b2Maybe(def.lengthA, 0) + _this.m_ratio * b2Settings_22.b2Maybe(def.lengthB, 0);
                     _this.m_impulse = 0;
                     return _this;
                 }
@@ -7159,13 +7147,13 @@ System.register("Dynamics/Joints/b2PulleyJoint", ["Common/b2Settings", "Common/b
                     this.m_uB.Copy(cB).SelfAdd(this.m_rB).SelfSub(this.m_groundAnchorB);
                     var lengthA = this.m_uA.Length();
                     var lengthB = this.m_uB.Length();
-                    if (lengthA > 10 * b2Settings_21.b2_linearSlop) {
+                    if (lengthA > 10 * b2Settings_22.b2_linearSlop) {
                         this.m_uA.SelfMul(1 / lengthA);
                     }
                     else {
                         this.m_uA.SetZero();
                     }
-                    if (lengthB > 10 * b2Settings_21.b2_linearSlop) {
+                    if (lengthB > 10 * b2Settings_22.b2_linearSlop) {
                         this.m_uB.SelfMul(1 / lengthB);
                     }
                     else {
@@ -7227,13 +7215,13 @@ System.register("Dynamics/Joints/b2PulleyJoint", ["Common/b2Settings", "Common/b
                     var uB = this.m_uB.Copy(cB).SelfAdd(rB).SelfSub(this.m_groundAnchorB);
                     var lengthA = uA.Length();
                     var lengthB = uB.Length();
-                    if (lengthA > 10 * b2Settings_21.b2_linearSlop) {
+                    if (lengthA > 10 * b2Settings_22.b2_linearSlop) {
                         uA.SelfMul(1 / lengthA);
                     }
                     else {
                         uA.SetZero();
                     }
-                    if (lengthB > 10 * b2Settings_21.b2_linearSlop) {
+                    if (lengthB > 10 * b2Settings_22.b2_linearSlop) {
                         uB.SelfMul(1 / lengthB);
                     }
                     else {
@@ -7258,7 +7246,7 @@ System.register("Dynamics/Joints/b2PulleyJoint", ["Common/b2Settings", "Common/b
                     aB += this.m_invIB * b2Math_21.b2Vec2.CrossVV(rB, PB);
                     data.positions[this.m_indexA].a = aA;
                     data.positions[this.m_indexB].a = aB;
-                    return linearError < b2Settings_21.b2_linearSlop;
+                    return linearError < b2Settings_22.b2_linearSlop;
                 };
                 b2PulleyJoint.prototype.GetAnchorA = function (out) {
                     return this.m_bodyA.GetWorldPoint(this.m_localAnchorA, out);
@@ -7338,11 +7326,11 @@ System.register("Dynamics/Joints/b2PulleyJoint", ["Common/b2Settings", "Common/b
 System.register("Dynamics/Joints/b2RopeJoint", ["Common/b2Settings", "Common/b2Math", "Dynamics/Joints/b2Joint"], function (exports_29, context_29) {
     "use strict";
     var __moduleName = context_29 && context_29.id;
-    var b2Settings_22, b2Math_22, b2Joint_10, b2RopeJointDef, b2RopeJoint;
+    var b2Settings_23, b2Math_22, b2Joint_10, b2RopeJointDef, b2RopeJoint;
     return {
         setters: [
-            function (b2Settings_22_1) {
-                b2Settings_22 = b2Settings_22_1;
+            function (b2Settings_23_1) {
+                b2Settings_23 = b2Settings_23_1;
             },
             function (b2Math_22_1) {
                 b2Math_22 = b2Math_22_1;
@@ -7390,9 +7378,9 @@ System.register("Dynamics/Joints/b2RopeJoint", ["Common/b2Settings", "Common/b2M
                     _this.m_qB = new b2Math_22.b2Rot();
                     _this.m_lalcA = new b2Math_22.b2Vec2();
                     _this.m_lalcB = new b2Math_22.b2Vec2();
-                    _this.m_localAnchorA.Copy(b2Settings_22.b2Maybe(def.localAnchorA, new b2Math_22.b2Vec2(-1, 0)));
-                    _this.m_localAnchorB.Copy(b2Settings_22.b2Maybe(def.localAnchorB, new b2Math_22.b2Vec2(1, 0)));
-                    _this.m_maxLength = b2Settings_22.b2Maybe(def.maxLength, 0);
+                    _this.m_localAnchorA.Copy(b2Settings_23.b2Maybe(def.localAnchorA, new b2Math_22.b2Vec2(-1, 0)));
+                    _this.m_localAnchorB.Copy(b2Settings_23.b2Maybe(def.localAnchorB, new b2Math_22.b2Vec2(1, 0)));
+                    _this.m_maxLength = b2Settings_23.b2Maybe(def.maxLength, 0);
                     return _this;
                 }
                 b2RopeJoint.prototype.InitVelocityConstraints = function (data) {
@@ -7426,7 +7414,7 @@ System.register("Dynamics/Joints/b2RopeJoint", ["Common/b2Settings", "Common/b2M
                     else {
                         this.m_state = b2Joint_10.b2LimitState.e_inactiveLimit;
                     }
-                    if (this.m_length > b2Settings_22.b2_linearSlop) {
+                    if (this.m_length > b2Settings_23.b2_linearSlop) {
                         this.m_u.SelfMul(1 / this.m_length);
                     }
                     else {
@@ -7490,7 +7478,7 @@ System.register("Dynamics/Joints/b2RopeJoint", ["Common/b2Settings", "Common/b2M
                     var u = this.m_u.Copy(cB).SelfAdd(rB).SelfSub(cA).SelfSub(rA);
                     var length = u.Normalize();
                     var C = length - this.m_maxLength;
-                    C = b2Math_22.b2Clamp(C, 0, b2Settings_22.b2_maxLinearCorrection);
+                    C = b2Math_22.b2Clamp(C, 0, b2Settings_23.b2_maxLinearCorrection);
                     var impulse = -this.m_mass * C;
                     var P = b2Math_22.b2Vec2.MulSV(impulse, u, b2RopeJoint.SolvePositionConstraints_s_P);
                     cA.SelfMulSub(this.m_invMassA, P);
@@ -7499,7 +7487,7 @@ System.register("Dynamics/Joints/b2RopeJoint", ["Common/b2Settings", "Common/b2M
                     aB += this.m_invIB * b2Math_22.b2Vec2.CrossVV(rB, P);
                     data.positions[this.m_indexA].a = aA;
                     data.positions[this.m_indexB].a = aB;
-                    return length - this.m_maxLength < b2Settings_22.b2_linearSlop;
+                    return length - this.m_maxLength < b2Settings_23.b2_linearSlop;
                 };
                 b2RopeJoint.prototype.GetAnchorA = function (out) {
                     return this.m_bodyA.GetWorldPoint(this.m_localAnchorA, out);
@@ -7548,11 +7536,11 @@ System.register("Dynamics/Joints/b2RopeJoint", ["Common/b2Settings", "Common/b2M
 System.register("Dynamics/Joints/b2WeldJoint", ["Common/b2Settings", "Common/b2Math", "Dynamics/Joints/b2Joint"], function (exports_30, context_30) {
     "use strict";
     var __moduleName = context_30 && context_30.id;
-    var b2Settings_23, b2Math_23, b2Joint_11, b2WeldJointDef, b2WeldJoint;
+    var b2Settings_24, b2Math_23, b2Joint_11, b2WeldJointDef, b2WeldJoint;
     return {
         setters: [
-            function (b2Settings_23_1) {
-                b2Settings_23 = b2Settings_23_1;
+            function (b2Settings_24_1) {
+                b2Settings_24 = b2Settings_24_1;
             },
             function (b2Math_23_1) {
                 b2Math_23 = b2Math_23_1;
@@ -7611,11 +7599,11 @@ System.register("Dynamics/Joints/b2WeldJoint", ["Common/b2Settings", "Common/b2M
                     _this.m_lalcA = new b2Math_23.b2Vec2();
                     _this.m_lalcB = new b2Math_23.b2Vec2();
                     _this.m_K = new b2Math_23.b2Mat33();
-                    _this.m_frequencyHz = b2Settings_23.b2Maybe(def.frequencyHz, 0);
-                    _this.m_dampingRatio = b2Settings_23.b2Maybe(def.dampingRatio, 0);
-                    _this.m_localAnchorA.Copy(b2Settings_23.b2Maybe(def.localAnchorA, b2Math_23.b2Vec2.ZERO));
-                    _this.m_localAnchorB.Copy(b2Settings_23.b2Maybe(def.localAnchorB, b2Math_23.b2Vec2.ZERO));
-                    _this.m_referenceAngle = b2Settings_23.b2Maybe(def.referenceAngle, 0);
+                    _this.m_frequencyHz = b2Settings_24.b2Maybe(def.frequencyHz, 0);
+                    _this.m_dampingRatio = b2Settings_24.b2Maybe(def.dampingRatio, 0);
+                    _this.m_localAnchorA.Copy(b2Settings_24.b2Maybe(def.localAnchorA, b2Math_23.b2Vec2.ZERO));
+                    _this.m_localAnchorB.Copy(b2Settings_24.b2Maybe(def.localAnchorB, b2Math_23.b2Vec2.ZERO));
+                    _this.m_referenceAngle = b2Settings_24.b2Maybe(def.referenceAngle, 0);
                     _this.m_impulse.SetZero();
                     return _this;
                 }
@@ -7656,7 +7644,7 @@ System.register("Dynamics/Joints/b2WeldJoint", ["Common/b2Settings", "Common/b2M
                         var invM = iA + iB;
                         var m = invM > 0 ? 1 / invM : 0;
                         var C = aB - aA - this.m_referenceAngle;
-                        var omega = 2 * b2Settings_23.b2_pi * this.m_frequencyHz;
+                        var omega = 2 * b2Settings_24.b2_pi * this.m_frequencyHz;
                         var d = 2 * m * this.m_dampingRatio * omega;
                         var k = m * omega * omega;
                         var h = data.step.dt;
@@ -7769,7 +7757,7 @@ System.register("Dynamics/Joints/b2WeldJoint", ["Common/b2Settings", "Common/b2M
                     }
                     data.positions[this.m_indexA].a = aA;
                     data.positions[this.m_indexB].a = aB;
-                    return positionError <= b2Settings_23.b2_linearSlop && angularError <= b2Settings_23.b2_angularSlop;
+                    return positionError <= b2Settings_24.b2_linearSlop && angularError <= b2Settings_24.b2_angularSlop;
                 };
                 b2WeldJoint.prototype.GetAnchorA = function (out) {
                     return this.m_bodyA.GetWorldPoint(this.m_localAnchorA, out);
@@ -7823,11 +7811,11 @@ System.register("Dynamics/Joints/b2WeldJoint", ["Common/b2Settings", "Common/b2M
 System.register("Dynamics/Joints/b2WheelJoint", ["Common/b2Settings", "Common/b2Math", "Dynamics/Joints/b2Joint"], function (exports_31, context_31) {
     "use strict";
     var __moduleName = context_31 && context_31.id;
-    var b2Settings_24, b2Math_24, b2Joint_12, b2WheelJointDef, b2WheelJoint;
+    var b2Settings_25, b2Math_24, b2Joint_12, b2WheelJointDef, b2WheelJoint;
     return {
         setters: [
-            function (b2Settings_24_1) {
-                b2Settings_24 = b2Settings_24_1;
+            function (b2Settings_25_1) {
+                b2Settings_25 = b2Settings_25_1;
             },
             function (b2Math_24_1) {
                 b2Math_24 = b2Math_24_1;
@@ -7902,15 +7890,15 @@ System.register("Dynamics/Joints/b2WheelJoint", ["Common/b2Settings", "Common/b2
                     _this.m_lalcB = new b2Math_24.b2Vec2();
                     _this.m_rA = new b2Math_24.b2Vec2();
                     _this.m_rB = new b2Math_24.b2Vec2();
-                    _this.m_frequencyHz = b2Settings_24.b2Maybe(def.frequencyHz, 2);
-                    _this.m_dampingRatio = b2Settings_24.b2Maybe(def.dampingRatio, 0.7);
-                    _this.m_localAnchorA.Copy(b2Settings_24.b2Maybe(def.localAnchorA, b2Math_24.b2Vec2.ZERO));
-                    _this.m_localAnchorB.Copy(b2Settings_24.b2Maybe(def.localAnchorB, b2Math_24.b2Vec2.ZERO));
-                    _this.m_localXAxisA.Copy(b2Settings_24.b2Maybe(def.localAxisA, b2Math_24.b2Vec2.UNITX));
+                    _this.m_frequencyHz = b2Settings_25.b2Maybe(def.frequencyHz, 2);
+                    _this.m_dampingRatio = b2Settings_25.b2Maybe(def.dampingRatio, 0.7);
+                    _this.m_localAnchorA.Copy(b2Settings_25.b2Maybe(def.localAnchorA, b2Math_24.b2Vec2.ZERO));
+                    _this.m_localAnchorB.Copy(b2Settings_25.b2Maybe(def.localAnchorB, b2Math_24.b2Vec2.ZERO));
+                    _this.m_localXAxisA.Copy(b2Settings_25.b2Maybe(def.localAxisA, b2Math_24.b2Vec2.UNITX));
                     b2Math_24.b2Vec2.CrossOneV(_this.m_localXAxisA, _this.m_localYAxisA);
-                    _this.m_maxMotorTorque = b2Settings_24.b2Maybe(def.maxMotorTorque, 0);
-                    _this.m_motorSpeed = b2Settings_24.b2Maybe(def.motorSpeed, 0);
-                    _this.m_enableMotor = b2Settings_24.b2Maybe(def.enableMotor, false);
+                    _this.m_maxMotorTorque = b2Settings_25.b2Maybe(def.maxMotorTorque, 0);
+                    _this.m_motorSpeed = b2Settings_25.b2Maybe(def.motorSpeed, 0);
+                    _this.m_enableMotor = b2Settings_25.b2Maybe(def.enableMotor, false);
                     _this.m_ax.SetZero();
                     _this.m_ay.SetZero();
                     return _this;
@@ -7978,7 +7966,7 @@ System.register("Dynamics/Joints/b2WheelJoint", ["Common/b2Settings", "Common/b2
                         if (invMass > 0) {
                             this.m_springMass = 1 / invMass;
                             var C = b2Math_24.b2Vec2.DotVV(d, this.m_ax);
-                            var omega = 2 * b2Settings_24.b2_pi * this.m_frequencyHz;
+                            var omega = 2 * b2Settings_25.b2_pi * this.m_frequencyHz;
                             var dc = 2 * this.m_springMass * this.m_dampingRatio * omega;
                             var k = this.m_springMass * omega * omega;
                             var h = data.step.dt;
@@ -8102,7 +8090,7 @@ System.register("Dynamics/Joints/b2WheelJoint", ["Common/b2Settings", "Common/b2
                     aB += this.m_invIB * LB;
                     data.positions[this.m_indexA].a = aA;
                     data.positions[this.m_indexB].a = aB;
-                    return b2Math_24.b2Abs(C) <= b2Settings_24.b2_linearSlop;
+                    return b2Math_24.b2Abs(C) <= b2Settings_25.b2_linearSlop;
                 };
                 b2WheelJoint.prototype.GetDefinition = function (def) {
                     return def;
@@ -8321,11 +8309,11 @@ System.register("Dynamics/Joints/b2JointFactory", ["Dynamics/Joints/b2Joint", "D
 System.register("Dynamics/Contacts/b2ContactSolver", ["Common/b2Settings", "Common/b2Math", "Collision/b2Collision", "Dynamics/b2TimeStep"], function (exports_33, context_33) {
     "use strict";
     var __moduleName = context_33 && context_33.id;
-    var b2Settings_25, b2Math_25, b2Collision_3, b2Collision_4, b2TimeStep_1, b2VelocityConstraintPoint, b2ContactVelocityConstraint, b2ContactPositionConstraint, b2ContactSolverDef, b2PositionSolverManifold, b2ContactSolver;
+    var b2Settings_26, b2Math_25, b2Collision_3, b2Collision_4, b2TimeStep_1, b2VelocityConstraintPoint, b2ContactVelocityConstraint, b2ContactPositionConstraint, b2ContactSolverDef, b2PositionSolverManifold, b2ContactSolver;
     return {
         setters: [
-            function (b2Settings_25_1) {
-                b2Settings_25 = b2Settings_25_1;
+            function (b2Settings_26_1) {
+                b2Settings_26 = b2Settings_26_1;
             },
             function (b2Math_25_1) {
                 b2Math_25 = b2Math_25_1;
@@ -8350,14 +8338,14 @@ System.register("Dynamics/Contacts/b2ContactSolver", ["Common/b2Settings", "Comm
                     this.velocityBias = 0;
                 }
                 b2VelocityConstraintPoint.MakeArray = function (length) {
-                    return b2Settings_25.b2MakeArray(length, function (i) { return new b2VelocityConstraintPoint(); });
+                    return b2Settings_26.b2MakeArray(length, function (i) { return new b2VelocityConstraintPoint(); });
                 };
                 return b2VelocityConstraintPoint;
             }());
             exports_33("b2VelocityConstraintPoint", b2VelocityConstraintPoint);
             b2ContactVelocityConstraint = (function () {
                 function b2ContactVelocityConstraint() {
-                    this.points = b2VelocityConstraintPoint.MakeArray(b2Settings_25.b2_maxManifoldPoints);
+                    this.points = b2VelocityConstraintPoint.MakeArray(b2Settings_26.b2_maxManifoldPoints);
                     this.normal = new b2Math_25.b2Vec2();
                     this.tangent = new b2Math_25.b2Vec2();
                     this.normalMass = new b2Math_25.b2Mat22();
@@ -8375,14 +8363,14 @@ System.register("Dynamics/Contacts/b2ContactSolver", ["Common/b2Settings", "Comm
                     this.contactIndex = 0;
                 }
                 b2ContactVelocityConstraint.MakeArray = function (length) {
-                    return b2Settings_25.b2MakeArray(length, function (i) { return new b2ContactVelocityConstraint(); });
+                    return b2Settings_26.b2MakeArray(length, function (i) { return new b2ContactVelocityConstraint(); });
                 };
                 return b2ContactVelocityConstraint;
             }());
             exports_33("b2ContactVelocityConstraint", b2ContactVelocityConstraint);
             b2ContactPositionConstraint = (function () {
                 function b2ContactPositionConstraint() {
-                    this.localPoints = b2Math_25.b2Vec2.MakeArray(b2Settings_25.b2_maxManifoldPoints);
+                    this.localPoints = b2Math_25.b2Vec2.MakeArray(b2Settings_26.b2_maxManifoldPoints);
                     this.localNormal = new b2Math_25.b2Vec2();
                     this.localPoint = new b2Math_25.b2Vec2();
                     this.indexA = 0;
@@ -8399,7 +8387,7 @@ System.register("Dynamics/Contacts/b2ContactSolver", ["Common/b2Settings", "Comm
                     this.pointCount = 0;
                 }
                 b2ContactPositionConstraint.MakeArray = function (length) {
-                    return b2Settings_25.b2MakeArray(length, function (i) { return new b2ContactPositionConstraint(); });
+                    return b2Settings_26.b2MakeArray(length, function (i) { return new b2ContactPositionConstraint(); });
                 };
                 return b2ContactPositionConstraint;
             }());
@@ -8598,7 +8586,7 @@ System.register("Dynamics/Contacts/b2ContactSolver", ["Common/b2Settings", "Comm
                             vcp.tangentMass = kTangent > 0 ? 1 / kTangent : 0;
                             vcp.velocityBias = 0;
                             var vRel = b2Math_25.b2Vec2.DotVV(vc.normal, b2Math_25.b2Vec2.SubVV(b2Math_25.b2Vec2.AddVCrossSV(vB, wB, vcp.rB, b2Math_25.b2Vec2.s_t0), b2Math_25.b2Vec2.AddVCrossSV(vA, wA, vcp.rA, b2Math_25.b2Vec2.s_t1), b2Math_25.b2Vec2.s_t0));
-                            if (vRel < (-b2Settings_25.b2_velocityThreshold)) {
+                            if (vRel < (-b2Settings_26.b2_velocityThreshold)) {
                                 vcp.velocityBias += (-vc.restitution * vRel);
                             }
                         }
@@ -8838,7 +8826,7 @@ System.register("Dynamics/Contacts/b2ContactSolver", ["Common/b2Settings", "Comm
                             b2Math_25.b2Vec2.SubVV(point, cA, rA);
                             b2Math_25.b2Vec2.SubVV(point, cB, rB);
                             minSeparation = b2Math_25.b2Min(minSeparation, separation);
-                            var C = b2Math_25.b2Clamp(b2Settings_25.b2_baumgarte * (separation + b2Settings_25.b2_linearSlop), (-b2Settings_25.b2_maxLinearCorrection), 0);
+                            var C = b2Math_25.b2Clamp(b2Settings_26.b2_baumgarte * (separation + b2Settings_26.b2_linearSlop), (-b2Settings_26.b2_maxLinearCorrection), 0);
                             var rnA = b2Math_25.b2Vec2.CrossVV(rA, normal);
                             var rnB = b2Math_25.b2Vec2.CrossVV(rB, normal);
                             var K = mA + mB + iA * rnA * rnA + iB * rnB * rnB;
@@ -8852,7 +8840,7 @@ System.register("Dynamics/Contacts/b2ContactSolver", ["Common/b2Settings", "Comm
                         this.m_positions[indexA].a = aA;
                         this.m_positions[indexB].a = aB;
                     }
-                    return minSeparation > (-3 * b2Settings_25.b2_linearSlop);
+                    return minSeparation > (-3 * b2Settings_26.b2_linearSlop);
                 };
                 b2ContactSolver.prototype.SolveTOIPositionConstraints = function (toiIndexA, toiIndexB) {
                     var xfA = b2ContactSolver.SolveTOIPositionConstraints_s_xfA;
@@ -8897,7 +8885,7 @@ System.register("Dynamics/Contacts/b2ContactSolver", ["Common/b2Settings", "Comm
                             b2Math_25.b2Vec2.SubVV(point, cA, rA);
                             b2Math_25.b2Vec2.SubVV(point, cB, rB);
                             minSeparation = b2Math_25.b2Min(minSeparation, separation);
-                            var C = b2Math_25.b2Clamp(b2Settings_25.b2_toiBaumgarte * (separation + b2Settings_25.b2_linearSlop), (-b2Settings_25.b2_maxLinearCorrection), 0);
+                            var C = b2Math_25.b2Clamp(b2Settings_26.b2_toiBaumgarte * (separation + b2Settings_26.b2_linearSlop), (-b2Settings_26.b2_maxLinearCorrection), 0);
                             var rnA = b2Math_25.b2Vec2.CrossVV(rA, normal);
                             var rnB = b2Math_25.b2Vec2.CrossVV(rB, normal);
                             var K = mA + mB + iA * rnA * rnA + iB * rnB * rnB;
@@ -8911,7 +8899,7 @@ System.register("Dynamics/Contacts/b2ContactSolver", ["Common/b2Settings", "Comm
                         this.m_positions[indexA].a = aA;
                         this.m_positions[indexB].a = aB;
                     }
-                    return minSeparation >= -1.5 * b2Settings_25.b2_linearSlop;
+                    return minSeparation >= -1.5 * b2Settings_26.b2_linearSlop;
                 };
                 b2ContactSolver.InitializeVelocityConstraints_s_xfA = new b2Math_25.b2Transform();
                 b2ContactSolver.InitializeVelocityConstraints_s_xfB = new b2Math_25.b2Transform();
@@ -8956,11 +8944,11 @@ System.register("Particle/b2Particle", ["Common/b2Settings", "Common/b2Math", "C
         return b2Math_26.b2Clamp(iterations, 1, B2_MAX_RECOMMENDED_PARTICLE_ITERATIONS);
     }
     exports_34("b2CalculateParticleIterations", b2CalculateParticleIterations);
-    var b2Settings_26, b2Math_26, b2Draw_1, b2ParticleFlag, b2ParticleDef, b2ParticleHandle;
+    var b2Settings_27, b2Math_26, b2Draw_1, b2ParticleFlag, b2ParticleDef, b2ParticleHandle;
     return {
         setters: [
-            function (b2Settings_26_1) {
-                b2Settings_26 = b2Settings_26_1;
+            function (b2Settings_27_1) {
+                b2Settings_27 = b2Settings_27_1;
             },
             function (b2Math_26_1) {
                 b2Math_26 = b2Math_26_1;
@@ -9006,7 +8994,7 @@ System.register("Particle/b2Particle", ["Common/b2Settings", "Common/b2Math", "C
             exports_34("b2ParticleDef", b2ParticleDef);
             b2ParticleHandle = (function () {
                 function b2ParticleHandle() {
-                    this.m_index = b2Settings_26.b2_invalidParticleIndex;
+                    this.m_index = b2Settings_27.b2_invalidParticleIndex;
                 }
                 b2ParticleHandle.prototype.GetIndex = function () { return this.m_index; };
                 b2ParticleHandle.prototype.SetIndex = function (index) { this.m_index = index; };
@@ -9019,11 +9007,11 @@ System.register("Particle/b2Particle", ["Common/b2Settings", "Common/b2Math", "C
 System.register("Particle/b2StackQueue", ["Common/b2Settings"], function (exports_35, context_35) {
     "use strict";
     var __moduleName = context_35 && context_35.id;
-    var b2Settings_27, b2StackQueue;
+    var b2Settings_28, b2StackQueue;
     return {
         setters: [
-            function (b2Settings_27_1) {
-                b2Settings_27 = b2Settings_27_1;
+            function (b2Settings_28_1) {
+                b2Settings_28 = b2Settings_28_1;
             }
         ],
         execute: function () {
@@ -9032,7 +9020,7 @@ System.register("Particle/b2StackQueue", ["Common/b2Settings"], function (export
                     this.m_front = 0;
                     this.m_back = 0;
                     this.m_capacity = 0;
-                    this.m_buffer = b2Settings_27.b2MakeArray(capacity, function (index) { return null; });
+                    this.m_buffer = b2Settings_28.b2MakeArray(capacity, function (index) { return null; });
                     this.m_capacity = capacity;
                 }
                 b2StackQueue.prototype.Push = function (item) {
@@ -9044,11 +9032,11 @@ System.register("Particle/b2StackQueue", ["Common/b2Settings"], function (export
                         this.m_front = 0;
                         if (this.m_back >= this.m_capacity) {
                             if (this.m_capacity > 0) {
-                                this.m_buffer.concat(b2Settings_27.b2MakeArray(this.m_capacity, function (index) { return null; }));
+                                this.m_buffer.concat(b2Settings_28.b2MakeArray(this.m_capacity, function (index) { return null; }));
                                 this.m_capacity *= 2;
                             }
                             else {
-                                this.m_buffer.concat(b2Settings_27.b2MakeArray(1, function (index) { return null; }));
+                                this.m_buffer.concat(b2Settings_28.b2MakeArray(1, function (index) { return null; }));
                                 this.m_capacity = 1;
                             }
                         }
@@ -9079,11 +9067,11 @@ System.register("Particle/b2StackQueue", ["Common/b2Settings"], function (export
 System.register("Particle/b2VoronoiDiagram", ["Common/b2Settings", "Common/b2Math", "Particle/b2StackQueue"], function (exports_36, context_36) {
     "use strict";
     var __moduleName = context_36 && context_36.id;
-    var b2Settings_28, b2Math_27, b2StackQueue_1, b2VoronoiDiagram;
+    var b2Settings_29, b2Math_27, b2StackQueue_1, b2VoronoiDiagram;
     return {
         setters: [
-            function (b2Settings_28_1) {
-                b2Settings_28 = b2Settings_28_1;
+            function (b2Settings_29_1) {
+                b2Settings_29 = b2Settings_29_1;
             },
             function (b2Math_27_1) {
                 b2Math_27 = b2Math_27_1;
@@ -9100,7 +9088,7 @@ System.register("Particle/b2VoronoiDiagram", ["Common/b2Settings", "Common/b2Mat
                     this.m_countX = 0;
                     this.m_countY = 0;
                     this.m_diagram = [];
-                    this.m_generatorBuffer = b2Settings_28.b2MakeArray(generatorCapacity, function (index) { return new b2VoronoiDiagram.Generator(); });
+                    this.m_generatorBuffer = b2Settings_29.b2MakeArray(generatorCapacity, function (index) { return new b2VoronoiDiagram.Generator(); });
                     this.m_generatorCapacity = generatorCapacity;
                 }
                 b2VoronoiDiagram.prototype.AddGenerator = function (center, tag, necessary) {
@@ -9111,8 +9099,8 @@ System.register("Particle/b2VoronoiDiagram", ["Common/b2Settings", "Common/b2Mat
                 };
                 b2VoronoiDiagram.prototype.Generate = function (radius, margin) {
                     var inverseRadius = 1 / radius;
-                    var lower = new b2Math_27.b2Vec2(+b2Settings_28.b2_maxFloat, +b2Settings_28.b2_maxFloat);
-                    var upper = new b2Math_27.b2Vec2(-b2Settings_28.b2_maxFloat, -b2Settings_28.b2_maxFloat);
+                    var lower = new b2Math_27.b2Vec2(+b2Settings_29.b2_maxFloat, +b2Settings_29.b2_maxFloat);
+                    var upper = new b2Math_27.b2Vec2(-b2Settings_29.b2_maxFloat, -b2Settings_29.b2_maxFloat);
                     var necessary_count = 0;
                     for (var k = 0; k < this.m_generatorCount; k++) {
                         var g = this.m_generatorBuffer[k];
@@ -9386,12 +9374,12 @@ System.register("Particle/b2ParticleSystem", ["Common/b2Settings", "Common/b2Mat
         }
         return ++result;
     }
-    var b2Settings_29, b2Settings_30, b2Math_28, b2Draw_2, b2Collision_5, b2Shape_7, b2EdgeShape_2, b2TimeStep_2, b2WorldCallbacks_1, b2Particle_1, b2ParticleGroup_1, b2VoronoiDiagram_1, b2GrowableBuffer, b2FixtureParticleQueryCallback, b2ParticleContact, b2ParticleBodyContact, b2ParticlePair, b2ParticleTriad, b2ParticleSystemDef, b2ParticleSystem;
+    var b2Settings_30, b2Settings_31, b2Math_28, b2Draw_2, b2Collision_5, b2Shape_7, b2EdgeShape_2, b2TimeStep_2, b2WorldCallbacks_1, b2Particle_1, b2ParticleGroup_1, b2VoronoiDiagram_1, b2GrowableBuffer, b2FixtureParticleQueryCallback, b2ParticleContact, b2ParticleBodyContact, b2ParticlePair, b2ParticleTriad, b2ParticleSystemDef, b2ParticleSystem;
     return {
         setters: [
-            function (b2Settings_29_1) {
-                b2Settings_29 = b2Settings_29_1;
-                b2Settings_30 = b2Settings_29_1;
+            function (b2Settings_30_1) {
+                b2Settings_30 = b2Settings_30_1;
+                b2Settings_31 = b2Settings_30_1;
             },
             function (b2Math_28_1) {
                 b2Math_28 = b2Math_28_1;
@@ -9448,7 +9436,7 @@ System.register("Particle/b2ParticleSystem", ["Common/b2Settings", "Common/b2Mat
                     this.capacity = newCapacity;
                 };
                 b2GrowableBuffer.prototype.Grow = function () {
-                    var newCapacity = this.capacity ? 2 * this.capacity : b2Settings_29.b2_minParticleSystemBufferCapacity;
+                    var newCapacity = this.capacity ? 2 * this.capacity : b2Settings_30.b2_minParticleSystemBufferCapacity;
                     this.Reserve(newCapacity);
                 };
                 b2GrowableBuffer.prototype.Free = function () {
@@ -9750,7 +9738,7 @@ System.register("Particle/b2ParticleSystem", ["Common/b2Settings", "Common/b2Mat
                         throw new Error();
                     }
                     if (this.m_count >= this.m_internalAllocatedCapacity) {
-                        var capacity = this.m_count ? 2 * this.m_count : b2Settings_29.b2_minParticleSystemBufferCapacity;
+                        var capacity = this.m_count ? 2 * this.m_count : b2Settings_30.b2_minParticleSystemBufferCapacity;
                         this.ReallocateInternalAllocatedBuffers(capacity);
                     }
                     if (this.m_count >= this.m_internalAllocatedCapacity) {
@@ -9759,7 +9747,7 @@ System.register("Particle/b2ParticleSystem", ["Common/b2Settings", "Common/b2Mat
                             this.SolveZombie();
                         }
                         else {
-                            return b2Settings_29.b2_invalidParticleIndex;
+                            return b2Settings_30.b2_invalidParticleIndex;
                         }
                     }
                     var index = this.m_count++;
@@ -9782,8 +9770,8 @@ System.register("Particle/b2ParticleSystem", ["Common/b2Settings", "Common/b2Mat
                     if (!this.m_velocityBuffer.data) {
                         throw new Error();
                     }
-                    this.m_positionBuffer.data[index] = (this.m_positionBuffer.data[index] || new b2Math_28.b2Vec2()).Copy(b2Settings_29.b2Maybe(def.position, b2Math_28.b2Vec2.ZERO));
-                    this.m_velocityBuffer.data[index] = (this.m_velocityBuffer.data[index] || new b2Math_28.b2Vec2()).Copy(b2Settings_29.b2Maybe(def.velocity, b2Math_28.b2Vec2.ZERO));
+                    this.m_positionBuffer.data[index] = (this.m_positionBuffer.data[index] || new b2Math_28.b2Vec2()).Copy(b2Settings_30.b2Maybe(def.position, b2Math_28.b2Vec2.ZERO));
+                    this.m_velocityBuffer.data[index] = (this.m_velocityBuffer.data[index] || new b2Math_28.b2Vec2()).Copy(b2Settings_30.b2Maybe(def.velocity, b2Math_28.b2Vec2.ZERO));
                     this.m_weightBuffer[index] = 0;
                     this.m_forceBuffer[index] = (this.m_forceBuffer[index] || new b2Math_28.b2Vec2()).SetZero();
                     if (this.m_staticPressureBuffer) {
@@ -9792,7 +9780,7 @@ System.register("Particle/b2ParticleSystem", ["Common/b2Settings", "Common/b2Mat
                     if (this.m_depthBuffer) {
                         this.m_depthBuffer[index] = 0;
                     }
-                    var color = new b2Draw_2.b2Color().Copy(b2Settings_29.b2Maybe(def.color, b2Draw_2.b2Color.ZERO));
+                    var color = new b2Draw_2.b2Color().Copy(b2Settings_30.b2Maybe(def.color, b2Draw_2.b2Color.ZERO));
                     if (this.m_colorBuffer.data || !color.IsZero()) {
                         this.m_colorBuffer.data = this.RequestBuffer(this.m_colorBuffer.data);
                         this.m_colorBuffer.data[index] = (this.m_colorBuffer.data[index] || new b2Draw_2.b2Color()).Copy(color);
@@ -9805,7 +9793,7 @@ System.register("Particle/b2ParticleSystem", ["Common/b2Settings", "Common/b2Mat
                         this.m_handleIndexBuffer.data[index] = null;
                     }
                     var proxy = this.m_proxyBuffer.data[this.m_proxyBuffer.Append()];
-                    var lifetime = b2Settings_29.b2Maybe(def.lifetime, 0.0);
+                    var lifetime = b2Settings_30.b2Maybe(def.lifetime, 0.0);
                     var finiteLifetime = lifetime > 0.0;
                     if (this.m_expirationTimeBuffer.data || finiteLifetime) {
                         this.SetParticleLifetime(index, finiteLifetime ? lifetime :
@@ -9816,7 +9804,7 @@ System.register("Particle/b2ParticleSystem", ["Common/b2Settings", "Common/b2Mat
                         this.m_indexByExpirationTimeBuffer.data[index] = index;
                     }
                     proxy.index = index;
-                    var group = b2Settings_29.b2Maybe(def.group, null);
+                    var group = b2Settings_30.b2Maybe(def.group, null);
                     this.m_groupBuffer[index] = group;
                     if (group) {
                         if (group.m_firstIndex < group.m_lastIndex) {
@@ -9828,7 +9816,7 @@ System.register("Particle/b2ParticleSystem", ["Common/b2Settings", "Common/b2Mat
                             group.m_lastIndex = index + 1;
                         }
                     }
-                    this.SetParticleFlags(index, b2Settings_29.b2Maybe(def.flags, 0));
+                    this.SetParticleFlags(index, b2Settings_30.b2Maybe(def.flags, 0));
                     return index;
                 };
                 b2ParticleSystem.prototype.GetParticleHandleFromIndex = function (index) {
@@ -9885,16 +9873,16 @@ System.register("Particle/b2ParticleSystem", ["Common/b2Settings", "Common/b2Mat
                         throw new Error();
                     }
                     var transform = s_transform;
-                    transform.SetPositionAngle(b2Settings_29.b2Maybe(groupDef.position, b2Math_28.b2Vec2.ZERO), b2Settings_29.b2Maybe(groupDef.angle, 0));
+                    transform.SetPositionAngle(b2Settings_30.b2Maybe(groupDef.position, b2Math_28.b2Vec2.ZERO), b2Settings_30.b2Maybe(groupDef.angle, 0));
                     var firstIndex = this.m_count;
                     if (groupDef.shape) {
                         this.CreateParticlesWithShapeForGroup(groupDef.shape, groupDef, transform);
                     }
                     if (groupDef.shapes) {
-                        this.CreateParticlesWithShapesForGroup(groupDef.shapes, b2Settings_29.b2Maybe(groupDef.shapeCount, groupDef.shapes.length), groupDef, transform);
+                        this.CreateParticlesWithShapesForGroup(groupDef.shapes, b2Settings_30.b2Maybe(groupDef.shapeCount, groupDef.shapes.length), groupDef, transform);
                     }
                     if (groupDef.positionData) {
-                        var count = b2Settings_29.b2Maybe(groupDef.particleCount, groupDef.positionData.length);
+                        var count = b2Settings_30.b2Maybe(groupDef.particleCount, groupDef.positionData.length);
                         for (var i = 0; i < count; i++) {
                             var p = groupDef.positionData[i];
                             this.CreateParticleForGroup(groupDef, transform, p);
@@ -9904,7 +9892,7 @@ System.register("Particle/b2ParticleSystem", ["Common/b2Settings", "Common/b2Mat
                     var group = new b2ParticleGroup_1.b2ParticleGroup(this);
                     group.m_firstIndex = firstIndex;
                     group.m_lastIndex = lastIndex;
-                    group.m_strength = b2Settings_29.b2Maybe(groupDef.strength, 1);
+                    group.m_strength = b2Settings_30.b2Maybe(groupDef.strength, 1);
                     group.m_userData = groupDef.userData;
                     group.m_transform.Copy(transform);
                     group.m_prev = null;
@@ -9917,7 +9905,7 @@ System.register("Particle/b2ParticleSystem", ["Common/b2Settings", "Common/b2Mat
                     for (var i = firstIndex; i < lastIndex; i++) {
                         this.m_groupBuffer[i] = group;
                     }
-                    this.SetGroupFlags(group, b2Settings_29.b2Maybe(groupDef.groupFlags, 0));
+                    this.SetGroupFlags(group, b2Settings_30.b2Maybe(groupDef.groupFlags, 0));
                     var filter = new b2ParticleSystem.ConnectionFilter();
                     this.UpdateContacts(true);
                     this.UpdatePairsAndTriads(firstIndex, lastIndex, filter);
@@ -9948,7 +9936,7 @@ System.register("Particle/b2ParticleSystem", ["Common/b2Settings", "Common/b2Mat
                 b2ParticleSystem.prototype.SplitParticleGroup = function (group) {
                     this.UpdateContacts(true);
                     var particleCount = group.GetParticleCount();
-                    var nodeBuffer = b2Settings_29.b2MakeArray(particleCount, function (index) { return new b2ParticleSystem.ParticleListNode(); });
+                    var nodeBuffer = b2Settings_30.b2MakeArray(particleCount, function (index) { return new b2ParticleSystem.ParticleListNode(); });
                     b2ParticleSystem.InitializeParticleLists(group, nodeBuffer);
                     this.MergeParticleListsInContact(group, nodeBuffer);
                     var survivingList = b2ParticleSystem.FindLongestParticleList(group, nodeBuffer);
@@ -10274,7 +10262,7 @@ System.register("Particle/b2ParticleSystem", ["Common/b2Settings", "Common/b2Mat
                     this.QueryAABB(callback, aabb);
                 };
                 b2ParticleSystem.prototype.QueryPointAABB = function (callback, point, slop) {
-                    if (slop === void 0) { slop = b2Settings_29.b2_linearSlop; }
+                    if (slop === void 0) { slop = b2Settings_30.b2_linearSlop; }
                     var s_aabb = b2ParticleSystem.QueryPointAABB_s_aabb;
                     var aabb = s_aabb;
                     aabb.lowerBound.Set(point.x - slop, point.y - slop);
@@ -10331,10 +10319,10 @@ System.register("Particle/b2ParticleSystem", ["Common/b2Settings", "Common/b2Mat
                 };
                 b2ParticleSystem.prototype.ComputeAABB = function (aabb) {
                     var particleCount = this.GetParticleCount();
-                    aabb.lowerBound.x = +b2Settings_29.b2_maxFloat;
-                    aabb.lowerBound.y = +b2Settings_29.b2_maxFloat;
-                    aabb.upperBound.x = -b2Settings_29.b2_maxFloat;
-                    aabb.upperBound.y = -b2Settings_29.b2_maxFloat;
+                    aabb.lowerBound.x = +b2Settings_30.b2_maxFloat;
+                    aabb.lowerBound.y = +b2Settings_30.b2_maxFloat;
+                    aabb.upperBound.x = -b2Settings_30.b2_maxFloat;
+                    aabb.upperBound.y = -b2Settings_30.b2_maxFloat;
                     if (!this.m_positionBuffer.data) {
                         throw new Error();
                     }
@@ -10386,7 +10374,7 @@ System.register("Particle/b2ParticleSystem", ["Common/b2Settings", "Common/b2Mat
                 b2ParticleSystem.prototype.RequestBuffer = function (buffer) {
                     if (!buffer) {
                         if (this.m_internalAllocatedCapacity === 0) {
-                            this.ReallocateInternalAllocatedBuffers(b2Settings_29.b2_minParticleSystemBufferCapacity);
+                            this.ReallocateInternalAllocatedBuffers(b2Settings_30.b2_minParticleSystemBufferCapacity);
                         }
                         buffer = [];
                         buffer.length = this.m_internalAllocatedCapacity;
@@ -10431,11 +10419,11 @@ System.register("Particle/b2ParticleSystem", ["Common/b2Settings", "Common/b2Mat
                 };
                 b2ParticleSystem.prototype.CreateParticleForGroup = function (groupDef, xf, p) {
                     var particleDef = new b2Particle_1.b2ParticleDef();
-                    particleDef.flags = b2Settings_29.b2Maybe(groupDef.flags, 0);
+                    particleDef.flags = b2Settings_30.b2Maybe(groupDef.flags, 0);
                     b2Math_28.b2Transform.MulXV(xf, p, particleDef.position);
-                    b2Math_28.b2Vec2.AddVV(b2Settings_29.b2Maybe(groupDef.linearVelocity, b2Math_28.b2Vec2.ZERO), b2Math_28.b2Vec2.CrossSV(b2Settings_29.b2Maybe(groupDef.angularVelocity, 0), b2Math_28.b2Vec2.SubVV(particleDef.position, b2Settings_29.b2Maybe(groupDef.position, b2Math_28.b2Vec2.ZERO), b2Math_28.b2Vec2.s_t0), b2Math_28.b2Vec2.s_t0), particleDef.velocity);
-                    particleDef.color.Copy(b2Settings_29.b2Maybe(groupDef.color, b2Draw_2.b2Color.ZERO));
-                    particleDef.lifetime = b2Settings_29.b2Maybe(groupDef.lifetime, 0);
+                    b2Math_28.b2Vec2.AddVV(b2Settings_30.b2Maybe(groupDef.linearVelocity, b2Math_28.b2Vec2.ZERO), b2Math_28.b2Vec2.CrossSV(b2Settings_30.b2Maybe(groupDef.angularVelocity, 0), b2Math_28.b2Vec2.SubVV(particleDef.position, b2Settings_30.b2Maybe(groupDef.position, b2Math_28.b2Vec2.ZERO), b2Math_28.b2Vec2.s_t0), b2Math_28.b2Vec2.s_t0), particleDef.velocity);
+                    particleDef.color.Copy(b2Settings_30.b2Maybe(groupDef.color, b2Draw_2.b2Color.ZERO));
+                    particleDef.lifetime = b2Settings_30.b2Maybe(groupDef.lifetime, 0);
                     particleDef.userData = groupDef.userData;
                     this.CreateParticle(particleDef);
                 };
@@ -10443,7 +10431,7 @@ System.register("Particle/b2ParticleSystem", ["Common/b2Settings", "Common/b2Mat
                     var s_edge = b2ParticleSystem.CreateParticlesStrokeShapeForGroup_s_edge;
                     var s_d = b2ParticleSystem.CreateParticlesStrokeShapeForGroup_s_d;
                     var s_p = b2ParticleSystem.CreateParticlesStrokeShapeForGroup_s_p;
-                    var stride = b2Settings_29.b2Maybe(groupDef.stride, 0);
+                    var stride = b2Settings_30.b2Maybe(groupDef.stride, 0);
                     if (stride === 0) {
                         stride = this.GetParticleStride();
                     }
@@ -10471,7 +10459,7 @@ System.register("Particle/b2ParticleSystem", ["Common/b2Settings", "Common/b2Mat
                 b2ParticleSystem.prototype.CreateParticlesFillShapeForGroup = function (shape, groupDef, xf) {
                     var s_aabb = b2ParticleSystem.CreateParticlesFillShapeForGroup_s_aabb;
                     var s_p = b2ParticleSystem.CreateParticlesFillShapeForGroup_s_p;
-                    var stride = b2Settings_29.b2Maybe(groupDef.stride, 0);
+                    var stride = b2Settings_30.b2Maybe(groupDef.stride, 0);
                     if (stride === 0) {
                         stride = this.GetParticleStride();
                     }
@@ -10665,7 +10653,7 @@ System.register("Particle/b2ParticleSystem", ["Common/b2Settings", "Common/b2Mat
                                 var dab = b2Math_28.b2Vec2.SubVV(pa, pb, s_dab);
                                 var dbc = b2Math_28.b2Vec2.SubVV(pb, pc, s_dbc);
                                 var dca = b2Math_28.b2Vec2.SubVV(pc, pa, s_dca);
-                                var maxDistanceSquared = b2Settings_29.b2_maxTriadDistanceSquared * system_1.m_squaredDiameter;
+                                var maxDistanceSquared = b2Settings_30.b2_maxTriadDistanceSquared * system_1.m_squaredDiameter;
                                 if (b2Math_28.b2Vec2.DotVV(dab, dab) > maxDistanceSquared ||
                                     b2Math_28.b2Vec2.DotVV(dbc, dbc) > maxDistanceSquared ||
                                     b2Math_28.b2Vec2.DotVV(dca, dca) > maxDistanceSquared) {
@@ -10903,7 +10891,7 @@ System.register("Particle/b2ParticleSystem", ["Common/b2Settings", "Common/b2Mat
                         var group = groupsToUpdate[i];
                         for (var i_2 = group.m_firstIndex; i_2 < group.m_lastIndex; i_2++) {
                             var w = this.m_accumulationBuffer[i_2];
-                            this.m_depthBuffer[i_2] = w < 0.8 ? 0 : b2Settings_29.b2_maxFloat;
+                            this.m_depthBuffer[i_2] = w < 0.8 ? 0 : b2Settings_30.b2_maxFloat;
                         }
                     }
                     var iterationCount = b2Math_28.b2Sqrt(this.m_count) >> 0;
@@ -10934,7 +10922,7 @@ System.register("Particle/b2ParticleSystem", ["Common/b2Settings", "Common/b2Mat
                     for (var i = 0; i < groupsToUpdateCount; i++) {
                         var group = groupsToUpdate[i];
                         for (var i_3 = group.m_firstIndex; i_3 < group.m_lastIndex; i_3++) {
-                            if (this.m_depthBuffer[i_3] < b2Settings_29.b2_maxFloat) {
+                            if (this.m_depthBuffer[i_3] < b2Settings_30.b2_maxFloat) {
                                 this.m_depthBuffer[i_3] *= this.m_particleDiameter;
                             }
                             else {
@@ -11257,10 +11245,10 @@ System.register("Particle/b2ParticleSystem", ["Common/b2Settings", "Common/b2Mat
                     var pos_data = this.m_positionBuffer.data;
                     var vel_data = this.m_velocityBuffer.data;
                     var aabb = s_aabb;
-                    aabb.lowerBound.x = +b2Settings_29.b2_maxFloat;
-                    aabb.lowerBound.y = +b2Settings_29.b2_maxFloat;
-                    aabb.upperBound.x = -b2Settings_29.b2_maxFloat;
-                    aabb.upperBound.y = -b2Settings_29.b2_maxFloat;
+                    aabb.lowerBound.x = +b2Settings_30.b2_maxFloat;
+                    aabb.lowerBound.y = +b2Settings_30.b2_maxFloat;
+                    aabb.upperBound.x = -b2Settings_30.b2_maxFloat;
+                    aabb.upperBound.y = -b2Settings_30.b2_maxFloat;
                     for (var i = 0; i < this.m_count; i++) {
                         var v = vel_data[i];
                         var p1 = pos_data[i];
@@ -11329,7 +11317,7 @@ System.register("Particle/b2ParticleSystem", ["Common/b2Settings", "Common/b2Mat
                             vel_data[i].SetZero();
                         }
                     }
-                    var tmax = b2Settings_29.b2_barrierCollisionTime * step.dt;
+                    var tmax = b2Settings_30.b2_barrierCollisionTime * step.dt;
                     var mass = this.GetParticleMass();
                     for (var k = 0; k < this.m_pairBuffer.count; k++) {
                         var pair = this.m_pairBuffer.data[k];
@@ -11436,7 +11424,7 @@ System.register("Particle/b2ParticleSystem", ["Common/b2Settings", "Common/b2Mat
                     this.m_staticPressureBuffer = this.RequestBuffer(this.m_staticPressureBuffer);
                     var criticalPressure = this.GetCriticalPressure(step);
                     var pressurePerWeight = this.m_def.staticPressureStrength * criticalPressure;
-                    var maxPressure = b2Settings_30.b2_maxParticlePressure * criticalPressure;
+                    var maxPressure = b2Settings_31.b2_maxParticlePressure * criticalPressure;
                     var relaxation = this.m_def.staticPressureRelaxation;
                     for (var t = 0; t < this.m_def.staticPressureIterations; t++) {
                         for (var i = 0; i < this.m_count; i++) {
@@ -11456,7 +11444,7 @@ System.register("Particle/b2ParticleSystem", ["Common/b2Settings", "Common/b2Mat
                             var w = this.m_weightBuffer[i];
                             if (this.m_flagsBuffer.data[i] & b2Particle_1.b2ParticleFlag.b2_staticPressureParticle) {
                                 var wh = this.m_accumulationBuffer[i];
-                                var h = (wh + pressurePerWeight * (w - b2Settings_30.b2_minParticleWeight)) /
+                                var h = (wh + pressurePerWeight * (w - b2Settings_31.b2_minParticleWeight)) /
                                     (w + relaxation);
                                 this.m_staticPressureBuffer[i] = b2Math_28.b2Clamp(h, 0.0, maxPressure);
                             }
@@ -11500,10 +11488,10 @@ System.register("Particle/b2ParticleSystem", ["Common/b2Settings", "Common/b2Mat
                     var vel_data = this.m_velocityBuffer.data;
                     var criticalPressure = this.GetCriticalPressure(step);
                     var pressurePerWeight = this.m_def.pressureStrength * criticalPressure;
-                    var maxPressure = b2Settings_30.b2_maxParticlePressure * criticalPressure;
+                    var maxPressure = b2Settings_31.b2_maxParticlePressure * criticalPressure;
                     for (var i = 0; i < this.m_count; i++) {
                         var w = this.m_weightBuffer[i];
-                        var h = pressurePerWeight * b2Math_28.b2Max(0.0, w - b2Settings_30.b2_minParticleWeight);
+                        var h = pressurePerWeight * b2Math_28.b2Max(0.0, w - b2Settings_31.b2_minParticleWeight);
                         this.m_accumulationBuffer[i] = b2Math_28.b2Min(h, maxPressure);
                     }
                     if (this.m_allParticleFlags & b2ParticleSystem.k_noPressureFlags) {
@@ -11859,7 +11847,7 @@ System.register("Particle/b2ParticleSystem", ["Common/b2Settings", "Common/b2Mat
                     var criticalVelocity = this.GetCriticalVelocity(step);
                     var pressureStrength = this.m_def.surfaceTensionPressureStrength * criticalVelocity;
                     var normalStrength = this.m_def.surfaceTensionNormalStrength * criticalVelocity;
-                    var maxVelocityVariation = b2Settings_30.b2_maxParticleForce * criticalVelocity;
+                    var maxVelocityVariation = b2Settings_31.b2_maxParticleForce * criticalVelocity;
                     for (var k = 0; k < this.m_contactBuffer.count; k++) {
                         var contact = this.m_contactBuffer.data[k];
                         if (contact.flags & b2Particle_1.b2ParticleFlag.b2_tensileParticle) {
@@ -11955,7 +11943,7 @@ System.register("Particle/b2ParticleSystem", ["Common/b2Settings", "Common/b2Mat
                     var pos_data = this.m_positionBuffer.data;
                     var vel_data = this.m_velocityBuffer.data;
                     var powderStrength = this.m_def.powderStrength * this.GetCriticalVelocity(step);
-                    var minWeight = 1.0 - b2Settings_30.b2_particleStride;
+                    var minWeight = 1.0 - b2Settings_31.b2_particleStride;
                     var inv_mass = this.GetParticleInvMass();
                     for (var k = 0; k < this.m_bodyContactBuffer.count; k++) {
                         var contact = this.m_bodyContactBuffer.data[k];
@@ -12056,7 +12044,7 @@ System.register("Particle/b2ParticleSystem", ["Common/b2Settings", "Common/b2Mat
                     var newCount = 0;
                     var newIndices = [];
                     for (var i = 0; i < this.m_count; i++) {
-                        newIndices[i] = b2Settings_29.b2_invalidParticleIndex;
+                        newIndices[i] = b2Settings_30.b2_invalidParticleIndex;
                     }
                     var allParticleFlags = 0;
                     for (var i = 0; i < this.m_count; i++) {
@@ -12069,11 +12057,11 @@ System.register("Particle/b2ParticleSystem", ["Common/b2Settings", "Common/b2Mat
                             if (this.m_handleIndexBuffer.data) {
                                 var handle = this.m_handleIndexBuffer.data[i];
                                 if (handle) {
-                                    handle.SetIndex(b2Settings_29.b2_invalidParticleIndex);
+                                    handle.SetIndex(b2Settings_30.b2_invalidParticleIndex);
                                     this.m_handleIndexBuffer.data[i] = null;
                                 }
                             }
-                            newIndices[i] = b2Settings_29.b2_invalidParticleIndex;
+                            newIndices[i] = b2Settings_30.b2_invalidParticleIndex;
                         }
                         else {
                             newIndices[i] = newCount;
@@ -12171,7 +12159,7 @@ System.register("Particle/b2ParticleSystem", ["Common/b2Settings", "Common/b2Mat
                         var writeOffset = 0;
                         for (var readOffset = 0; readOffset < this.m_count; readOffset++) {
                             var newIndex = newIndices[this.m_indexByExpirationTimeBuffer.data[readOffset]];
-                            if (newIndex !== b2Settings_29.b2_invalidParticleIndex) {
+                            if (newIndex !== b2Settings_30.b2_invalidParticleIndex) {
                                 this.m_indexByExpirationTimeBuffer.data[writeOffset++] = newIndex;
                             }
                         }
@@ -12366,14 +12354,14 @@ System.register("Particle/b2ParticleSystem", ["Common/b2Settings", "Common/b2Mat
                     return this.m_def.density * this.GetCriticalVelocitySquared(step);
                 };
                 b2ParticleSystem.prototype.GetParticleStride = function () {
-                    return b2Settings_30.b2_particleStride * this.m_particleDiameter;
+                    return b2Settings_31.b2_particleStride * this.m_particleDiameter;
                 };
                 b2ParticleSystem.prototype.GetParticleMass = function () {
                     var stride = this.GetParticleStride();
                     return this.m_def.density * stride * stride;
                 };
                 b2ParticleSystem.prototype.GetParticleInvMass = function () {
-                    var inverseStride = this.m_inverseDiameter * (1.0 / b2Settings_30.b2_particleStride);
+                    var inverseStride = this.m_inverseDiameter * (1.0 / b2Settings_31.b2_particleStride);
                     return this.m_inverseDensity * inverseStride * inverseStride;
                 };
                 b2ParticleSystem.prototype.GetFixtureContactFilter = function () {
@@ -12446,7 +12434,7 @@ System.register("Particle/b2ParticleSystem", ["Common/b2Settings", "Common/b2Mat
                             for (var childIndex = 0; childIndex < childCount; childIndex++) {
                                 var normal = s_normal;
                                 var distance = contact.fixture.ComputeDistance(pos, normal, childIndex);
-                                if (distance < b2Settings_29.b2_linearSlop) {
+                                if (distance < b2Settings_30.b2_linearSlop) {
                                     return false;
                                 }
                             }
@@ -12480,7 +12468,7 @@ System.register("Particle/b2ParticleSystem", ["Common/b2Settings", "Common/b2Mat
                 };
                 b2ParticleSystem.prototype.ValidateParticleIndex = function (index) {
                     return index >= 0 && index < this.GetParticleCount() &&
-                        index !== b2Settings_29.b2_invalidParticleIndex;
+                        index !== b2Settings_30.b2_invalidParticleIndex;
                 };
                 b2ParticleSystem.prototype.GetQuantizedTimeElapsed = function () {
                     return Math.floor(this.m_timeElapsed / 0x100000000);
@@ -12644,7 +12632,7 @@ System.register("Particle/b2ParticleSystem", ["Common/b2Settings", "Common/b2Mat
                 b2ParticleSystem.UserOverridableBuffer = UserOverridableBuffer;
                 var Proxy = (function () {
                     function Proxy() {
-                        this.index = b2Settings_29.b2_invalidParticleIndex;
+                        this.index = b2Settings_30.b2_invalidParticleIndex;
                         this.tag = 0;
                     }
                     Proxy.CompareProxyProxy = function (a, b) {
@@ -12677,7 +12665,7 @@ System.register("Particle/b2ParticleSystem", ["Common/b2Settings", "Common/b2Mat
                             }
                             this.m_first++;
                         }
-                        return b2Settings_29.b2_invalidParticleIndex;
+                        return b2Settings_30.b2_invalidParticleIndex;
                     };
                     return InsideBoundsEnumerator;
                 }());
@@ -12717,7 +12705,7 @@ System.register("Particle/b2ParticleSystem", ["Common/b2Settings", "Common/b2Mat
                 b2ParticleSystem.FixedSetAllocator = FixedSetAllocator;
                 var FixtureParticle = (function () {
                     function FixtureParticle(fixture, particle) {
-                        this.second = b2Settings_29.b2_invalidParticleIndex;
+                        this.second = b2Settings_30.b2_invalidParticleIndex;
                         this.first = fixture;
                         this.second = particle;
                     }
@@ -12732,15 +12720,15 @@ System.register("Particle/b2ParticleSystem", ["Common/b2Settings", "Common/b2Mat
                     FixtureParticleSet.prototype.Initialize = function (bodyContactBuffer, flagsBuffer) {
                     };
                     FixtureParticleSet.prototype.Find = function (pair) {
-                        return b2Settings_29.b2_invalidParticleIndex;
+                        return b2Settings_30.b2_invalidParticleIndex;
                     };
                     return FixtureParticleSet;
                 }(b2ParticleSystem.FixedSetAllocator));
                 b2ParticleSystem.FixtureParticleSet = FixtureParticleSet;
                 var ParticlePair = (function () {
                     function ParticlePair(particleA, particleB) {
-                        this.first = b2Settings_29.b2_invalidParticleIndex;
-                        this.second = b2Settings_29.b2_invalidParticleIndex;
+                        this.first = b2Settings_30.b2_invalidParticleIndex;
+                        this.second = b2Settings_30.b2_invalidParticleIndex;
                         this.first = particleA;
                         this.second = particleB;
                     }
@@ -12755,7 +12743,7 @@ System.register("Particle/b2ParticleSystem", ["Common/b2Settings", "Common/b2Mat
                     b2ParticlePairSet.prototype.Initialize = function (contactBuffer, flagsBuffer) {
                     };
                     b2ParticlePairSet.prototype.Find = function (pair) {
-                        return b2Settings_29.b2_invalidParticleIndex;
+                        return b2Settings_30.b2_invalidParticleIndex;
                     };
                     return b2ParticlePairSet;
                 }(b2ParticleSystem.FixedSetAllocator));
@@ -12861,10 +12849,10 @@ System.register("Particle/b2ParticleSystem", ["Common/b2Settings", "Common/b2Mat
                     };
                     CompositeShape.prototype.ComputeAABB = function (aabb, xf, childIndex) {
                         var s_subaabb = new b2Collision_5.b2AABB();
-                        aabb.lowerBound.x = +b2Settings_29.b2_maxFloat;
-                        aabb.lowerBound.y = +b2Settings_29.b2_maxFloat;
-                        aabb.upperBound.x = -b2Settings_29.b2_maxFloat;
-                        aabb.upperBound.y = -b2Settings_29.b2_maxFloat;
+                        aabb.lowerBound.x = +b2Settings_30.b2_maxFloat;
+                        aabb.lowerBound.y = +b2Settings_30.b2_maxFloat;
+                        aabb.upperBound.x = -b2Settings_30.b2_maxFloat;
+                        aabb.upperBound.y = -b2Settings_30.b2_maxFloat;
                         for (var i = 0; i < this.m_shapeCount; i++) {
                             var childCount = this.m_shapes[i].GetChildCount();
                             for (var j = 0; j < childCount; j++) {
@@ -13000,8 +12988,8 @@ System.register("Particle/b2ParticleSystem", ["Common/b2Settings", "Common/b2Mat
                         if (fixture.RayCast(output, input, childIndex)) {
                             var n = output.normal;
                             var p = s_p;
-                            p.x = (1 - output.fraction) * input.p1.x + output.fraction * input.p2.x + b2Settings_29.b2_linearSlop * n.x;
-                            p.y = (1 - output.fraction) * input.p1.y + output.fraction * input.p2.y + b2Settings_29.b2_linearSlop * n.y;
+                            p.x = (1 - output.fraction) * input.p1.x + output.fraction * input.p2.x + b2Settings_30.b2_linearSlop * n.x;
+                            p.y = (1 - output.fraction) * input.p1.y + output.fraction * input.p2.y + b2Settings_30.b2_linearSlop * n.y;
                             var v = s_v;
                             v.x = this.m_step.inv_dt * (p.x - ap.x);
                             v.y = this.m_step.inv_dt * (p.y - ap.y);
@@ -13223,11 +13211,11 @@ System.register("Particle/b2ParticleGroup", ["Common/b2Math", "Common/b2Draw"], 
 System.register("Dynamics/b2WorldCallbacks", ["Common/b2Settings", "Dynamics/b2Body"], function (exports_39, context_39) {
     "use strict";
     var __moduleName = context_39 && context_39.id;
-    var b2Settings_31, b2Body_1, b2DestructionListener, b2ContactFilter, b2ContactImpulse, b2ContactListener, b2QueryCallback, b2RayCastCallback;
+    var b2Settings_32, b2Body_1, b2DestructionListener, b2ContactFilter, b2ContactImpulse, b2ContactListener, b2QueryCallback, b2RayCastCallback;
     return {
         setters: [
-            function (b2Settings_31_1) {
-                b2Settings_31 = b2Settings_31_1;
+            function (b2Settings_32_1) {
+                b2Settings_32 = b2Settings_32_1;
             },
             function (b2Body_1_1) {
                 b2Body_1 = b2Body_1_1;
@@ -13276,8 +13264,8 @@ System.register("Dynamics/b2WorldCallbacks", ["Common/b2Settings", "Dynamics/b2B
             exports_39("b2ContactFilter", b2ContactFilter);
             b2ContactImpulse = (function () {
                 function b2ContactImpulse() {
-                    this.normalImpulses = b2Settings_31.b2MakeNumberArray(b2Settings_31.b2_maxManifoldPoints);
-                    this.tangentImpulses = b2Settings_31.b2MakeNumberArray(b2Settings_31.b2_maxManifoldPoints);
+                    this.normalImpulses = b2Settings_32.b2MakeNumberArray(b2Settings_32.b2_maxManifoldPoints);
+                    this.tangentImpulses = b2Settings_32.b2MakeNumberArray(b2Settings_32.b2_maxManifoldPoints);
                     this.count = 0;
                 }
                 return b2ContactImpulse;
@@ -13334,14 +13322,14 @@ System.register("Dynamics/b2WorldCallbacks", ["Common/b2Settings", "Dynamics/b2B
 System.register("Dynamics/b2Island", ["Common/b2Settings", "Common/b2Math", "Common/b2Timer", "Dynamics/Contacts/b2ContactSolver", "Dynamics/b2Body", "Dynamics/b2TimeStep", "Dynamics/b2WorldCallbacks"], function (exports_40, context_40) {
     "use strict";
     var __moduleName = context_40 && context_40.id;
-    var b2Settings_32, b2Settings_33, b2Settings_34, b2Settings_35, b2Math_30, b2Timer_2, b2ContactSolver_1, b2Body_2, b2TimeStep_3, b2WorldCallbacks_2, b2Island;
+    var b2Settings_33, b2Settings_34, b2Settings_35, b2Settings_36, b2Math_30, b2Timer_2, b2ContactSolver_1, b2Body_2, b2TimeStep_3, b2WorldCallbacks_2, b2Island;
     return {
         setters: [
-            function (b2Settings_32_1) {
-                b2Settings_32 = b2Settings_32_1;
-                b2Settings_33 = b2Settings_32_1;
-                b2Settings_34 = b2Settings_32_1;
-                b2Settings_35 = b2Settings_32_1;
+            function (b2Settings_33_1) {
+                b2Settings_33 = b2Settings_33_1;
+                b2Settings_34 = b2Settings_33_1;
+                b2Settings_35 = b2Settings_33_1;
+                b2Settings_36 = b2Settings_33_1;
             },
             function (b2Math_30_1) {
                 b2Math_30 = b2Math_30_1;
@@ -13472,13 +13460,13 @@ System.register("Dynamics/b2Island", ["Common/b2Settings", "Common/b2Math", "Com
                         var v = this.m_velocities[i].v;
                         var w = this.m_velocities[i].w;
                         var translation = b2Math_30.b2Vec2.MulSV(h, v, b2Island.s_translation);
-                        if (b2Math_30.b2Vec2.DotVV(translation, translation) > b2Settings_33.b2_maxTranslationSquared) {
-                            var ratio = b2Settings_33.b2_maxTranslation / translation.Length();
+                        if (b2Math_30.b2Vec2.DotVV(translation, translation) > b2Settings_34.b2_maxTranslationSquared) {
+                            var ratio = b2Settings_34.b2_maxTranslation / translation.Length();
                             v.SelfMul(ratio);
                         }
                         var rotation = h * w;
-                        if (rotation * rotation > b2Settings_34.b2_maxRotationSquared) {
-                            var ratio = b2Settings_34.b2_maxRotation / b2Math_30.b2Abs(rotation);
+                        if (rotation * rotation > b2Settings_35.b2_maxRotationSquared) {
+                            var ratio = b2Settings_35.b2_maxRotation / b2Math_30.b2Abs(rotation);
                             w *= ratio;
                         }
                         c.x += h * v.x;
@@ -13512,9 +13500,9 @@ System.register("Dynamics/b2Island", ["Common/b2Settings", "Common/b2Math", "Com
                     profile.solvePosition = timer.GetMilliseconds();
                     this.Report(contactSolver.m_velocityConstraints);
                     if (allowSleep) {
-                        var minSleepTime = b2Settings_32.b2_maxFloat;
-                        var linTolSqr = b2Settings_35.b2_linearSleepTolerance * b2Settings_35.b2_linearSleepTolerance;
-                        var angTolSqr = b2Settings_35.b2_angularSleepTolerance * b2Settings_35.b2_angularSleepTolerance;
+                        var minSleepTime = b2Settings_33.b2_maxFloat;
+                        var linTolSqr = b2Settings_36.b2_linearSleepTolerance * b2Settings_36.b2_linearSleepTolerance;
+                        var angTolSqr = b2Settings_36.b2_angularSleepTolerance * b2Settings_36.b2_angularSleepTolerance;
                         for (var i = 0; i < this.m_bodyCount; ++i) {
                             var b = this.m_bodies[i];
                             if (b.GetType() === b2Body_2.b2BodyType.b2_staticBody) {
@@ -13531,7 +13519,7 @@ System.register("Dynamics/b2Island", ["Common/b2Settings", "Common/b2Math", "Com
                                 minSleepTime = b2Math_30.b2Min(minSleepTime, b.m_sleepTime);
                             }
                         }
-                        if (minSleepTime >= b2Settings_32.b2_timeToSleep && positionSolved) {
+                        if (minSleepTime >= b2Settings_33.b2_timeToSleep && positionSolved) {
                             for (var i = 0; i < this.m_bodyCount; ++i) {
                                 var b = this.m_bodies[i];
                                 b.SetAwake(false);
@@ -13576,13 +13564,13 @@ System.register("Dynamics/b2Island", ["Common/b2Settings", "Common/b2Math", "Com
                         var v = this.m_velocities[i].v;
                         var w = this.m_velocities[i].w;
                         var translation = b2Math_30.b2Vec2.MulSV(h, v, b2Island.s_translation);
-                        if (b2Math_30.b2Vec2.DotVV(translation, translation) > b2Settings_33.b2_maxTranslationSquared) {
-                            var ratio = b2Settings_33.b2_maxTranslation / translation.Length();
+                        if (b2Math_30.b2Vec2.DotVV(translation, translation) > b2Settings_34.b2_maxTranslationSquared) {
+                            var ratio = b2Settings_34.b2_maxTranslation / translation.Length();
                             v.SelfMul(ratio);
                         }
                         var rotation = h * w;
-                        if (rotation * rotation > b2Settings_34.b2_maxRotationSquared) {
-                            var ratio = b2Settings_34.b2_maxRotation / b2Math_30.b2Abs(rotation);
+                        if (rotation * rotation > b2Settings_35.b2_maxRotationSquared) {
+                            var ratio = b2Settings_35.b2_maxRotation / b2Math_30.b2Abs(rotation);
                             w *= ratio;
                         }
                         c.SelfMulAdd(h, v);
@@ -13728,12 +13716,12 @@ System.register("Controllers/b2Controller", [], function (exports_41, context_41
 System.register("Dynamics/b2World", ["Common/b2Settings", "Common/b2Math", "Common/b2Timer", "Common/b2Draw", "Collision/b2Collision", "Collision/b2TimeOfImpact", "Collision/Shapes/b2Shape", "Dynamics/Joints/b2Joint", "Dynamics/Joints/b2JointFactory", "Dynamics/b2Body", "Dynamics/b2ContactManager", "Dynamics/b2Island", "Dynamics/b2TimeStep", "Dynamics/b2WorldCallbacks", "Particle/b2Particle", "Particle/b2ParticleSystem"], function (exports_42, context_42) {
     "use strict";
     var __moduleName = context_42 && context_42.id;
-    var b2Settings_36, b2Math_31, b2Timer_3, b2Draw_4, b2Collision_6, b2TimeOfImpact_1, b2Shape_8, b2Joint_14, b2JointFactory_1, b2Body_3, b2ContactManager_1, b2Island_1, b2TimeStep_4, b2WorldCallbacks_3, b2WorldCallbacks_4, b2Settings_37, b2Particle_2, b2ParticleSystem_1, b2World;
+    var b2Settings_37, b2Math_31, b2Timer_3, b2Draw_4, b2Collision_6, b2TimeOfImpact_1, b2Shape_8, b2Joint_14, b2JointFactory_1, b2Body_3, b2ContactManager_1, b2Island_1, b2TimeStep_4, b2WorldCallbacks_3, b2Settings_38, b2Particle_2, b2ParticleSystem_1, b2World;
     return {
         setters: [
-            function (b2Settings_36_1) {
-                b2Settings_36 = b2Settings_36_1;
-                b2Settings_37 = b2Settings_36_1;
+            function (b2Settings_37_1) {
+                b2Settings_37 = b2Settings_37_1;
+                b2Settings_38 = b2Settings_37_1;
             },
             function (b2Math_31_1) {
                 b2Math_31 = b2Math_31_1;
@@ -13773,7 +13761,6 @@ System.register("Dynamics/b2World", ["Common/b2Settings", "Common/b2Math", "Comm
             },
             function (b2WorldCallbacks_3_1) {
                 b2WorldCallbacks_3 = b2WorldCallbacks_3_1;
-                b2WorldCallbacks_4 = b2WorldCallbacks_3_1;
             },
             function (b2Particle_2_1) {
                 b2Particle_2 = b2Particle_2_1;
@@ -14010,7 +13997,7 @@ System.register("Dynamics/b2World", ["Common/b2Settings", "Common/b2Math", "Comm
                         return 1;
                     }
                     function GetSmallestRadius(world) {
-                        var smallestRadius = b2Settings_37.b2_maxFloat;
+                        var smallestRadius = b2Settings_38.b2_maxFloat;
                         for (var system = world.GetParticleSystemList(); system !== null; system = system.m_next) {
                             smallestRadius = b2Math_31.b2Min(smallestRadius, system.GetRadius());
                         }
@@ -14167,19 +14154,19 @@ System.register("Dynamics/b2World", ["Common/b2Settings", "Common/b2Math", "Comm
                         }
                     }
                 };
-                b2World.prototype.QueryAABB = function (callback, aabb) {
+                b2World.prototype.QueryAABB = function (callback, aabb, fn) {
                     var broadPhase = this.m_contactManager.m_broadPhase;
-                    function WorldQueryWrapper(proxy) {
+                    broadPhase.Query(aabb, function (proxy) {
                         var fixture_proxy = broadPhase.GetUserData(proxy);
                         var fixture = fixture_proxy.fixture;
-                        if (callback instanceof b2WorldCallbacks_3.b2QueryCallback) {
+                        if (callback) {
                             return callback.ReportFixture(fixture);
                         }
-                        else {
-                            return callback(fixture);
+                        else if (fn) {
+                            return fn(fixture);
                         }
-                    }
-                    broadPhase.Query(WorldQueryWrapper, aabb);
+                        return true;
+                    });
                     if (callback instanceof b2WorldCallbacks_3.b2QueryCallback) {
                         for (var p = this.m_particleSystemList; p; p = p.m_next) {
                             if (callback.ShouldQueryParticleSystem(p)) {
@@ -14188,24 +14175,54 @@ System.register("Dynamics/b2World", ["Common/b2Settings", "Common/b2Math", "Comm
                         }
                     }
                 };
-                b2World.prototype.QueryShape = function (callback, shape, transform) {
+                b2World.prototype.QueryAllAABB = function (aabb, out) {
+                    if (out === void 0) { out = []; }
+                    this.QueryAABB(null, aabb, function (fixture) { out.push(fixture); return true; });
+                    return out;
+                };
+                b2World.prototype.QueryPointAABB = function (callback, point, fn) {
                     var broadPhase = this.m_contactManager.m_broadPhase;
-                    function WorldQueryWrapper(proxy) {
+                    broadPhase.QueryPoint(point, function (proxy) {
                         var fixture_proxy = broadPhase.GetUserData(proxy);
                         var fixture = fixture_proxy.fixture;
-                        if (b2Collision_6.b2TestOverlapShape(shape, 0, fixture.GetShape(), 0, transform, fixture.GetBody().GetTransform())) {
-                            if (callback instanceof b2WorldCallbacks_3.b2QueryCallback) {
+                        if (callback) {
+                            return callback.ReportFixture(fixture);
+                        }
+                        else if (fn) {
+                            return fn(fixture);
+                        }
+                        return true;
+                    });
+                    if (callback instanceof b2WorldCallbacks_3.b2QueryCallback) {
+                        for (var p = this.m_particleSystemList; p; p = p.m_next) {
+                            if (callback.ShouldQueryParticleSystem(p)) {
+                                p.QueryPointAABB(callback, point);
+                            }
+                        }
+                    }
+                };
+                b2World.prototype.QueryAllPointAABB = function (point, out) {
+                    if (out === void 0) { out = []; }
+                    this.QueryPointAABB(null, point, function (fixture) { out.push(fixture); return true; });
+                    return out;
+                };
+                b2World.prototype.QueryFixtureShape = function (callback, shape, index, transform, fn) {
+                    var broadPhase = this.m_contactManager.m_broadPhase;
+                    var aabb = b2World.QueryFixtureShape_s_aabb;
+                    shape.ComputeAABB(aabb, transform, index);
+                    broadPhase.Query(aabb, function (proxy) {
+                        var fixture_proxy = broadPhase.GetUserData(proxy);
+                        var fixture = fixture_proxy.fixture;
+                        if (b2Collision_6.b2TestOverlapShape(shape, index, fixture.GetShape(), fixture_proxy.childIndex, transform, fixture.GetBody().GetTransform())) {
+                            if (callback) {
                                 return callback.ReportFixture(fixture);
                             }
-                            else {
-                                return callback(fixture);
+                            else if (fn) {
+                                return fn(fixture);
                             }
                         }
                         return true;
-                    }
-                    var aabb = b2World.QueryShape_s_aabb;
-                    shape.ComputeAABB(aabb, transform, 0);
-                    broadPhase.Query(WorldQueryWrapper, aabb);
+                    });
                     if (callback instanceof b2WorldCallbacks_3.b2QueryCallback) {
                         for (var p = this.m_particleSystemList; p; p = p.m_next) {
                             if (callback.ShouldQueryParticleSystem(p)) {
@@ -14214,36 +14231,46 @@ System.register("Dynamics/b2World", ["Common/b2Settings", "Common/b2Math", "Comm
                         }
                     }
                 };
-                b2World.prototype.QueryPoint = function (callback, point) {
+                b2World.prototype.QueryAllFixtureShape = function (shape, index, transform, out) {
+                    if (out === void 0) { out = []; }
+                    this.QueryFixtureShape(null, shape, index, transform, function (fixture) { out.push(fixture); return true; });
+                    return out;
+                };
+                b2World.prototype.QueryFixturePoint = function (callback, point, fn) {
                     var broadPhase = this.m_contactManager.m_broadPhase;
-                    function WorldQueryWrapper(proxy) {
+                    broadPhase.QueryPoint(point, function (proxy) {
                         var fixture_proxy = broadPhase.GetUserData(proxy);
                         var fixture = fixture_proxy.fixture;
                         if (fixture.TestPoint(point)) {
-                            if (callback instanceof b2WorldCallbacks_3.b2QueryCallback) {
+                            if (callback) {
                                 return callback.ReportFixture(fixture);
                             }
-                            else {
-                                return callback(fixture);
+                            else if (fn) {
+                                return fn(fixture);
                             }
                         }
                         return true;
-                    }
-                    var aabb = b2World.QueryPoint_s_aabb;
-                    aabb.lowerBound.Set(point.x - b2Settings_36.b2_linearSlop, point.y - b2Settings_36.b2_linearSlop);
-                    aabb.upperBound.Set(point.x + b2Settings_36.b2_linearSlop, point.y + b2Settings_36.b2_linearSlop);
-                    broadPhase.Query(WorldQueryWrapper, aabb);
-                    if (callback instanceof b2WorldCallbacks_3.b2QueryCallback) {
+                    });
+                    if (callback) {
                         for (var p = this.m_particleSystemList; p; p = p.m_next) {
                             if (callback.ShouldQueryParticleSystem(p)) {
-                                p.QueryAABB(callback, aabb);
+                                p.QueryPointAABB(callback, point);
                             }
                         }
                     }
                 };
-                b2World.prototype.RayCast = function (callback, point1, point2) {
+                b2World.prototype.QueryAllFixturePoint = function (point, out) {
+                    if (out === void 0) { out = []; }
+                    this.QueryFixturePoint(null, point, function (fixture) { out.push(fixture); return true; });
+                    return out;
+                };
+                b2World.prototype.RayCast = function (callback, point1, point2, fn) {
                     var broadPhase = this.m_contactManager.m_broadPhase;
-                    function WorldRayCastWrapper(input, proxy) {
+                    var input = b2World.RayCast_s_input;
+                    input.maxFraction = 1;
+                    input.p1.Copy(point1);
+                    input.p2.Copy(point2);
+                    broadPhase.RayCast(input, function (input, proxy) {
                         var fixture_proxy = broadPhase.GetUserData(proxy);
                         var fixture = fixture_proxy.fixture;
                         var index = fixture_proxy.childIndex;
@@ -14253,21 +14280,16 @@ System.register("Dynamics/b2World", ["Common/b2Settings", "Common/b2Math", "Comm
                             var fraction = output.fraction;
                             var point = b2World.RayCast_s_point;
                             point.Set((1 - fraction) * point1.x + fraction * point2.x, (1 - fraction) * point1.y + fraction * point2.y);
-                            if (callback instanceof b2WorldCallbacks_4.b2RayCastCallback) {
+                            if (callback) {
                                 return callback.ReportFixture(fixture, point, output.normal, fraction);
                             }
-                            else {
-                                return callback(fixture, point, output.normal, fraction);
+                            else if (fn) {
+                                return fn(fixture, point, output.normal, fraction);
                             }
                         }
                         return input.maxFraction;
-                    }
-                    var input = b2World.RayCast_s_input;
-                    input.maxFraction = 1;
-                    input.p1.Copy(point1);
-                    input.p2.Copy(point2);
-                    broadPhase.RayCast(WorldRayCastWrapper, input);
-                    if (callback instanceof b2WorldCallbacks_4.b2RayCastCallback) {
+                    });
+                    if (callback) {
                         for (var p = this.m_particleSystemList; p; p = p.m_next) {
                             if (callback.ShouldQueryParticleSystem(p)) {
                                 p.RayCast(callback, point1, point2);
@@ -14278,23 +14300,21 @@ System.register("Dynamics/b2World", ["Common/b2Settings", "Common/b2Math", "Comm
                 b2World.prototype.RayCastOne = function (point1, point2) {
                     var result = null;
                     var min_fraction = 1;
-                    function WorldRayCastOneWrapper(fixture, point, normal, fraction) {
+                    this.RayCast(null, point1, point2, function (fixture, point, normal, fraction) {
                         if (fraction < min_fraction) {
                             min_fraction = fraction;
                             result = fixture;
                         }
                         return min_fraction;
-                    }
-                    this.RayCast(WorldRayCastOneWrapper, point1, point2);
+                    });
                     return result;
                 };
                 b2World.prototype.RayCastAll = function (point1, point2, out) {
                     if (out === void 0) { out = []; }
-                    function WorldRayCastAllWrapper(fixture, point, normal, fraction) {
+                    this.RayCast(null, point1, point2, function (fixture, point, normal, fraction) {
                         out.push(fixture);
                         return 1;
-                    }
-                    this.RayCast(WorldRayCastAllWrapper, point1, point2);
+                    });
                     return out;
                 };
                 b2World.prototype.GetBodyList = function () {
@@ -14646,7 +14666,7 @@ System.register("Dynamics/b2World", ["Common/b2Settings", "Common/b2Math", "Comm
                 };
                 b2World.prototype.SolveTOI = function (step) {
                     var island = this.m_island;
-                    island.Initialize(2 * b2Settings_36.b2_maxTOIContacts, b2Settings_36.b2_maxTOIContacts, 0, null, this.m_contactManager.m_contactListener);
+                    island.Initialize(2 * b2Settings_37.b2_maxTOIContacts, b2Settings_37.b2_maxTOIContacts, 0, null, this.m_contactManager.m_contactListener);
                     if (this.m_stepComplete) {
                         for (var b = this.m_bodyList; b; b = b.m_next) {
                             b.m_islandFlag = false;
@@ -14666,7 +14686,7 @@ System.register("Dynamics/b2World", ["Common/b2Settings", "Common/b2Math", "Comm
                             if (!c.IsEnabled()) {
                                 continue;
                             }
-                            if (c.m_toiCount > b2Settings_36.b2_maxSubSteps) {
+                            if (c.m_toiCount > b2Settings_37.b2_maxSubSteps) {
                                 continue;
                             }
                             var alpha = 1;
@@ -14727,7 +14747,7 @@ System.register("Dynamics/b2World", ["Common/b2Settings", "Common/b2Math", "Comm
                                 minAlpha = alpha;
                             }
                         }
-                        if (minContact === null || 1 - 10 * b2Settings_36.b2_epsilon < minAlpha) {
+                        if (minContact === null || 1 - 10 * b2Settings_37.b2_epsilon < minAlpha) {
                             this.m_stepComplete = true;
                             break;
                         }
@@ -14870,8 +14890,7 @@ System.register("Dynamics/b2World", ["Common/b2Settings", "Common/b2Math", "Comm
                 b2World.DrawDebugData_s_color = new b2Draw_4.b2Color(0, 0, 0);
                 b2World.DrawDebugData_s_vs = b2Math_31.b2Vec2.MakeArray(4);
                 b2World.DrawDebugData_s_xf = new b2Math_31.b2Transform();
-                b2World.QueryShape_s_aabb = new b2Collision_6.b2AABB();
-                b2World.QueryPoint_s_aabb = new b2Collision_6.b2AABB();
+                b2World.QueryFixtureShape_s_aabb = new b2Collision_6.b2AABB();
                 b2World.RayCast_s_input = new b2Collision_6.b2RayCastInput();
                 b2World.RayCast_s_output = new b2Collision_6.b2RayCastOutput();
                 b2World.RayCast_s_point = new b2Math_31.b2Vec2();
@@ -14893,11 +14912,11 @@ System.register("Dynamics/b2World", ["Common/b2Settings", "Common/b2Math", "Comm
 System.register("Dynamics/b2Body", ["Common/b2Settings", "Common/b2Math", "Collision/Shapes/b2Shape", "Dynamics/b2Fixture"], function (exports_43, context_43) {
     "use strict";
     var __moduleName = context_43 && context_43.id;
-    var b2Settings_38, b2Math_32, b2Shape_9, b2Fixture_1, b2BodyType, b2BodyDef, b2Body;
+    var b2Settings_39, b2Math_32, b2Shape_9, b2Fixture_1, b2BodyType, b2BodyDef, b2Body;
     return {
         setters: [
-            function (b2Settings_38_1) {
-                b2Settings_38 = b2Settings_38_1;
+            function (b2Settings_39_1) {
+                b2Settings_39 = b2Settings_39_1;
             },
             function (b2Math_32_1) {
                 b2Math_32 = b2Math_32_1;
@@ -14972,29 +14991,29 @@ System.register("Dynamics/b2Body", ["Common/b2Settings", "Common/b2Math", "Colli
                     this.m_userData = null;
                     this.m_controllerList = null;
                     this.m_controllerCount = 0;
-                    this.m_bulletFlag = b2Settings_38.b2Maybe(bd.bullet, false);
-                    this.m_fixedRotationFlag = b2Settings_38.b2Maybe(bd.fixedRotation, false);
-                    this.m_autoSleepFlag = b2Settings_38.b2Maybe(bd.allowSleep, true);
-                    this.m_awakeFlag = b2Settings_38.b2Maybe(bd.awake, true);
-                    this.m_activeFlag = b2Settings_38.b2Maybe(bd.active, true);
+                    this.m_bulletFlag = b2Settings_39.b2Maybe(bd.bullet, false);
+                    this.m_fixedRotationFlag = b2Settings_39.b2Maybe(bd.fixedRotation, false);
+                    this.m_autoSleepFlag = b2Settings_39.b2Maybe(bd.allowSleep, true);
+                    this.m_awakeFlag = b2Settings_39.b2Maybe(bd.awake, true);
+                    this.m_activeFlag = b2Settings_39.b2Maybe(bd.active, true);
                     this.m_world = world;
-                    this.m_xf.p.Copy(b2Settings_38.b2Maybe(bd.position, b2Math_32.b2Vec2.ZERO));
-                    this.m_xf.q.SetAngle(b2Settings_38.b2Maybe(bd.angle, 0));
+                    this.m_xf.p.Copy(b2Settings_39.b2Maybe(bd.position, b2Math_32.b2Vec2.ZERO));
+                    this.m_xf.q.SetAngle(b2Settings_39.b2Maybe(bd.angle, 0));
                     this.m_xf0.Copy(this.m_xf);
                     this.m_sweep.localCenter.SetZero();
                     this.m_sweep.c0.Copy(this.m_xf.p);
                     this.m_sweep.c.Copy(this.m_xf.p);
                     this.m_sweep.a0 = this.m_sweep.a = this.m_xf.q.GetAngle();
                     this.m_sweep.alpha0 = 0;
-                    this.m_linearVelocity.Copy(b2Settings_38.b2Maybe(bd.linearVelocity, b2Math_32.b2Vec2.ZERO));
-                    this.m_angularVelocity = b2Settings_38.b2Maybe(bd.angularVelocity, 0);
-                    this.m_linearDamping = b2Settings_38.b2Maybe(bd.linearDamping, 0);
-                    this.m_angularDamping = b2Settings_38.b2Maybe(bd.angularDamping, 0);
-                    this.m_gravityScale = b2Settings_38.b2Maybe(bd.gravityScale, 1);
+                    this.m_linearVelocity.Copy(b2Settings_39.b2Maybe(bd.linearVelocity, b2Math_32.b2Vec2.ZERO));
+                    this.m_angularVelocity = b2Settings_39.b2Maybe(bd.angularVelocity, 0);
+                    this.m_linearDamping = b2Settings_39.b2Maybe(bd.linearDamping, 0);
+                    this.m_angularDamping = b2Settings_39.b2Maybe(bd.angularDamping, 0);
+                    this.m_gravityScale = b2Settings_39.b2Maybe(bd.gravityScale, 1);
                     this.m_force.SetZero();
                     this.m_torque = 0;
                     this.m_sleepTime = 0;
-                    this.m_type = b2Settings_38.b2Maybe(bd.type, b2BodyType.b2_staticBody);
+                    this.m_type = b2Settings_39.b2Maybe(bd.type, b2BodyType.b2_staticBody);
                     if (bd.type === b2BodyType.b2_dynamicBody) {
                         this.m_mass = 1;
                         this.m_invMass = 1;
@@ -15611,11 +15630,11 @@ System.register("Dynamics/Contacts/b2Contact", ["Common/b2Settings", "Common/b2M
         return restitution1 > restitution2 ? restitution1 : restitution2;
     }
     exports_44("b2MixRestitution", b2MixRestitution);
-    var b2Settings_39, b2Math_33, b2Collision_7, b2Collision_8, b2TimeOfImpact_2, b2ContactEdge, b2Contact;
+    var b2Settings_40, b2Math_33, b2Collision_7, b2Collision_8, b2TimeOfImpact_2, b2ContactEdge, b2Contact;
     return {
         setters: [
-            function (b2Settings_39_1) {
-                b2Settings_39 = b2Settings_39_1;
+            function (b2Settings_40_1) {
+                b2Settings_40 = b2Settings_40_1;
             },
             function (b2Math_33_1) {
                 b2Math_33 = b2Math_33_1;
@@ -15806,7 +15825,7 @@ System.register("Dynamics/Contacts/b2Contact", ["Common/b2Settings", "Common/b2M
                     input.proxyB.SetShape(this.m_fixtureB.GetShape(), this.m_indexB);
                     input.sweepA.Copy(sweepA);
                     input.sweepB.Copy(sweepB);
-                    input.tMax = b2Settings_39.b2_linearSlop;
+                    input.tMax = b2Settings_40.b2_linearSlop;
                     var output = b2Contact.ComputeTOI_s_output;
                     b2TimeOfImpact_2.b2TimeOfImpact(output, input);
                     return output.t;
@@ -15844,7 +15863,7 @@ System.register("Collision/b2CollideCircle", ["Common/b2Settings", "Common/b2Mat
         var c = b2Math_34.b2Transform.MulXV(xfB, circleB.m_p, b2CollidePolygonAndCircle_s_c);
         var cLocal = b2Math_34.b2Transform.MulTXV(xfA, c, b2CollidePolygonAndCircle_s_cLocal);
         var normalIndex = 0;
-        var separation = (-b2Settings_40.b2_maxFloat);
+        var separation = (-b2Settings_41.b2_maxFloat);
         var radius = polygonA.m_radius + circleB.m_radius;
         var vertexCount = polygonA.m_count;
         var vertices = polygonA.m_vertices;
@@ -15863,7 +15882,7 @@ System.register("Collision/b2CollideCircle", ["Common/b2Settings", "Common/b2Mat
         var vertIndex2 = (vertIndex1 + 1) % vertexCount;
         var v1 = vertices[vertIndex1];
         var v2 = vertices[vertIndex2];
-        if (separation < b2Settings_40.b2_epsilon) {
+        if (separation < b2Settings_41.b2_epsilon) {
             manifold.pointCount = 1;
             manifold.type = b2Collision_9.b2ManifoldType.e_faceA;
             manifold.localNormal.Copy(normals[normalIndex]);
@@ -15911,11 +15930,11 @@ System.register("Collision/b2CollideCircle", ["Common/b2Settings", "Common/b2Mat
         }
     }
     exports_45("b2CollidePolygonAndCircle", b2CollidePolygonAndCircle);
-    var b2Settings_40, b2Math_34, b2Collision_9, b2CollideCircles_s_pA, b2CollideCircles_s_pB, b2CollidePolygonAndCircle_s_c, b2CollidePolygonAndCircle_s_cLocal, b2CollidePolygonAndCircle_s_faceCenter;
+    var b2Settings_41, b2Math_34, b2Collision_9, b2CollideCircles_s_pA, b2CollideCircles_s_pB, b2CollidePolygonAndCircle_s_c, b2CollidePolygonAndCircle_s_cLocal, b2CollidePolygonAndCircle_s_faceCenter;
     return {
         setters: [
-            function (b2Settings_40_1) {
-                b2Settings_40 = b2Settings_40_1;
+            function (b2Settings_41_1) {
+                b2Settings_41 = b2Settings_41_1;
             },
             function (b2Math_34_1) {
                 b2Math_34 = b2Math_34_1;
@@ -15982,7 +16001,7 @@ System.register("Collision/b2CollidePolygon", ["Common/b2Settings", "Common/b2Ma
         var normal1World = b2Math_35.b2Rot.MulRV(xf1.q, normals1[edge1], b2EdgeSeparation_s_normal1World);
         var normal1 = b2Math_35.b2Rot.MulTRV(xf2.q, normal1World, b2EdgeSeparation_s_normal1);
         var index = 0;
-        var minDot = b2Settings_41.b2_maxFloat;
+        var minDot = b2Settings_42.b2_maxFloat;
         for (var i = 0; i < count2; ++i) {
             var dot = b2Math_35.b2Vec2.DotVV(vertices2[i], normal1);
             if (dot < minDot) {
@@ -16001,7 +16020,7 @@ System.register("Collision/b2CollidePolygon", ["Common/b2Settings", "Common/b2Ma
         var d = b2Math_35.b2Vec2.SubVV(b2Math_35.b2Transform.MulXV(xf2, poly2.m_centroid, b2Math_35.b2Vec2.s_t0), b2Math_35.b2Transform.MulXV(xf1, poly1.m_centroid, b2Math_35.b2Vec2.s_t1), b2FindMaxSeparation_s_d);
         var dLocal1 = b2Math_35.b2Rot.MulTRV(xf1.q, d, b2FindMaxSeparation_s_dLocal1);
         var edge = 0;
-        var maxDot = (-b2Settings_41.b2_maxFloat);
+        var maxDot = (-b2Settings_42.b2_maxFloat);
         for (var i = 0; i < count1; ++i) {
             var dot = b2Math_35.b2Vec2.DotVV(normals1[i], dLocal1);
             if (dot > maxDot) {
@@ -16057,7 +16076,7 @@ System.register("Collision/b2CollidePolygon", ["Common/b2Settings", "Common/b2Ma
         var normals2 = poly2.m_normals;
         var normal1 = b2Math_35.b2Rot.MulTRV(xf2.q, b2Math_35.b2Rot.MulRV(xf1.q, normals1[edge1], b2Math_35.b2Vec2.s_t0), b2FindIncidentEdge_s_normal1);
         var index = 0;
-        var minDot = b2Settings_41.b2_maxFloat;
+        var minDot = b2Settings_42.b2_maxFloat;
         for (var i = 0; i < count2; ++i) {
             var dot = b2Math_35.b2Vec2.DotVV(normal1, normals2[i]);
             if (dot < minDot) {
@@ -16156,7 +16175,7 @@ System.register("Collision/b2CollidePolygon", ["Common/b2Settings", "Common/b2Ma
         manifold.localNormal.Copy(localNormal);
         manifold.localPoint.Copy(planePoint);
         var pointCount = 0;
-        for (var i = 0; i < b2Settings_41.b2_maxManifoldPoints; ++i) {
+        for (var i = 0; i < b2Settings_42.b2_maxManifoldPoints; ++i) {
             var cv = clipPoints2[i];
             var separation = b2Math_35.b2Vec2.DotVV(normal, cv.v) - frontOffset;
             if (separation <= totalRadius) {
@@ -16176,11 +16195,11 @@ System.register("Collision/b2CollidePolygon", ["Common/b2Settings", "Common/b2Ma
         manifold.pointCount = pointCount;
     }
     exports_47("b2CollidePolygons", b2CollidePolygons);
-    var b2Settings_41, b2Math_35, b2Collision_10, b2Collision_11, b2EdgeSeparation_s_normal1World, b2EdgeSeparation_s_normal1, b2EdgeSeparation_s_v1, b2EdgeSeparation_s_v2, b2FindMaxSeparation_s_d, b2FindMaxSeparation_s_dLocal1, b2FindIncidentEdge_s_normal1, b2CollidePolygons_s_incidentEdge, b2CollidePolygons_s_clipPoints1, b2CollidePolygons_s_clipPoints2, b2CollidePolygons_s_edgeA, b2CollidePolygons_s_edgeB, b2CollidePolygons_s_localTangent, b2CollidePolygons_s_localNormal, b2CollidePolygons_s_planePoint, b2CollidePolygons_s_normal, b2CollidePolygons_s_tangent, b2CollidePolygons_s_ntangent, b2CollidePolygons_s_v11, b2CollidePolygons_s_v12;
+    var b2Settings_42, b2Math_35, b2Collision_10, b2Collision_11, b2EdgeSeparation_s_normal1World, b2EdgeSeparation_s_normal1, b2EdgeSeparation_s_v1, b2EdgeSeparation_s_v2, b2FindMaxSeparation_s_d, b2FindMaxSeparation_s_dLocal1, b2FindIncidentEdge_s_normal1, b2CollidePolygons_s_incidentEdge, b2CollidePolygons_s_clipPoints1, b2CollidePolygons_s_clipPoints2, b2CollidePolygons_s_edgeA, b2CollidePolygons_s_edgeB, b2CollidePolygons_s_localTangent, b2CollidePolygons_s_localNormal, b2CollidePolygons_s_planePoint, b2CollidePolygons_s_normal, b2CollidePolygons_s_tangent, b2CollidePolygons_s_ntangent, b2CollidePolygons_s_v11, b2CollidePolygons_s_v12;
     return {
         setters: [
-            function (b2Settings_41_1) {
-                b2Settings_41 = b2Settings_41_1;
+            function (b2Settings_42_1) {
+                b2Settings_42 = b2Settings_42_1;
             },
             function (b2Math_35_1) {
                 b2Math_35 = b2Math_35_1;
@@ -16386,11 +16405,11 @@ System.register("Collision/b2CollideEdge", ["Common/b2Settings", "Common/b2Math"
         collider.Collide(manifold, edgeA, xfA, polygonB, xfB);
     }
     exports_50("b2CollideEdgeAndPolygon", b2CollideEdgeAndPolygon);
-    var b2Settings_42, b2Math_36, b2Collision_12, b2Collision_13, b2CollideEdgeAndCircle_s_Q, b2CollideEdgeAndCircle_s_e, b2CollideEdgeAndCircle_s_d, b2CollideEdgeAndCircle_s_e1, b2CollideEdgeAndCircle_s_e2, b2CollideEdgeAndCircle_s_P, b2CollideEdgeAndCircle_s_n, b2CollideEdgeAndCircle_s_id, b2EPAxisType, b2EPAxis, b2TempPolygon, b2ReferenceFace, b2EPColliderVertexType, b2EPCollider, b2CollideEdgeAndPolygon_s_collider;
+    var b2Settings_43, b2Math_36, b2Collision_12, b2Collision_13, b2CollideEdgeAndCircle_s_Q, b2CollideEdgeAndCircle_s_e, b2CollideEdgeAndCircle_s_d, b2CollideEdgeAndCircle_s_e1, b2CollideEdgeAndCircle_s_e2, b2CollideEdgeAndCircle_s_P, b2CollideEdgeAndCircle_s_n, b2CollideEdgeAndCircle_s_id, b2EPAxisType, b2EPAxis, b2TempPolygon, b2ReferenceFace, b2EPColliderVertexType, b2EPCollider, b2CollideEdgeAndPolygon_s_collider;
     return {
         setters: [
-            function (b2Settings_42_1) {
-                b2Settings_42 = b2Settings_42_1;
+            function (b2Settings_43_1) {
+                b2Settings_43 = b2Settings_43_1;
             },
             function (b2Math_36_1) {
                 b2Math_36 = b2Math_36_1;
@@ -16424,8 +16443,8 @@ System.register("Collision/b2CollideEdge", ["Common/b2Settings", "Common/b2Math"
             }());
             b2TempPolygon = (function () {
                 function b2TempPolygon() {
-                    this.vertices = b2Math_36.b2Vec2.MakeArray(b2Settings_42.b2_maxPolygonVertices);
-                    this.normals = b2Math_36.b2Vec2.MakeArray(b2Settings_42.b2_maxPolygonVertices);
+                    this.vertices = b2Math_36.b2Vec2.MakeArray(b2Settings_43.b2_maxPolygonVertices);
+                    this.normals = b2Math_36.b2Vec2.MakeArray(b2Settings_43.b2_maxPolygonVertices);
                     this.count = 0;
                 }
                 return b2TempPolygon;
@@ -16628,7 +16647,7 @@ System.register("Collision/b2CollideEdge", ["Common/b2Settings", "Common/b2Math"
                         b2Math_36.b2Transform.MulXV(this.m_xf, polygonB.m_vertices[i], this.m_polygonB.vertices[i]);
                         b2Math_36.b2Rot.MulRV(this.m_xf.q, polygonB.m_normals[i], this.m_polygonB.normals[i]);
                     }
-                    this.m_radius = 2 * b2Settings_42.b2_polygonRadius;
+                    this.m_radius = 2 * b2Settings_43.b2_polygonRadius;
                     manifold.pointCount = 0;
                     var edgeAxis = this.ComputeEdgeSeparation(b2EPCollider.s_edgeAxis);
                     if (edgeAxis.type === 0) {
@@ -16723,11 +16742,11 @@ System.register("Collision/b2CollideEdge", ["Common/b2Settings", "Common/b2Math"
                     var clipPoints2 = b2EPCollider.s_clipPoints2;
                     var np = 0;
                     np = b2Collision_13.b2ClipSegmentToLine(clipPoints1, ie, rf.sideNormal1, rf.sideOffset1, rf.i1);
-                    if (np < b2Settings_42.b2_maxManifoldPoints) {
+                    if (np < b2Settings_43.b2_maxManifoldPoints) {
                         return;
                     }
                     np = b2Collision_13.b2ClipSegmentToLine(clipPoints2, clipPoints1, rf.sideNormal2, rf.sideOffset2, rf.i2);
-                    if (np < b2Settings_42.b2_maxManifoldPoints) {
+                    if (np < b2Settings_43.b2_maxManifoldPoints) {
                         return;
                     }
                     if (primaryAxis.type === 1) {
@@ -16739,7 +16758,7 @@ System.register("Collision/b2CollideEdge", ["Common/b2Settings", "Common/b2Math"
                         manifold.localPoint.Copy(polygonB.m_vertices[rf.i1]);
                     }
                     var pointCount = 0;
-                    for (var i = 0; i < b2Settings_42.b2_maxManifoldPoints; ++i) {
+                    for (var i = 0; i < b2Settings_43.b2_maxManifoldPoints; ++i) {
                         var separation = void 0;
                         separation = b2Math_36.b2Vec2.DotVV(rf.normal, b2Math_36.b2Vec2.SubVV(clipPoints2[i].v, rf.v1, b2Math_36.b2Vec2.s_t0));
                         if (separation <= this.m_radius) {
@@ -16764,7 +16783,7 @@ System.register("Collision/b2CollideEdge", ["Common/b2Settings", "Common/b2Math"
                     var axis = out;
                     axis.type = 1;
                     axis.index = this.m_front ? 0 : 1;
-                    axis.separation = b2Settings_42.b2_maxFloat;
+                    axis.separation = b2Settings_43.b2_maxFloat;
                     for (var i = 0; i < this.m_polygonB.count; ++i) {
                         var s = b2Math_36.b2Vec2.DotVV(this.m_normal, b2Math_36.b2Vec2.SubVV(this.m_polygonB.vertices[i], this.m_v1, b2Math_36.b2Vec2.s_t0));
                         if (s < axis.separation) {
@@ -16777,7 +16796,7 @@ System.register("Collision/b2CollideEdge", ["Common/b2Settings", "Common/b2Math"
                     var axis = out;
                     axis.type = 0;
                     axis.index = -1;
-                    axis.separation = -b2Settings_42.b2_maxFloat;
+                    axis.separation = -b2Settings_43.b2_maxFloat;
                     var perp = b2EPCollider.s_perp.Set(-this.m_normal.y, this.m_normal.x);
                     for (var i = 0; i < this.m_polygonB.count; ++i) {
                         var n = b2Math_36.b2Vec2.NegV(this.m_polygonB.normals[i], b2EPCollider.s_n);
@@ -16791,12 +16810,12 @@ System.register("Collision/b2CollideEdge", ["Common/b2Settings", "Common/b2Math"
                             return axis;
                         }
                         if (b2Math_36.b2Vec2.DotVV(n, perp) >= 0) {
-                            if (b2Math_36.b2Vec2.DotVV(b2Math_36.b2Vec2.SubVV(n, this.m_upperLimit, b2Math_36.b2Vec2.s_t0), this.m_normal) < -b2Settings_42.b2_angularSlop) {
+                            if (b2Math_36.b2Vec2.DotVV(b2Math_36.b2Vec2.SubVV(n, this.m_upperLimit, b2Math_36.b2Vec2.s_t0), this.m_normal) < -b2Settings_43.b2_angularSlop) {
                                 continue;
                             }
                         }
                         else {
-                            if (b2Math_36.b2Vec2.DotVV(b2Math_36.b2Vec2.SubVV(n, this.m_lowerLimit, b2Math_36.b2Vec2.s_t0), this.m_normal) < -b2Settings_42.b2_angularSlop) {
+                            if (b2Math_36.b2Vec2.DotVV(b2Math_36.b2Vec2.SubVV(n, this.m_lowerLimit, b2Math_36.b2Vec2.s_t0), this.m_normal) < -b2Settings_43.b2_angularSlop) {
                                 continue;
                             }
                         }
@@ -16994,11 +17013,11 @@ System.register("Dynamics/Contacts/b2ChainAndPolygonContact", ["Collision/b2Coll
 System.register("Dynamics/Contacts/b2ContactFactory", ["Common/b2Settings", "Collision/Shapes/b2Shape", "Dynamics/Contacts/b2CircleContact", "Dynamics/Contacts/b2PolygonContact", "Dynamics/Contacts/b2PolygonAndCircleContact", "Dynamics/Contacts/b2EdgeAndCircleContact", "Dynamics/Contacts/b2EdgeAndPolygonContact", "Dynamics/Contacts/b2ChainAndCircleContact", "Dynamics/Contacts/b2ChainAndPolygonContact"], function (exports_55, context_55) {
     "use strict";
     var __moduleName = context_55 && context_55.id;
-    var b2Settings_43, b2Shape_10, b2CircleContact_1, b2PolygonContact_1, b2PolygonAndCircleContact_1, b2EdgeAndCircleContact_1, b2EdgeAndPolygonContact_1, b2ChainAndCircleContact_1, b2ChainAndPolygonContact_1, b2ContactRegister, b2ContactFactory;
+    var b2Settings_44, b2Shape_10, b2CircleContact_1, b2PolygonContact_1, b2PolygonAndCircleContact_1, b2EdgeAndCircleContact_1, b2EdgeAndPolygonContact_1, b2ChainAndCircleContact_1, b2ChainAndPolygonContact_1, b2ContactRegister, b2ContactFactory;
     return {
         setters: [
-            function (b2Settings_43_1) {
-                b2Settings_43 = b2Settings_43_1;
+            function (b2Settings_44_1) {
+                b2Settings_44 = b2Settings_44_1;
             },
             function (b2Shape_10_1) {
                 b2Shape_10 = b2Shape_10_1;
@@ -17043,7 +17062,7 @@ System.register("Dynamics/Contacts/b2ContactFactory", ["Common/b2Settings", "Col
                 }
                 b2ContactFactory.prototype.AddType = function (createFcn, destroyFcn, type1, type2) {
                     var _this = this;
-                    var pool = b2Settings_43.b2MakeArray(256, function (i) { return createFcn(_this.m_allocator); });
+                    var pool = b2Settings_44.b2MakeArray(256, function (i) { return createFcn(_this.m_allocator); });
                     function poolCreateFcn(allocator) {
                         return pool.pop() || createFcn(allocator);
                     }
@@ -17118,7 +17137,7 @@ System.register("Dynamics/Contacts/b2ContactFactory", ["Common/b2Settings", "Col
 System.register("Dynamics/b2ContactManager", ["Collision/b2BroadPhase", "Dynamics/Contacts/b2ContactFactory", "Dynamics/b2Body", "Dynamics/b2WorldCallbacks"], function (exports_56, context_56) {
     "use strict";
     var __moduleName = context_56 && context_56.id;
-    var b2BroadPhase_1, b2ContactFactory_1, b2Body_4, b2WorldCallbacks_5, b2ContactManager;
+    var b2BroadPhase_1, b2ContactFactory_1, b2Body_4, b2WorldCallbacks_4, b2ContactManager;
     return {
         setters: [
             function (b2BroadPhase_1_1) {
@@ -17130,8 +17149,8 @@ System.register("Dynamics/b2ContactManager", ["Collision/b2BroadPhase", "Dynamic
             function (b2Body_4_1) {
                 b2Body_4 = b2Body_4_1;
             },
-            function (b2WorldCallbacks_5_1) {
-                b2WorldCallbacks_5 = b2WorldCallbacks_5_1;
+            function (b2WorldCallbacks_4_1) {
+                b2WorldCallbacks_4 = b2WorldCallbacks_4_1;
             }
         ],
         execute: function () {
@@ -17140,8 +17159,8 @@ System.register("Dynamics/b2ContactManager", ["Collision/b2BroadPhase", "Dynamic
                     this.m_broadPhase = new b2BroadPhase_1.b2BroadPhase();
                     this.m_contactList = null;
                     this.m_contactCount = 0;
-                    this.m_contactFilter = b2WorldCallbacks_5.b2ContactFilter.b2_defaultFilter;
-                    this.m_contactListener = b2WorldCallbacks_5.b2ContactListener.b2_defaultListener;
+                    this.m_contactFilter = b2WorldCallbacks_4.b2ContactFilter.b2_defaultFilter;
+                    this.m_contactListener = b2WorldCallbacks_4.b2ContactListener.b2_defaultListener;
                     this.m_allocator = null;
                     this.m_contactFactory = new b2ContactFactory_1.b2ContactFactory(this.m_allocator);
                 }
@@ -17376,7 +17395,8 @@ System.register("Collision/b2BroadPhase", ["Collision/b2Collision", "Collision/b
                         if (queryProxy === null) {
                             return "continue";
                         }
-                        var QueryCallback = function (proxy) {
+                        var fatAABB = this_1.m_tree.GetFatAABB(queryProxy);
+                        this_1.m_tree.Query(fatAABB, function (proxy) {
                             if (proxy.m_id === queryProxy.m_id) {
                                 return true;
                             }
@@ -17400,9 +17420,7 @@ System.register("Collision/b2BroadPhase", ["Collision/b2Collision", "Collision/b
                             }
                             ++_this.m_pairCount;
                             return true;
-                        };
-                        var fatAABB = this_1.m_tree.GetFatAABB(queryProxy);
-                        this_1.m_tree.Query(QueryCallback, fatAABB);
+                        });
                     };
                     var this_1 = this;
                     for (var i_4 = 0; i_4 < this.m_moveCount; ++i_4) {
@@ -17427,11 +17445,14 @@ System.register("Collision/b2BroadPhase", ["Collision/b2Collision", "Collision/b
                         }
                     }
                 };
-                b2BroadPhase.prototype.Query = function (callback, aabb) {
-                    this.m_tree.Query(callback, aabb);
+                b2BroadPhase.prototype.Query = function (aabb, callback) {
+                    this.m_tree.Query(aabb, callback);
                 };
-                b2BroadPhase.prototype.RayCast = function (callback, input) {
-                    this.m_tree.RayCast(callback, input);
+                b2BroadPhase.prototype.QueryPoint = function (point, callback) {
+                    this.m_tree.QueryPoint(point, callback);
+                };
+                b2BroadPhase.prototype.RayCast = function (input, callback) {
+                    this.m_tree.RayCast(input, callback);
                 };
                 b2BroadPhase.prototype.GetTreeHeight = function () {
                     return this.m_tree.GetHeight();
@@ -17462,7 +17483,7 @@ System.register("Collision/b2BroadPhase", ["Collision/b2Collision", "Collision/b
 System.register("Controllers/b2BuoyancyController", ["Controllers/b2Controller", "Common/b2Math", "Common/b2Settings", "Common/b2Draw"], function (exports_58, context_58) {
     "use strict";
     var __moduleName = context_58 && context_58.id;
-    var b2Controller_1, b2Math_37, b2Settings_44, b2Draw_5, b2BuoyancyController;
+    var b2Controller_1, b2Math_37, b2Settings_45, b2Draw_5, b2BuoyancyController;
     return {
         setters: [
             function (b2Controller_1_1) {
@@ -17471,8 +17492,8 @@ System.register("Controllers/b2BuoyancyController", ["Controllers/b2Controller",
             function (b2Math_37_1) {
                 b2Math_37 = b2Math_37_1;
             },
-            function (b2Settings_44_1) {
-                b2Settings_44 = b2Settings_44_1;
+            function (b2Settings_45_1) {
+                b2Settings_45 = b2Settings_45_1;
             },
             function (b2Draw_5_1) {
                 b2Draw_5 = b2Draw_5_1;
@@ -17531,7 +17552,7 @@ System.register("Controllers/b2BuoyancyController", ["Controllers/b2Controller",
                         areac.y /= area;
                         massc.x /= mass;
                         massc.y /= mass;
-                        if (area < b2Settings_44.b2_epsilon) {
+                        if (area < b2Settings_45.b2_epsilon) {
                             continue;
                         }
                         var buoyancyForce = this.gravity.Clone().SelfNeg();
@@ -17640,14 +17661,14 @@ System.register("Controllers/b2ConstantForceController", ["Controllers/b2Control
 System.register("Controllers/b2GravityController", ["Controllers/b2Controller", "Common/b2Settings", "Common/b2Math"], function (exports_61, context_61) {
     "use strict";
     var __moduleName = context_61 && context_61.id;
-    var b2Controller_4, b2Settings_45, b2Math_40, b2GravityController;
+    var b2Controller_4, b2Settings_46, b2Math_40, b2GravityController;
     return {
         setters: [
             function (b2Controller_4_1) {
                 b2Controller_4 = b2Controller_4_1;
             },
-            function (b2Settings_45_1) {
-                b2Settings_45 = b2Settings_45_1;
+            function (b2Settings_46_1) {
+                b2Settings_46 = b2Settings_46_1;
             },
             function (b2Math_40_1) {
                 b2Math_40 = b2Math_40_1;
@@ -17675,7 +17696,7 @@ System.register("Controllers/b2GravityController", ["Controllers/b2Controller", 
                                 var dx = p2.x - p1.x;
                                 var dy = p2.y - p1.y;
                                 var r2 = dx * dx + dy * dy;
-                                if (r2 < b2Settings_45.b2_epsilon) {
+                                if (r2 < b2Settings_46.b2_epsilon) {
                                     continue;
                                 }
                                 var f = b2GravityController.Step_s_f.Set(dx, dy);
@@ -17701,7 +17722,7 @@ System.register("Controllers/b2GravityController", ["Controllers/b2Controller", 
                                 var dx = p2.x - p1.x;
                                 var dy = p2.y - p1.y;
                                 var r2 = dx * dx + dy * dy;
-                                if (r2 < b2Settings_45.b2_epsilon) {
+                                if (r2 < b2Settings_46.b2_epsilon) {
                                     continue;
                                 }
                                 var f = b2GravityController.Step_s_f.Set(dx, dy);
@@ -17727,7 +17748,7 @@ System.register("Controllers/b2GravityController", ["Controllers/b2Controller", 
 System.register("Controllers/b2TensorDampingController", ["Controllers/b2Controller", "Common/b2Math", "Common/b2Settings"], function (exports_62, context_62) {
     "use strict";
     var __moduleName = context_62 && context_62.id;
-    var b2Controller_5, b2Math_41, b2Settings_46, b2TensorDampingController;
+    var b2Controller_5, b2Math_41, b2Settings_47, b2TensorDampingController;
     return {
         setters: [
             function (b2Controller_5_1) {
@@ -17736,8 +17757,8 @@ System.register("Controllers/b2TensorDampingController", ["Controllers/b2Control
             function (b2Math_41_1) {
                 b2Math_41 = b2Math_41_1;
             },
-            function (b2Settings_46_1) {
-                b2Settings_46 = b2Settings_46_1;
+            function (b2Settings_47_1) {
+                b2Settings_47 = b2Settings_47_1;
             }
         ],
         execute: function () {
@@ -17751,7 +17772,7 @@ System.register("Controllers/b2TensorDampingController", ["Controllers/b2Control
                 }
                 b2TensorDampingController.prototype.Step = function (step) {
                     var timestep = step.dt;
-                    if (timestep <= b2Settings_46.b2_epsilon) {
+                    if (timestep <= b2Settings_47.b2_epsilon) {
                         return;
                     }
                     if (timestep > this.maxTimestep && this.maxTimestep > 0) {
@@ -17789,11 +17810,11 @@ System.register("Controllers/b2TensorDampingController", ["Controllers/b2Control
 System.register("Rope/b2Rope", ["Common/b2Settings", "Common/b2Math", "Common/b2Draw"], function (exports_63, context_63) {
     "use strict";
     var __moduleName = context_63 && context_63.id;
-    var b2Settings_47, b2Math_42, b2Draw_6, b2RopeDef, b2Rope;
+    var b2Settings_48, b2Math_42, b2Draw_6, b2RopeDef, b2Rope;
     return {
         setters: [
-            function (b2Settings_47_1) {
-                b2Settings_47 = b2Settings_47_1;
+            function (b2Settings_48_1) {
+                b2Settings_48 = b2Settings_48_1;
             },
             function (b2Math_42_1) {
                 b2Math_42 = b2Math_42_1;
@@ -17841,7 +17862,7 @@ System.register("Rope/b2Rope", ["Common/b2Settings", "Common/b2Math", "Common/b2
                     this.m_ps = b2Math_42.b2Vec2.MakeArray(this.m_count);
                     this.m_p0s = b2Math_42.b2Vec2.MakeArray(this.m_count);
                     this.m_vs = b2Math_42.b2Vec2.MakeArray(this.m_count);
-                    this.m_ims = b2Settings_47.b2MakeNumberArray(this.m_count);
+                    this.m_ims = b2Settings_48.b2MakeNumberArray(this.m_count);
                     for (var i = 0; i < this.m_count; ++i) {
                         this.m_ps[i].Copy(def.vertices[i]);
                         this.m_p0s[i].Copy(def.vertices[i]);
@@ -17856,8 +17877,8 @@ System.register("Rope/b2Rope", ["Common/b2Settings", "Common/b2Math", "Common/b2
                     }
                     var count2 = this.m_count - 1;
                     var count3 = this.m_count - 2;
-                    this.m_Ls = b2Settings_47.b2MakeNumberArray(count2);
-                    this.m_as = b2Settings_47.b2MakeNumberArray(count3);
+                    this.m_Ls = b2Settings_48.b2MakeNumberArray(count2);
+                    this.m_as = b2Settings_48.b2MakeNumberArray(count3);
                     for (var i = 0; i < count2; ++i) {
                         var p1 = this.m_ps[i];
                         var p2 = this.m_ps[i + 1];
@@ -17955,12 +17976,12 @@ System.register("Rope/b2Rope", ["Common/b2Settings", "Common/b2Math", "Common/b2
                         }
                         mass = 1 / mass;
                         var C = angle - this.m_as[i];
-                        while (C > b2Settings_47.b2_pi) {
-                            angle -= 2 * b2Settings_47.b2_pi;
+                        while (C > b2Settings_48.b2_pi) {
+                            angle -= 2 * b2Settings_48.b2_pi;
                             C = angle - this.m_as[i];
                         }
-                        while (C < -b2Settings_47.b2_pi) {
-                            angle += 2 * b2Settings_47.b2_pi;
+                        while (C < -b2Settings_48.b2_pi) {
+                            angle += 2 * b2Settings_48.b2_pi;
                             C = angle - this.m_as[i];
                         }
                         var impulse = -this.m_k3 * mass * C;
@@ -18000,8 +18021,8 @@ System.register("Box2D", ["Common/b2Settings", "Common/b2Math", "Common/b2Draw",
     }
     return {
         setters: [
-            function (b2Settings_48_1) {
-                exportStar_1(b2Settings_48_1);
+            function (b2Settings_49_1) {
+                exportStar_1(b2Settings_49_1);
             },
             function (b2Math_43_1) {
                 exportStar_1(b2Math_43_1);
@@ -18069,8 +18090,8 @@ System.register("Box2D", ["Common/b2Settings", "Common/b2Math", "Common/b2Draw",
             function (b2World_1_1) {
                 exportStar_1(b2World_1_1);
             },
-            function (b2WorldCallbacks_6_1) {
-                exportStar_1(b2WorldCallbacks_6_1);
+            function (b2WorldCallbacks_5_1) {
+                exportStar_1(b2WorldCallbacks_5_1);
             },
             function (b2Island_2_1) {
                 exportStar_1(b2Island_2_1);
