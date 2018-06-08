@@ -145,7 +145,6 @@ export class b2FixtureProxy {
 export class b2Fixture {
   public m_density: number = 0;
 
-  public m_next: b2Fixture | null = null;
   public readonly m_body: b2Body;
 
   public readonly m_shape: b2Shape;
@@ -211,27 +210,16 @@ export class b2Fixture {
   /// Call this if you want to establish collision that was previously disabled by b2ContactFilter::ShouldCollide.
   public Refilter(): void {
     // Flag associated contacts for filtering.
-    let edge = this.m_body.GetContactList();
-
-    while (edge) {
-      const contact = edge.contact;
+    for (const contact of this.m_body.GetContactList()) {
       const fixtureA = contact.GetFixtureA();
       const fixtureB = contact.GetFixtureB();
       if (fixtureA === this || fixtureB === this) {
         contact.FlagForFiltering();
       }
-
-      edge = edge.next;
-    }
-
-    const world = this.m_body.GetWorld();
-
-    if (world === null) {
-      return;
     }
 
     // Touch each proxy so that new pairs may be created
-    const broadPhase = world.m_contactManager.m_broadPhase;
+    const broadPhase = this.m_body.GetWorld().m_contactManager.m_broadPhase;
     for (let i: number = 0; i < this.m_proxyCount; ++i) {
       broadPhase.TouchProxy(this.m_proxies[i].treeNode);
     }
@@ -241,12 +229,6 @@ export class b2Fixture {
   /// @return the parent body.
   public GetBody(): b2Body {
     return this.m_body;
-  }
-
-  /// Get the next fixture in the parent body's fixture list.
-  /// @return the next shape.
-  public GetNext(): b2Fixture | null {
-    return this.m_next;
   }
 
   /// Get the user data that was assigned in the fixture definition. Use this to
@@ -356,7 +338,6 @@ export class b2Fixture {
     this.m_restitution = b2Maybe(def.restitution, 0);
 
     // this.m_body = body;
-    this.m_next = null;
 
     this.m_filter.Copy(b2Maybe(def.filter, b2Filter.DEFAULT));
 

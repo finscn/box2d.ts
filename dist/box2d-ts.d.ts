@@ -771,13 +771,6 @@ declare module "Dynamics/Joints/b2Joint" {
         SetZero(): b2Jacobian;
         Set(x: XY, a1: number, a2: number): b2Jacobian;
     }
-    export class b2JointEdge {
-        readonly other: b2Body;
-        readonly joint: b2Joint;
-        prev: b2JointEdge | null;
-        next: b2JointEdge | null;
-        constructor(joint: b2Joint, other: b2Body);
-    }
     export interface b2IJointDef {
         type: b2JointType;
         userData?: any;
@@ -795,10 +788,6 @@ declare module "Dynamics/Joints/b2Joint" {
     }
     export abstract class b2Joint {
         m_type: b2JointType;
-        m_prev: b2Joint | null;
-        m_next: b2Joint | null;
-        m_edgeA: b2JointEdge;
-        m_edgeB: b2JointEdge;
         m_bodyA: b2Body;
         m_bodyB: b2Body;
         m_index: number;
@@ -809,11 +798,11 @@ declare module "Dynamics/Joints/b2Joint" {
         GetType(): b2JointType;
         GetBodyA(): b2Body;
         GetBodyB(): b2Body;
+        GetOtherBody(body: b2Body): b2Body;
         abstract GetAnchorA<T extends XY>(out: T): T;
         abstract GetAnchorB<T extends XY>(out: T): T;
         abstract GetReactionForce<T extends XY>(inv_dt: number, out: T): T;
         abstract GetReactionTorque(inv_dt: number): number;
-        GetNext(): b2Joint | null;
         GetUserData(): any;
         SetUserData(data: any): void;
         IsActive(): boolean;
@@ -872,7 +861,6 @@ declare module "Dynamics/b2Fixture" {
     }
     export class b2Fixture {
         m_density: number;
-        m_next: b2Fixture | null;
         readonly m_body: b2Body;
         readonly m_shape: b2Shape;
         m_friction: number;
@@ -891,7 +879,6 @@ declare module "Dynamics/b2Fixture" {
         GetFilterData(): Readonly<b2Filter>;
         Refilter(): void;
         GetBody(): b2Body;
-        GetNext(): b2Fixture | null;
         GetUserData(): any;
         SetUserData(data: any): void;
         TestPoint(p: b2Vec2): boolean;
@@ -2371,12 +2358,9 @@ declare module "Particle/b2ParticleSystem" {
         m_indexByExpirationTimeBuffer: b2ParticleSystem.UserOverridableBuffer<number>;
         m_timeElapsed: number;
         m_expirationTimeBufferRequiresSorting: boolean;
-        m_groupCount: number;
-        m_groupList: b2ParticleGroup | null;
+        readonly m_groupList: Set<b2ParticleGroup>;
         m_def: b2ParticleSystemDef;
         m_world: b2World;
-        m_prev: b2ParticleSystem | null;
-        m_next: b2ParticleSystem | null;
         static readonly xTruncBits: number;
         static readonly yTruncBits: number;
         static readonly tagBits: number;
@@ -2401,7 +2385,7 @@ declare module "Particle/b2ParticleSystem" {
         static readonly CreateParticleGroup_s_transform: b2Transform;
         JoinParticleGroups(groupA: b2ParticleGroup, groupB: b2ParticleGroup): void;
         SplitParticleGroup(group: b2ParticleGroup): void;
-        GetParticleGroupList(): b2ParticleGroup | null;
+        GetParticleGroupList(): Set<b2ParticleGroup>;
         GetParticleGroupCount(): number;
         GetParticleCount(): number;
         GetMaxParticleCount(): number;
@@ -2461,7 +2445,6 @@ declare module "Particle/b2ParticleSystem" {
         static IsSignificantForce(force: XY): boolean;
         ParticleApplyForce(index: number, force: XY): void;
         ApplyForce(firstIndex: number, lastIndex: number, force: XY): void;
-        GetNext(): b2ParticleSystem | null;
         QueryAABB(callback: b2QueryCallback, aabb: b2AABB): void;
         QueryShapeAABB(callback: b2QueryCallback, shape: b2Shape, xf: b2Transform, childIndex?: number): void;
         static readonly QueryShapeAABB_s_aabb: b2AABB;
@@ -2816,8 +2799,6 @@ declare module "Particle/b2ParticleGroup" {
         m_lastIndex: number;
         m_groupFlags: b2ParticleGroupFlag;
         m_strength: number;
-        m_prev: b2ParticleGroup | null;
-        m_next: b2ParticleGroup | null;
         m_timestamp: number;
         m_mass: number;
         m_inertia: number;
@@ -2827,7 +2808,6 @@ declare module "Particle/b2ParticleGroup" {
         readonly m_transform: b2Transform;
         m_userData: any;
         constructor(system: b2ParticleSystem);
-        GetNext(): b2ParticleGroup | null;
         GetParticleSystem(): b2ParticleSystem;
         GetParticleCount(): number;
         GetBufferIndex(): number;
@@ -2944,25 +2924,11 @@ declare module "Controllers/b2Controller" {
     import { b2Body } from "Dynamics/b2Body";
     import { b2TimeStep } from "Dynamics/b2TimeStep";
     import { b2Draw } from "Common/b2Draw";
-    export class b2ControllerEdge {
-        controller: b2Controller;
-        body: b2Body;
-        prevBody: b2ControllerEdge | null;
-        nextBody: b2ControllerEdge | null;
-        prevController: b2ControllerEdge | null;
-        nextController: b2ControllerEdge | null;
-        constructor(controller: b2Controller, body: b2Body);
-    }
     export abstract class b2Controller {
-        m_bodyList: b2ControllerEdge | null;
-        m_bodyCount: number;
-        m_prev: b2Controller | null;
-        m_next: b2Controller | null;
+        readonly m_bodyList: Set<b2Body>;
         abstract Step(step: b2TimeStep): void;
         abstract Draw(debugDraw: b2Draw): void;
-        GetNext(): b2Controller | null;
-        GetPrev(): b2Controller | null;
-        GetBodyList(): b2ControllerEdge | null;
+        GetBodyList(): Set<b2Body>;
         AddBody(body: b2Body): void;
         RemoveBody(body: b2Body): void;
         Clear(): void;
@@ -2992,11 +2958,9 @@ declare module "Dynamics/b2World" {
         m_locked: boolean;
         m_clearForces: boolean;
         readonly m_contactManager: b2ContactManager;
-        m_bodyList: b2Body | null;
-        m_jointList: b2Joint | null;
-        m_particleSystemList: b2ParticleSystem | null;
-        m_bodyCount: number;
-        m_jointCount: number;
+        readonly m_bodyList: Set<b2Body>;
+        readonly m_jointList: Set<b2Joint>;
+        readonly m_particleSystemList: Set<b2ParticleSystem>;
         readonly m_gravity: b2Vec2;
         m_allowSleep: boolean;
         m_destructionListener: b2DestructionListener | null;
@@ -3009,8 +2973,7 @@ declare module "Dynamics/b2World" {
         readonly m_profile: b2Profile;
         readonly m_island: b2Island;
         readonly s_stack: Array<b2Body | null>;
-        m_controllerList: b2Controller | null;
-        m_controllerCount: number;
+        readonly m_controllerList: Set<b2Controller>;
         constructor(gravity: XY);
         SetDestructionListener(listener: b2DestructionListener | null): void;
         SetContactFilter(filter: b2ContactFilter): void;
@@ -3048,10 +3011,10 @@ declare module "Dynamics/b2World" {
         RayCast(callback: b2RayCastCallback | null, point1: b2Vec2, point2: b2Vec2, fn?: b2RayCastCallbackFunction): void;
         RayCastOne(point1: b2Vec2, point2: b2Vec2): b2Fixture | null;
         RayCastAll(point1: b2Vec2, point2: b2Vec2, out?: b2Fixture[]): b2Fixture[];
-        GetBodyList(): b2Body | null;
-        GetJointList(): b2Joint | null;
-        GetParticleSystemList(): b2ParticleSystem | null;
-        GetContactList(): b2Contact | null;
+        GetBodyList(): Set<b2Body>;
+        GetJointList(): Set<b2Joint>;
+        GetParticleSystemList(): Set<b2ParticleSystem>;
+        GetContactList(): Set<b2Contact>;
         SetAllowSleeping(flag: boolean): void;
         GetAllowSleeping(): boolean;
         SetWarmStarting(flag: boolean): void;
@@ -3096,11 +3059,11 @@ declare module "Dynamics/b2World" {
 declare module "Dynamics/b2Body" {
     import { b2Vec2, b2Transform, b2Sweep, XY } from "Common/b2Math";
     import { b2Shape, b2MassData } from "Collision/Shapes/b2Shape";
-    import { b2ContactEdge } from "Dynamics/Contacts/b2Contact";
-    import { b2JointEdge } from "Dynamics/Joints/b2Joint";
+    import { b2Contact } from "Dynamics/Contacts/b2Contact";
+    import { b2Joint } from "Dynamics/Joints/b2Joint";
     import { b2Fixture, b2IFixtureDef } from "Dynamics/b2Fixture";
     import { b2World } from "Dynamics/b2World";
-    import { b2ControllerEdge } from "Controllers/b2Controller";
+    import { b2Controller } from "Controllers/b2Controller";
     export enum b2BodyType {
         b2_unknown = -1,
         b2_staticBody = 0,
@@ -3157,12 +3120,9 @@ declare module "Dynamics/b2Body" {
         readonly m_force: b2Vec2;
         m_torque: number;
         m_world: b2World;
-        m_prev: b2Body | null;
-        m_next: b2Body | null;
-        m_fixtureList: b2Fixture | null;
-        m_fixtureCount: number;
-        m_jointList: b2JointEdge | null;
-        m_contactList: b2ContactEdge | null;
+        readonly m_fixtureList: Set<b2Fixture>;
+        readonly m_jointList: Set<b2Joint>;
+        readonly m_contactList: Set<b2Contact>;
         m_mass: number;
         m_invMass: number;
         m_I: number;
@@ -3172,8 +3132,7 @@ declare module "Dynamics/b2Body" {
         m_gravityScale: number;
         m_sleepTime: number;
         m_userData: any;
-        m_controllerList: b2ControllerEdge | null;
-        m_controllerCount: number;
+        readonly m_controllerList: Set<b2Controller>;
         constructor(bd: b2IBodyDef, world: b2World);
         CreateFixture(a: b2IFixtureDef | b2Shape, b?: number): b2Fixture;
         CreateFixtureDef(def: b2IFixtureDef): b2Fixture;
@@ -3235,10 +3194,9 @@ declare module "Dynamics/b2Body" {
         IsActive(): boolean;
         SetFixedRotation(flag: boolean): void;
         IsFixedRotation(): boolean;
-        GetFixtureList(): b2Fixture | null;
-        GetJointList(): b2JointEdge | null;
-        GetContactList(): b2ContactEdge | null;
-        GetNext(): b2Body | null;
+        GetFixtureList(): Set<b2Fixture>;
+        GetJointList(): Set<b2Joint>;
+        GetContactList(): Set<b2Contact>;
         GetUserData(): any;
         SetUserData(data: any): void;
         GetWorld(): b2World;
@@ -3249,7 +3207,7 @@ declare module "Dynamics/b2Body" {
         ShouldCollide(other: b2Body): boolean;
         ShouldCollideConnected(other: b2Body): boolean;
         Advance(alpha: number): void;
-        GetControllerList(): b2ControllerEdge | null;
+        GetControllerList(): Set<b2Controller>;
         GetControllerCount(): number;
     }
 }
@@ -3261,13 +3219,6 @@ declare module "Dynamics/Contacts/b2Contact" {
     import { b2ContactListener } from "Dynamics/b2WorldCallbacks";
     export function b2MixFriction(friction1: number, friction2: number): number;
     export function b2MixRestitution(restitution1: number, restitution2: number): number;
-    export class b2ContactEdge {
-        other: b2Body;
-        contact: b2Contact;
-        prev: b2ContactEdge | null;
-        next: b2ContactEdge | null;
-        constructor(contact: b2Contact);
-    }
     export abstract class b2Contact {
         m_islandFlag: boolean;
         m_touchingFlag: boolean;
@@ -3275,10 +3226,6 @@ declare module "Dynamics/Contacts/b2Contact" {
         m_filterFlag: boolean;
         m_bulletHitFlag: boolean;
         m_toiFlag: boolean;
-        m_prev: b2Contact | null;
-        m_next: b2Contact | null;
-        readonly m_nodeA: b2ContactEdge;
-        readonly m_nodeB: b2ContactEdge;
         m_fixtureA: b2Fixture;
         m_fixtureB: b2Fixture;
         m_indexA: number;
@@ -3290,17 +3237,17 @@ declare module "Dynamics/Contacts/b2Contact" {
         m_restitution: number;
         m_tangentSpeed: number;
         m_oldManifold: b2Manifold;
-        constructor();
         GetManifold(): b2Manifold;
         GetWorldManifold(worldManifold: b2WorldManifold): void;
         IsTouching(): boolean;
         SetEnabled(flag: boolean): void;
         IsEnabled(): boolean;
-        GetNext(): b2Contact | null;
         GetFixtureA(): b2Fixture;
         GetChildIndexA(): number;
         GetFixtureB(): b2Fixture;
         GetChildIndexB(): number;
+        GetOtherFixture(fixture: b2Fixture): b2Fixture;
+        GetOtherBody(body: b2Body): b2Body;
         abstract Evaluate(manifold: b2Manifold, xfA: b2Transform, xfB: b2Transform): void;
         FlagForFiltering(): void;
         SetFriction(friction: number): void;
@@ -3460,8 +3407,7 @@ declare module "Dynamics/b2ContactManager" {
     import { b2ContactFilter, b2ContactListener } from "Dynamics/b2WorldCallbacks";
     export class b2ContactManager {
         readonly m_broadPhase: b2BroadPhase;
-        m_contactList: b2Contact | null;
-        m_contactCount: number;
+        readonly m_contactList: Set<b2Contact>;
         m_contactFilter: b2ContactFilter;
         m_contactListener: b2ContactListener;
         m_allocator: any;
