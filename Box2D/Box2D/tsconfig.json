@@ -1,8 +1,11 @@
 {
   "compilerOptions": {
-    "target": "ES2016",
+    "target": "es5",
+    "lib": [ "es6", "dom" ],
     "module": "system",
+    "downlevelIteration": true,
     "strict": true,
+    "strictPropertyInitialization": true,
     "strictNullChecks": false,
     "inlineSourceMap": false,
     "preserveConstEnums": true,
