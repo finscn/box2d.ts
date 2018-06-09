@@ -1,6 +1,14 @@
 declare module "Common/b2Settings" {
     export function b2Assert(condition: boolean, ...args: any[]): void;
     export function b2Maybe<T>(value: T | undefined, def: T): T;
+    export class b2List<T> implements Iterable<T> {
+        private readonly m_array;
+        readonly size: number;
+        clear(): void;
+        add(value: T): void;
+        delete(value: T): void;
+        [Symbol.iterator](): Iterator<T>;
+    }
     export const b2_maxFloat: number;
     export const b2_epsilon: number;
     export const b2_epsilon_sq: number;
@@ -2122,6 +2130,7 @@ declare module "Dynamics/Contacts/b2ContactFactory" {
     }
 }
 declare module "Dynamics/b2ContactManager" {
+    import { b2List } from "Common/b2Settings";
     import { b2BroadPhase } from "Collision/b2BroadPhase";
     import { b2Contact } from "Dynamics/Contacts/b2Contact";
     import { b2ContactFactory } from "Dynamics/Contacts/b2ContactFactory";
@@ -2129,7 +2138,7 @@ declare module "Dynamics/b2ContactManager" {
     import { b2ContactFilter, b2ContactListener } from "Dynamics/b2WorldCallbacks";
     export class b2ContactManager {
         readonly m_broadPhase: b2BroadPhase<b2FixtureProxy>;
-        readonly m_contactList: Set<b2Contact>;
+        readonly m_contactList: b2List<b2Contact>;
         m_contactFilter: b2ContactFilter;
         m_contactListener: b2ContactListener;
         m_allocator: any;
@@ -2296,20 +2305,22 @@ declare module "Dynamics/b2Island" {
     }
 }
 declare module "Controllers/b2Controller" {
+    import { b2List } from "Common/b2Settings";
     import { b2Body } from "Dynamics/b2Body";
     import { b2TimeStep } from "Dynamics/b2TimeStep";
     import { b2Draw } from "Common/b2Draw";
     export abstract class b2Controller {
-        readonly m_bodyList: Set<b2Body>;
+        readonly m_bodyList: b2List<b2Body>;
         abstract Step(step: b2TimeStep): void;
         abstract Draw(debugDraw: b2Draw): void;
-        GetBodyList(): Set<b2Body>;
+        GetBodyList(): b2List<b2Body>;
         AddBody(body: b2Body): void;
         RemoveBody(body: b2Body): void;
         Clear(): void;
     }
 }
 declare module "Dynamics/b2World" {
+    import { b2List } from "Common/b2Settings";
     import { b2Vec2, b2Transform, XY } from "Common/b2Math";
     import { b2Color, b2Draw } from "Common/b2Draw";
     import { b2AABB } from "Collision/b2Collision";
@@ -2333,9 +2344,9 @@ declare module "Dynamics/b2World" {
         m_locked: boolean;
         m_clearForces: boolean;
         readonly m_contactManager: b2ContactManager;
-        readonly m_bodyList: Set<b2Body>;
-        readonly m_jointList: Set<b2Joint>;
-        readonly m_particleSystemList: Set<b2ParticleSystem>;
+        readonly m_bodyList: b2List<b2Body>;
+        readonly m_jointList: b2List<b2Joint>;
+        readonly m_particleSystemList: b2List<b2ParticleSystem>;
         readonly m_gravity: b2Vec2;
         m_allowSleep: boolean;
         m_destructionListener: b2DestructionListener | null;
@@ -2349,7 +2360,7 @@ declare module "Dynamics/b2World" {
         readonly m_island: b2Island;
         readonly m_islandTOI: b2Island;
         readonly s_stack: Array<b2Body | null>;
-        readonly m_controllerList: Set<b2Controller>;
+        readonly m_controllerList: b2List<b2Controller>;
         constructor(gravity: XY);
         SetDestructionListener(listener: b2DestructionListener | null): void;
         SetContactFilter(filter: b2ContactFilter): void;
@@ -2387,10 +2398,10 @@ declare module "Dynamics/b2World" {
         RayCast(callback: b2RayCastCallback | null, point1: b2Vec2, point2: b2Vec2, fn?: b2RayCastCallbackFunction): void;
         RayCastOne(point1: b2Vec2, point2: b2Vec2): b2Fixture | null;
         RayCastAll(point1: b2Vec2, point2: b2Vec2, out?: b2Fixture[]): b2Fixture[];
-        GetBodyList(): Set<b2Body>;
-        GetJointList(): Set<b2Joint>;
-        GetParticleSystemList(): Set<b2ParticleSystem>;
-        GetContactList(): Set<b2Contact>;
+        GetBodyList(): b2List<b2Body>;
+        GetJointList(): b2List<b2Joint>;
+        GetParticleSystemList(): b2List<b2ParticleSystem>;
+        GetContactList(): b2List<b2Contact>;
         SetAllowSleeping(flag: boolean): void;
         GetAllowSleeping(): boolean;
         SetWarmStarting(flag: boolean): void;
@@ -2476,6 +2487,7 @@ declare module "Particle/b2VoronoiDiagram" {
     }
 }
 declare module "Particle/b2ParticleSystem" {
+    import { b2List } from "Common/b2Settings";
     import { b2Vec2, b2Rot, b2Transform, XY } from "Common/b2Math";
     import { b2Color } from "Common/b2Draw";
     import { b2AABB, b2RayCastInput, b2RayCastOutput } from "Collision/b2Collision";
@@ -2631,7 +2643,7 @@ declare module "Particle/b2ParticleSystem" {
         m_indexByExpirationTimeBuffer: b2ParticleSystem.UserOverridableBuffer<number>;
         m_timeElapsed: number;
         m_expirationTimeBufferRequiresSorting: boolean;
-        readonly m_groupList: Set<b2ParticleGroup>;
+        readonly m_groupList: b2List<b2ParticleGroup>;
         m_def: b2ParticleSystemDef;
         m_world: b2World;
         static readonly xTruncBits: number;
@@ -2658,7 +2670,7 @@ declare module "Particle/b2ParticleSystem" {
         static readonly CreateParticleGroup_s_transform: b2Transform;
         JoinParticleGroups(groupA: b2ParticleGroup, groupB: b2ParticleGroup): void;
         SplitParticleGroup(group: b2ParticleGroup): void;
-        GetParticleGroupList(): Set<b2ParticleGroup>;
+        GetParticleGroupList(): b2List<b2ParticleGroup>;
         GetParticleGroupCount(): number;
         GetParticleCount(): number;
         GetMaxParticleCount(): number;
@@ -3210,6 +3222,7 @@ declare module "Dynamics/Contacts/b2Contact" {
     }
 }
 declare module "Dynamics/b2Body" {
+    import { b2List } from "Common/b2Settings";
     import { b2Vec2, b2Transform, b2Sweep, XY } from "Common/b2Math";
     import { b2Shape, b2MassData } from "Collision/Shapes/b2Shape";
     import { b2Contact } from "Dynamics/Contacts/b2Contact";
@@ -3273,9 +3286,9 @@ declare module "Dynamics/b2Body" {
         readonly m_force: b2Vec2;
         m_torque: number;
         m_world: b2World;
-        readonly m_fixtureList: Set<b2Fixture>;
-        readonly m_jointList: Set<b2Joint>;
-        readonly m_contactList: Set<b2Contact>;
+        readonly m_fixtureList: b2List<b2Fixture>;
+        readonly m_jointList: b2List<b2Joint>;
+        readonly m_contactList: b2List<b2Contact>;
         m_mass: number;
         m_invMass: number;
         m_I: number;
@@ -3285,7 +3298,7 @@ declare module "Dynamics/b2Body" {
         m_gravityScale: number;
         m_sleepTime: number;
         m_userData: any;
-        readonly m_controllerList: Set<b2Controller>;
+        readonly m_controllerList: b2List<b2Controller>;
         constructor(bd: b2IBodyDef, world: b2World);
         CreateFixture(a: b2IFixtureDef | b2Shape, b?: number): b2Fixture;
         CreateFixtureDef(def: b2IFixtureDef): b2Fixture;
@@ -3347,9 +3360,9 @@ declare module "Dynamics/b2Body" {
         IsActive(): boolean;
         SetFixedRotation(flag: boolean): void;
         IsFixedRotation(): boolean;
-        GetFixtureList(): Set<b2Fixture>;
-        GetJointList(): Set<b2Joint>;
-        GetContactList(): Set<b2Contact>;
+        GetFixtureList(): b2List<b2Fixture>;
+        GetJointList(): b2List<b2Joint>;
+        GetContactList(): b2List<b2Contact>;
         GetUserData(): any;
         SetUserData(data: any): void;
         GetWorld(): b2World;
@@ -3360,7 +3373,7 @@ declare module "Dynamics/b2Body" {
         ShouldCollide(other: b2Body): boolean;
         ShouldCollideConnected(other: b2Body): boolean;
         Advance(alpha: number): void;
-        GetControllerList(): Set<b2Controller>;
+        GetControllerList(): b2List<b2Controller>;
         GetControllerCount(): number;
     }
 }
