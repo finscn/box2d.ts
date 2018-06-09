@@ -124,10 +124,6 @@ System.register("Common/b2Math", ["Common/b2Settings"], function (exports_2, con
         b[0] = tmp;
     }
     exports_2("b2Swap", b2Swap);
-    function b2IsValid(n) {
-        return isFinite(n);
-    }
-    exports_2("b2IsValid", b2IsValid);
     function b2Sq(n) {
         return n * n;
     }
@@ -165,7 +161,7 @@ System.register("Common/b2Math", ["Common/b2Settings"], function (exports_2, con
         return (hi - lo) * Math.random() + lo;
     }
     exports_2("b2RandomRange", b2RandomRange);
-    var b2Settings_1, b2_pi_over_180, b2_180_over_pi, b2_two_pi, b2Abs, b2Min, b2Max, b2Sqrt, b2Pow, b2Cos, b2Sin, b2Acos, b2Asin, b2Atan2, b2Vec2, b2Vec2_zero, b2Vec3, b2Mat22, b2Mat33, b2Rot, b2Transform, b2Sweep;
+    var b2Settings_1, b2_pi_over_180, b2_180_over_pi, b2_two_pi, b2Abs, b2Min, b2Max, b2IsValid, b2Sqrt, b2Pow, b2Cos, b2Sin, b2Acos, b2Asin, b2Atan2, b2Vec2, b2Vec2_zero, b2Vec3, b2Mat22, b2Mat33, b2Rot, b2Transform, b2Sweep;
     return {
         setters: [
             function (b2Settings_1_1) {
@@ -179,6 +175,7 @@ System.register("Common/b2Math", ["Common/b2Settings"], function (exports_2, con
             exports_2("b2Abs", b2Abs = Math.abs);
             exports_2("b2Min", b2Min = Math.min);
             exports_2("b2Max", b2Max = Math.max);
+            exports_2("b2IsValid", b2IsValid = isFinite);
             exports_2("b2Sqrt", b2Sqrt = Math.sqrt);
             exports_2("b2Pow", b2Pow = Math.pow);
             exports_2("b2Cos", b2Cos = Math.cos);
@@ -8023,48 +8020,21 @@ System.register("Dynamics/Joints/b2JointFactory", ["Dynamics/Joints/b2Joint", "D
         execute: function () {
             b2JointFactory = class b2JointFactory {
                 static Create(def, allocator) {
-                    let joint;
                     switch (def.type) {
-                        case b2Joint_13.b2JointType.e_distanceJoint:
-                            joint = new b2DistanceJoint_2.b2DistanceJoint(def);
-                            break;
-                        case b2Joint_13.b2JointType.e_mouseJoint:
-                            joint = new b2MouseJoint_1.b2MouseJoint(def);
-                            break;
-                        case b2Joint_13.b2JointType.e_prismaticJoint:
-                            joint = new b2PrismaticJoint_1.b2PrismaticJoint(def);
-                            break;
-                        case b2Joint_13.b2JointType.e_revoluteJoint:
-                            joint = new b2RevoluteJoint_1.b2RevoluteJoint(def);
-                            break;
-                        case b2Joint_13.b2JointType.e_pulleyJoint:
-                            joint = new b2PulleyJoint_1.b2PulleyJoint(def);
-                            break;
-                        case b2Joint_13.b2JointType.e_gearJoint:
-                            joint = new b2GearJoint_1.b2GearJoint(def);
-                            break;
-                        case b2Joint_13.b2JointType.e_wheelJoint:
-                            joint = new b2WheelJoint_1.b2WheelJoint(def);
-                            break;
-                        case b2Joint_13.b2JointType.e_weldJoint:
-                            joint = new b2WeldJoint_1.b2WeldJoint(def);
-                            break;
-                        case b2Joint_13.b2JointType.e_frictionJoint:
-                            joint = new b2FrictionJoint_1.b2FrictionJoint(def);
-                            break;
-                        case b2Joint_13.b2JointType.e_ropeJoint:
-                            joint = new b2RopeJoint_1.b2RopeJoint(def);
-                            break;
-                        case b2Joint_13.b2JointType.e_motorJoint:
-                            joint = new b2MotorJoint_1.b2MotorJoint(def);
-                            break;
-                        case b2Joint_13.b2JointType.e_areaJoint:
-                            joint = new b2AreaJoint_1.b2AreaJoint(def);
-                            break;
-                        default:
-                            throw new Error();
+                        case b2Joint_13.b2JointType.e_distanceJoint: return new b2DistanceJoint_2.b2DistanceJoint(def);
+                        case b2Joint_13.b2JointType.e_mouseJoint: return new b2MouseJoint_1.b2MouseJoint(def);
+                        case b2Joint_13.b2JointType.e_prismaticJoint: return new b2PrismaticJoint_1.b2PrismaticJoint(def);
+                        case b2Joint_13.b2JointType.e_revoluteJoint: return new b2RevoluteJoint_1.b2RevoluteJoint(def);
+                        case b2Joint_13.b2JointType.e_pulleyJoint: return new b2PulleyJoint_1.b2PulleyJoint(def);
+                        case b2Joint_13.b2JointType.e_gearJoint: return new b2GearJoint_1.b2GearJoint(def);
+                        case b2Joint_13.b2JointType.e_wheelJoint: return new b2WheelJoint_1.b2WheelJoint(def);
+                        case b2Joint_13.b2JointType.e_weldJoint: return new b2WeldJoint_1.b2WeldJoint(def);
+                        case b2Joint_13.b2JointType.e_frictionJoint: return new b2FrictionJoint_1.b2FrictionJoint(def);
+                        case b2Joint_13.b2JointType.e_ropeJoint: return new b2RopeJoint_1.b2RopeJoint(def);
+                        case b2Joint_13.b2JointType.e_motorJoint: return new b2MotorJoint_1.b2MotorJoint(def);
+                        case b2Joint_13.b2JointType.e_areaJoint: return new b2AreaJoint_1.b2AreaJoint(def);
                     }
-                    return joint;
+                    throw new Error();
                 }
                 static Destroy(joint, allocator) {
                 }
@@ -13387,7 +13357,7 @@ System.register("Dynamics/b2World", ["Common/b2Settings", "Common/b2Math", "Comm
                 SetDebugDraw(debugDraw) {
                     this.m_debugDraw = debugDraw;
                 }
-                CreateBody(def) {
+                CreateBody(def = {}) {
                     if (this.IsLocked()) {
                         throw new Error();
                     }

@@ -63,7 +63,7 @@ declare module "Common/b2Math" {
     export const b2Max: (...values: number[]) => number;
     export function b2Clamp(a: number, lo: number, hi: number): number;
     export function b2Swap<T>(a: T[], b: T[]): void;
-    export function b2IsValid(n: number): boolean;
+    export const b2IsValid: typeof isFinite;
     export function b2Sq(n: number): number;
     export function b2InvSqrt(n: number): number;
     export const b2Sqrt: (x: number) => number;
@@ -2940,7 +2940,7 @@ declare module "Dynamics/b2World" {
     import { b2AABB } from "Collision/b2Collision";
     import { b2Shape } from "Collision/Shapes/b2Shape";
     import { b2Contact } from "Dynamics/Contacts/b2Contact";
-    import { b2Joint, b2JointDef } from "Dynamics/Joints/b2Joint";
+    import { b2Joint, b2IJointDef } from "Dynamics/Joints/b2Joint";
     import { b2Body, b2IBodyDef } from "Dynamics/b2Body";
     import { b2ContactManager } from "Dynamics/b2ContactManager";
     import { b2Fixture } from "Dynamics/b2Fixture";
@@ -2979,9 +2979,9 @@ declare module "Dynamics/b2World" {
         SetContactFilter(filter: b2ContactFilter): void;
         SetContactListener(listener: b2ContactListener): void;
         SetDebugDraw(debugDraw: b2Draw): void;
-        CreateBody(def: b2IBodyDef): b2Body;
+        CreateBody(def?: b2IBodyDef): b2Body;
         DestroyBody(b: b2Body): void;
-        CreateJoint<T extends b2Joint>(def: b2JointDef): T;
+        CreateJoint<T extends b2Joint>(def: b2IJointDef): T;
         DestroyJoint(j: b2Joint): void;
         CreateParticleSystem(def: b2ParticleSystemDef): b2ParticleSystem;
         DestroyParticleSystem(p: b2ParticleSystem): void;
