@@ -18,16 +18,16 @@
 
 // DEBUG: import { b2Assert } from "../Common/b2Settings";
 // DEBUG: import { b2IsValid } from "../Common/b2Math";
-import { b2Maybe, b2List } from "../Common/b2Settings";
+import { b2Maybe } from "../Common/b2Settings";
 import { b2Vec2, b2Rot, b2Transform, b2Sweep, XY } from "../Common/b2Math";
 import { b2BroadPhase } from "../Collision/b2BroadPhase";
 import { b2Shape, b2MassData } from "../Collision/Shapes/b2Shape";
-import { b2Contact } from "./Contacts/b2Contact";
-import { b2Joint } from "./Joints/b2Joint";
-import { b2Fixture, b2FixtureDef, b2IFixtureDef, b2FixtureProxy } from "./b2Fixture";
+import { b2ContactEdge } from "./Contacts/b2Contact";
+import { b2JointEdge } from "./Joints/b2Joint";
+import { b2Fixture, b2FixtureDef, b2IFixtureDef } from "./b2Fixture";
 import { b2World } from "./b2World";
 // #if B2_ENABLE_CONTROLLER
-import { b2Controller } from "../Controllers/b2Controller";
+import { b2ControllerEdge } from "../Controllers/b2Controller";
 // #endif
 
 /// The body type.
@@ -181,11 +181,14 @@ export class b2Body {
   public m_torque: number = 0;
 
   public m_world: b2World;
+  public m_prev: b2Body | null = null;
+  public m_next: b2Body | null = null;
 
-  public readonly m_fixtureList: b2List<b2Fixture> = new b2List<b2Fixture>();
+  public m_fixtureList: b2Fixture | null = null;
+  public m_fixtureCount: number = 0;
 
-  public readonly m_jointList: b2List<b2Joint> = new b2List<b2Joint>();
-  public readonly m_contactList: b2List<b2Contact> = new b2List<b2Contact>();
+  public m_jointList: b2JointEdge | null = null;
+  public m_contactList: b2ContactEdge | null = null;
 
   public m_mass: number = 1;
   public m_invMass: number = 1;
@@ -203,7 +206,8 @@ export class b2Body {
   public m_userData: any = null;
 
   // #if B2_ENABLE_CONTROLLER
-  public readonly m_controllerList: b2List<b2Controller> = new b2List<b2Controller>();
+  public m_controllerList: b2ControllerEdge | null = null;
+  public m_controllerCount: number = 0;
   // #endif
 
   constructor(bd: b2IBodyDef, world: b2World) {
@@ -260,6 +264,14 @@ export class b2Body {
     this.m_invI = 0;
 
     this.m_userData = bd.userData;
+
+    this.m_fixtureList = null;
+    this.m_fixtureCount = 0;
+
+    // #if B2_ENABLE_CONTROLLER
+    this.m_controllerList = null;
+    this.m_controllerCount = 0;
+    // #endif
   }
 
   public CreateFixture(a: b2IFixtureDef | b2Shape, b: number = 0): b2Fixture {
@@ -284,10 +296,13 @@ export class b2Body {
     fixture.Create(def);
 
     if (this.m_activeFlag) {
-      fixture.CreateProxies(this.m_xf);
+      const broadPhase: b2BroadPhase = this.m_world.m_contactManager.m_broadPhase;
+      fixture.CreateProxies(broadPhase, this.m_xf);
     }
 
-    this.m_fixtureList.add(fixture);
+    fixture.m_next = this.m_fixtureList;
+    this.m_fixtureList = fixture;
+    ++this.m_fixtureCount;
 
     // fixture.m_body = this;
 
@@ -331,31 +346,54 @@ export class b2Body {
     // DEBUG: b2Assert(fixture.m_body === this);
 
     // Remove the fixture from this body's singly linked list.
-    // DEBUG: b2Assert(this.m_fixtureList.size > 0);
+    // DEBUG: b2Assert(this.m_fixtureCount > 0);
+    let node: b2Fixture | null = this.m_fixtureList;
+    let ppF: b2Fixture | null = null;
     // DEBUG: let found: boolean = false;
-    // DEBUG: const found: boolean =
-    this.m_fixtureList.delete(fixture);
+    while (node !== null) {
+      if (node === fixture) {
+        if (ppF) {
+          ppF.m_next = fixture.m_next;
+        } else {
+          this.m_fixtureList = fixture.m_next;
+        }
+        // DEBUG: found = true;
+        break;
+      }
+
+      ppF = node;
+      node = node.m_next;
+    }
 
     // You tried to remove a shape that is not attached to this body.
     // DEBUG: b2Assert(found);
 
     // Destroy any contacts associated with the fixture.
-    for (const contact of this.m_contactList) {
-      const fixtureA: b2Fixture = contact.GetFixtureA();
-      const fixtureB: b2Fixture = contact.GetFixtureB();
+    let edge: b2ContactEdge | null = this.m_contactList;
+    while (edge) {
+      const c = edge.contact;
+      edge = edge.next;
+
+      const fixtureA: b2Fixture = c.GetFixtureA();
+      const fixtureB: b2Fixture = c.GetFixtureB();
 
       if (fixture === fixtureA || fixture === fixtureB) {
         // This destroys the contact and removes it from
         // this body's contact list.
-        this.m_world.m_contactManager.Destroy(contact);
+        this.m_world.m_contactManager.Destroy(c);
       }
     }
 
     if (this.m_activeFlag) {
-      fixture.DestroyProxies();
+      const broadPhase: b2BroadPhase = this.m_world.m_contactManager.m_broadPhase;
+      fixture.DestroyProxies(broadPhase);
     }
 
     fixture.Destroy();
+    // fixture.m_body = null;
+    fixture.m_next = null;
+
+    --this.m_fixtureCount;
 
     // Reset the mass data.
     this.ResetMassData();
@@ -385,8 +423,9 @@ export class b2Body {
     this.m_sweep.c0.Copy(this.m_sweep.c);
     this.m_sweep.a0 = angle;
 
-    for (const f of this.m_fixtureList) {
-      f.Synchronize(this.m_xf, this.m_xf);
+    const broadPhase: b2BroadPhase = this.m_world.m_contactManager.m_broadPhase;
+    for (let f: b2Fixture | null = this.m_fixtureList; f; f = f.m_next) {
+      f.Synchronize(broadPhase, this.m_xf, this.m_xf);
     }
 
     this.m_world.m_contactManager.FindNewContacts();
@@ -702,7 +741,7 @@ export class b2Body {
 
     // Accumulate mass over all fixtures.
     const localCenter: b2Vec2 = b2Body.ResetMassData_s_localCenter.SetZero();
-    for (const f of this.m_fixtureList) {
+    for (let f: b2Fixture | null = this.m_fixtureList; f; f = f.m_next) {
       if (f.m_density === 0) {
         continue;
       }
@@ -843,15 +882,19 @@ export class b2Body {
     this.m_torque = 0;
 
     // Delete the attached contacts.
-    for (const contact of this.m_contactList) {
-      this.m_world.m_contactManager.Destroy(contact);
+    let ce: b2ContactEdge | null = this.m_contactList;
+    while (ce) {
+      const ce0: b2ContactEdge = ce;
+      ce = ce.next;
+      this.m_world.m_contactManager.Destroy(ce0.contact);
     }
-    this.m_contactList.clear();
+    this.m_contactList = null;
 
     // Touch the proxies so that new contacts will be created (when appropriate)
-    const broadPhase: b2BroadPhase<b2FixtureProxy> = this.m_world.m_contactManager.m_broadPhase;
-    for (const f of this.m_fixtureList) {
-      for (let i: number = 0; i < f.m_proxies.length; ++i) {
+    const broadPhase: b2BroadPhase = this.m_world.m_contactManager.m_broadPhase;
+    for (let f: b2Fixture | null = this.m_fixtureList; f; f = f.m_next) {
+      const proxyCount: number = f.m_proxyCount;
+      for (let i: number = 0; i < proxyCount; ++i) {
         broadPhase.TouchProxy(f.m_proxies[i].treeNode);
       }
     }
@@ -935,20 +978,25 @@ export class b2Body {
 
     if (flag) {
       // Create all proxies.
-      for (const f of this.m_fixtureList) {
-        f.CreateProxies(this.m_xf);
+      const broadPhase: b2BroadPhase = this.m_world.m_contactManager.m_broadPhase;
+      for (let f: b2Fixture | null = this.m_fixtureList; f; f = f.m_next) {
+        f.CreateProxies(broadPhase, this.m_xf);
       }
       // Contacts are created the next time step.
     } else {
       // Destroy all proxies.
-      for (const f of this.m_fixtureList) {
-        f.DestroyProxies();
+      const broadPhase: b2BroadPhase = this.m_world.m_contactManager.m_broadPhase;
+      for (let f: b2Fixture | null = this.m_fixtureList; f; f = f.m_next) {
+        f.DestroyProxies(broadPhase);
       }
       // Destroy the attached contacts.
-      for (const contact of this.m_contactList) {
-        this.m_world.m_contactManager.Destroy(contact);
+      let ce: b2ContactEdge | null = this.m_contactList;
+      while (ce) {
+        const ce0: b2ContactEdge = ce;
+        ce = ce.next;
+        this.m_world.m_contactManager.Destroy(ce0.contact);
       }
-      this.m_contactList.clear();
+      this.m_contactList = null;
     }
   }
 
@@ -977,20 +1025,25 @@ export class b2Body {
   }
 
   /// Get the list of all fixtures attached to this body.
-  public GetFixtureList(): b2List<b2Fixture> {
+  public GetFixtureList(): b2Fixture | null {
     return this.m_fixtureList;
   }
 
   /// Get the list of all joints attached to this body.
-  public GetJointList(): b2List<b2Joint> {
+  public GetJointList(): b2JointEdge | null {
     return this.m_jointList;
   }
 
   /// Get the list of all contacts attached to this body.
   /// @warning this list changes during the time step and you may
   /// miss some collisions if you don't use b2ContactListener.
-  public GetContactList(): b2List<b2Contact> {
+  public GetContactList(): b2ContactEdge | null {
     return this.m_contactList;
+  }
+
+  /// Get the next body in the world's body list.
+  public GetNext(): b2Body | null {
+    return this.m_next;
   }
 
   /// Get the user data pointer that was provided in the body definition.
@@ -1045,7 +1098,7 @@ export class b2Body {
     log("\n");
     log("  bodies[%d] = this.m_world.CreateBody(bd);\n", this.m_islandIndex);
     log("\n");
-    for (const f of this.m_fixtureList) {
+    for (let f: b2Fixture | null = this.m_fixtureList; f; f = f.m_next) {
       log("  {\n");
       f.Dump(log, bodyIndex);
       log("  }\n");
@@ -1060,8 +1113,9 @@ export class b2Body {
     b2Rot.MulRV(xf1.q, this.m_sweep.localCenter, xf1.p);
     b2Vec2.SubVV(this.m_sweep.c0, xf1.p, xf1.p);
 
-    for (const f of this.m_fixtureList) {
-      f.Synchronize(xf1, this.m_xf);
+    const broadPhase: b2BroadPhase = this.m_world.m_contactManager.m_broadPhase;
+    for (let f: b2Fixture | null = this.m_fixtureList; f; f = f.m_next) {
+      f.Synchronize(broadPhase, xf1, this.m_xf);
     }
   }
 
@@ -1083,9 +1137,9 @@ export class b2Body {
 
   public ShouldCollideConnected(other: b2Body): boolean {
     // Does a joint prevent collision?
-    for (const joint of this.m_jointList) {
-      if (joint.GetOtherBody(this) === other) {
-        if (!joint.m_collideConnected) {
+    for (let jn: b2JointEdge | null = this.m_jointList; jn; jn = jn.next) {
+      if (jn.other === other) {
+        if (!jn.joint.m_collideConnected) {
           return false;
         }
       }
@@ -1105,12 +1159,12 @@ export class b2Body {
   }
 
   // #if B2_ENABLE_CONTROLLER
-  public GetControllerList(): b2List<b2Controller> {
+  public GetControllerList(): b2ControllerEdge | null {
     return this.m_controllerList;
   }
 
   public GetControllerCount(): number {
-    return this.m_controllerList.size;
+    return this.m_controllerCount;
   }
   // #endif
 }
