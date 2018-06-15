@@ -320,7 +320,7 @@ declare module "Common/b2Draw" {
         e_centerOfMassBit = 16,
         e_particleBit = 32,
         e_controllerBit = 64,
-        e_all = 63,
+        e_all = 63
     }
     export class b2Draw {
         m_drawFlags: b2DrawFlags;
@@ -464,7 +464,7 @@ declare module "Collision/Shapes/b2Shape" {
         e_edgeShape = 1,
         e_polygonShape = 2,
         e_chainShape = 3,
-        e_shapeTypeCount = 4,
+        e_shapeTypeCount = 4
     }
     export abstract class b2Shape {
         m_type: b2ShapeType;
@@ -489,7 +489,7 @@ declare module "Collision/b2Collision" {
     import { b2Shape } from "Collision/Shapes/b2Shape";
     export enum b2ContactFeatureType {
         e_vertex = 0,
-        e_face = 1,
+        e_face = 1
     }
     export class b2ContactFeature {
         _key: number;
@@ -524,7 +524,7 @@ declare module "Collision/b2Collision" {
         e_unknown = -1,
         e_circles = 0,
         e_faceA = 1,
-        e_faceB = 2,
+        e_faceB = 2
     }
     export class b2Manifold {
         points: b2ManifoldPoint[];
@@ -552,7 +552,7 @@ declare module "Collision/b2Collision" {
         b2_nullState = 0,
         b2_addState = 1,
         b2_persistState = 2,
-        b2_removeState = 3,
+        b2_removeState = 3
     }
     export function b2GetPointStates(state1: b2PointState[], state2: b2PointState[], manifold1: b2Manifold, manifold2: b2Manifold): void;
     export class b2ClipVertex {
@@ -635,17 +635,17 @@ declare module "Collision/b2DynamicTree" {
         RemoveLeaf(leaf: b2TreeNode<T>): void;
         Balance(A: b2TreeNode<T>): b2TreeNode<T>;
         GetHeight(): number;
-        private static GetAreaNode<T>(node);
+        private static GetAreaNode;
         GetAreaRatio(): number;
         ComputeHeightNode(node: b2TreeNode<T> | null): number;
         ComputeHeight(): number;
         ValidateStructure(index: b2TreeNode<T> | null): void;
         ValidateMetrics(index: b2TreeNode<T> | null): void;
         Validate(): void;
-        private static GetMaxBalanceNode<T>(node, maxBalance);
+        private static GetMaxBalanceNode;
         GetMaxBalance(): number;
         RebuildBottomUp(): void;
-        private static ShiftOriginNode<T>(node, newOrigin);
+        private static ShiftOriginNode;
         ShiftOrigin(newOrigin: XY): void;
     }
 }
@@ -706,7 +706,7 @@ declare module "Collision/b2TimeOfImpact" {
         e_failed = 1,
         e_overlapped = 2,
         e_touching = 3,
-        e_separated = 4,
+        e_separated = 4
     }
     export class b2TOIOutput {
         state: b2TOIOutputState;
@@ -716,7 +716,7 @@ declare module "Collision/b2TimeOfImpact" {
         e_unknown = -1,
         e_points = 0,
         e_faceA = 1,
-        e_faceB = 2,
+        e_faceB = 2
     }
     export class b2SeparationFunction {
         m_proxyA: b2DistanceProxy;
@@ -976,13 +976,13 @@ declare module "Dynamics/Joints/b2Joint" {
         e_frictionJoint = 9,
         e_ropeJoint = 10,
         e_motorJoint = 11,
-        e_areaJoint = 12,
+        e_areaJoint = 12
     }
     export enum b2LimitState {
         e_inactiveLimit = 0,
         e_atLowerLimit = 1,
         e_atUpperLimit = 2,
-        e_equalLimits = 3,
+        e_equalLimits = 3
     }
     export class b2Jacobian {
         readonly linear: b2Vec2;
@@ -1067,7 +1067,7 @@ declare module "Particle/b2Particle" {
         b2_fixtureContactListenerParticle = 16384,
         b2_particleContactListenerParticle = 32768,
         b2_fixtureContactFilterParticle = 65536,
-        b2_particleContactFilterParticle = 131072,
+        b2_particleContactFilterParticle = 131072
     }
     export interface b2IParticleDef {
         flags?: b2ParticleFlag;
@@ -2126,8 +2126,8 @@ declare module "Dynamics/Contacts/b2ContactFactory" {
         m_allocator: any;
         m_registers: b2ContactRegister[][];
         constructor(allocator: any);
-        private AddType(createFcn, destroyFcn, type1, type2);
-        private InitializeRegisters();
+        private AddType;
+        private InitializeRegisters;
         Create(fixtureA: b2Fixture, indexA: number, fixtureB: b2Fixture, indexB: number): b2Contact | null;
         Destroy(contact: b2Contact): void;
     }
@@ -3057,7 +3057,7 @@ declare module "Particle/b2ParticleGroup" {
         b2_particleGroupCanBeEmpty = 4,
         b2_particleGroupWillBeDestroyed = 8,
         b2_particleGroupNeedsUpdateDepth = 16,
-        b2_particleGroupInternalMask = 24,
+        b2_particleGroupInternalMask = 24
     }
     export interface b2IParticleGroupDef {
         flags?: b2ParticleFlag;
@@ -3266,7 +3266,7 @@ declare module "Dynamics/b2Body" {
         b2_unknown = -1,
         b2_staticBody = 0,
         b2_kinematicBody = 1,
-        b2_dynamicBody = 2,
+        b2_dynamicBody = 2
     }
     export interface b2IBodyDef {
         type?: b2BodyType;

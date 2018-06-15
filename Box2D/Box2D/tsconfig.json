@@ -6,7 +6,7 @@
     "downlevelIteration": true,
     "strict": true,
     "strictPropertyInitialization": true,
-    "strictNullChecks": false,
+    "strictNullChecks": true,
     "inlineSourceMap": false,
     "preserveConstEnums": true,
     "noImplicitAny": true,
