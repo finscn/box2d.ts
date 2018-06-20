@@ -47,7 +47,8 @@ declare module "Common/b2Settings" {
         toString(): string;
     }
     export const b2_version: b2Version;
-    export const b2_changelist: number;
+    export const b2_branch: string;
+    export const b2_commit: string;
     export function b2ParseInt(v: string): number;
     export function b2ParseUInt(v: string): number;
     export function b2MakeArray<T>(length: number, init: (i: number) => T): T[];
@@ -322,21 +323,22 @@ declare module "Common/b2Draw" {
         e_controllerBit = 64,
         e_all = 63
     }
-    export class b2Draw {
+    export abstract class b2Draw {
         m_drawFlags: b2DrawFlags;
         SetFlags(flags: b2DrawFlags): void;
         GetFlags(): b2DrawFlags;
         AppendFlags(flags: b2DrawFlags): void;
         ClearFlags(flags: b2DrawFlags): void;
-        PushTransform(xf: b2Transform): void;
-        PopTransform(xf: b2Transform): void;
-        DrawPolygon(vertices: XY[], vertexCount: number, color: RGBA): void;
-        DrawSolidPolygon(vertices: XY[], vertexCount: number, color: RGBA): void;
-        DrawCircle(center: XY, radius: number, color: RGBA): void;
-        DrawSolidCircle(center: XY, radius: number, axis: XY, color: RGBA): void;
-        DrawParticles(centers: XY[], radius: number, colors: RGBA[] | null, count: number): void;
-        DrawSegment(p1: XY, p2: XY, color: RGBA): void;
-        DrawTransform(xf: b2Transform): void;
+        abstract PushTransform(xf: b2Transform): void;
+        abstract PopTransform(xf: b2Transform): void;
+        abstract DrawPolygon(vertices: XY[], vertexCount: number, color: RGBA): void;
+        abstract DrawSolidPolygon(vertices: XY[], vertexCount: number, color: RGBA): void;
+        abstract DrawCircle(center: XY, radius: number, color: RGBA): void;
+        abstract DrawSolidCircle(center: XY, radius: number, axis: XY, color: RGBA): void;
+        abstract DrawParticles(centers: XY[], radius: number, colors: RGBA[] | null, count: number): void;
+        abstract DrawSegment(p1: XY, p2: XY, color: RGBA): void;
+        abstract DrawTransform(xf: b2Transform): void;
+        abstract DrawPoint(p: XY, size: number, color: RGBA): void;
     }
 }
 declare module "Common/b2Timer" {
@@ -388,6 +390,7 @@ declare module "Collision/b2Distance" {
         m_radius: number;
         Reset(): b2DistanceProxy;
         SetShape(shape: b2Shape, index: number): void;
+        SetVerticesRadius(vertices: b2Vec2[], count: number, radius: number): void;
         GetSupport(d: b2Vec2): number;
         GetSupportVertex(d: b2Vec2): b2Vec2;
         GetVertexCount(): number;
@@ -414,6 +417,19 @@ declare module "Collision/b2Distance" {
         distance: number;
         iterations: number;
         Reset(): b2DistanceOutput;
+    }
+    export class b2ShapeCastInput {
+        readonly proxyA: b2DistanceProxy;
+        readonly proxyB: b2DistanceProxy;
+        readonly transformA: b2Transform;
+        readonly transformB: b2Transform;
+        readonly translationB: b2Vec2;
+    }
+    export class b2ShapeCastOutput {
+        readonly point: b2Vec2;
+        readonly normal: b2Vec2;
+        lambda: number;
+        iterations: number;
     }
     export let b2_gjkCalls: number;
     export let b2_gjkIters: number;
@@ -448,6 +464,7 @@ declare module "Collision/b2Distance" {
         private static s_e23;
     }
     export function b2Distance(output: b2DistanceOutput, cache: b2SimplexCache, input: b2DistanceInput): void;
+    export function b2ShapeCast(output: b2ShapeCastOutput, input: b2ShapeCastInput): boolean;
 }
 declare module "Collision/Shapes/b2Shape" {
     import { b2Vec2, b2Transform } from "Common/b2Math";
@@ -2001,7 +2018,9 @@ declare module "Dynamics/Joints/b2WheelJoint" {
         GetLocalAnchorB(): Readonly<b2Vec2>;
         GetLocalAxisA(): Readonly<b2Vec2>;
         GetJointTranslation(): number;
-        GetJointSpeed(): number;
+        GetJointLinearSpeed(): number;
+        GetJointAngle(): number;
+        GetJointAngularSpeed(): number;
         GetPrismaticJointTranslation(): number;
         GetPrismaticJointSpeed(): number;
         GetRevoluteJointAngle(): number;
@@ -2158,6 +2177,7 @@ declare module "Dynamics/Contacts/b2ContactSolver" {
     import { b2ManifoldType } from "Collision/b2Collision";
     import { b2Contact } from "Dynamics/Contacts/b2Contact";
     import { b2TimeStep, b2Position, b2Velocity } from "Dynamics/b2TimeStep";
+    export let g_blockSolve: boolean;
     export class b2VelocityConstraintPoint {
         readonly rA: b2Vec2;
         readonly rB: b2Vec2;
@@ -2445,7 +2465,9 @@ declare module "Dynamics/b2World" {
         private static DrawJoint_s_p1;
         private static DrawJoint_s_p2;
         private static DrawJoint_s_color;
+        private static DrawJoint_s_c;
         DrawJoint(joint: b2Joint): void;
+        private static DrawShape_s_ghostColor;
         DrawShape(fixture: b2Fixture, color: b2Color): void;
         Solve(step: b2TimeStep): void;
         private static SolveTOI_s_subStep;
