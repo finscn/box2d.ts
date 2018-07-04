@@ -1282,6 +1282,19 @@
           this.m_count = 0;
           this.m_radius = 0;
       }
+      Copy(other) {
+          if (other.m_vertices === other.m_buffer) {
+              this.m_vertices = this.m_buffer;
+              this.m_buffer[0].Copy(other.m_buffer[0]);
+              this.m_buffer[1].Copy(other.m_buffer[1]);
+          }
+          else {
+              this.m_vertices = other.m_vertices;
+          }
+          this.m_count = other.m_count;
+          this.m_radius = other.m_radius;
+          return this;
+      }
       Reset() {
           this.m_vertices = this.m_buffer;
           this.m_count = 0;
@@ -1343,8 +1356,8 @@
   }
   class b2DistanceInput {
       constructor() {
-          this.proxyA = new b2DistanceProxy(); // TODO: readonly
-          this.proxyB = new b2DistanceProxy(); // TODO: readonly
+          this.proxyA = new b2DistanceProxy();
+          this.proxyB = new b2DistanceProxy();
           this.transformA = new b2Transform();
           this.transformB = new b2Transform();
           this.useRadii = false;
@@ -1965,50 +1978,47 @@
               return;
           }
           switch (manifold.type) {
-              case b2ManifoldType.e_circles:
-                  {
-                      this.normal.Set(1, 0);
-                      const pointA = b2Transform.MulXV(xfA, manifold.localPoint, b2WorldManifold.Initialize_s_pointA);
-                      const pointB = b2Transform.MulXV(xfB, manifold.points[0].localPoint, b2WorldManifold.Initialize_s_pointB);
-                      if (b2Vec2.DistanceSquaredVV(pointA, pointB) > b2_epsilon_sq) {
-                          b2Vec2.SubVV(pointB, pointA, this.normal).SelfNormalize();
-                      }
-                      const cA = b2Vec2.AddVMulSV(pointA, radiusA, this.normal, b2WorldManifold.Initialize_s_cA);
-                      const cB = b2Vec2.SubVMulSV(pointB, radiusB, this.normal, b2WorldManifold.Initialize_s_cB);
-                      b2Vec2.MidVV(cA, cB, this.points[0]);
-                      this.separations[0] = b2Vec2.DotVV(b2Vec2.SubVV(cB, cA, b2Vec2.s_t0), this.normal); // b2Dot(cB - cA, normal);
+              case b2ManifoldType.e_circles: {
+                  this.normal.Set(1, 0);
+                  const pointA = b2Transform.MulXV(xfA, manifold.localPoint, b2WorldManifold.Initialize_s_pointA);
+                  const pointB = b2Transform.MulXV(xfB, manifold.points[0].localPoint, b2WorldManifold.Initialize_s_pointB);
+                  if (b2Vec2.DistanceSquaredVV(pointA, pointB) > b2_epsilon_sq) {
+                      b2Vec2.SubVV(pointB, pointA, this.normal).SelfNormalize();
+                  }
+                  const cA = b2Vec2.AddVMulSV(pointA, radiusA, this.normal, b2WorldManifold.Initialize_s_cA);
+                  const cB = b2Vec2.SubVMulSV(pointB, radiusB, this.normal, b2WorldManifold.Initialize_s_cB);
+                  b2Vec2.MidVV(cA, cB, this.points[0]);
+                  this.separations[0] = b2Vec2.DotVV(b2Vec2.SubVV(cB, cA, b2Vec2.s_t0), this.normal); // b2Dot(cB - cA, normal);
+                  break;
+              }
+              case b2ManifoldType.e_faceA: {
+                  b2Rot.MulRV(xfA.q, manifold.localNormal, this.normal);
+                  const planePoint = b2Transform.MulXV(xfA, manifold.localPoint, b2WorldManifold.Initialize_s_planePoint);
+                  for (let i = 0; i < manifold.pointCount; ++i) {
+                      const clipPoint = b2Transform.MulXV(xfB, manifold.points[i].localPoint, b2WorldManifold.Initialize_s_clipPoint);
+                      const s = radiusA - b2Vec2.DotVV(b2Vec2.SubVV(clipPoint, planePoint, b2Vec2.s_t0), this.normal);
+                      const cA = b2Vec2.AddVMulSV(clipPoint, s, this.normal, b2WorldManifold.Initialize_s_cA);
+                      const cB = b2Vec2.SubVMulSV(clipPoint, radiusB, this.normal, b2WorldManifold.Initialize_s_cB);
+                      b2Vec2.MidVV(cA, cB, this.points[i]);
+                      this.separations[i] = b2Vec2.DotVV(b2Vec2.SubVV(cB, cA, b2Vec2.s_t0), this.normal); // b2Dot(cB - cA, normal);
                   }
                   break;
-              case b2ManifoldType.e_faceA:
-                  {
-                      b2Rot.MulRV(xfA.q, manifold.localNormal, this.normal);
-                      const planePoint = b2Transform.MulXV(xfA, manifold.localPoint, b2WorldManifold.Initialize_s_planePoint);
-                      for (let i = 0; i < manifold.pointCount; ++i) {
-                          const clipPoint = b2Transform.MulXV(xfB, manifold.points[i].localPoint, b2WorldManifold.Initialize_s_clipPoint);
-                          const s = radiusA - b2Vec2.DotVV(b2Vec2.SubVV(clipPoint, planePoint, b2Vec2.s_t0), this.normal);
-                          const cA = b2Vec2.AddVMulSV(clipPoint, s, this.normal, b2WorldManifold.Initialize_s_cA);
-                          const cB = b2Vec2.SubVMulSV(clipPoint, radiusB, this.normal, b2WorldManifold.Initialize_s_cB);
-                          b2Vec2.MidVV(cA, cB, this.points[i]);
-                          this.separations[i] = b2Vec2.DotVV(b2Vec2.SubVV(cB, cA, b2Vec2.s_t0), this.normal); // b2Dot(cB - cA, normal);
-                      }
+              }
+              case b2ManifoldType.e_faceB: {
+                  b2Rot.MulRV(xfB.q, manifold.localNormal, this.normal);
+                  const planePoint = b2Transform.MulXV(xfB, manifold.localPoint, b2WorldManifold.Initialize_s_planePoint);
+                  for (let i = 0; i < manifold.pointCount; ++i) {
+                      const clipPoint = b2Transform.MulXV(xfA, manifold.points[i].localPoint, b2WorldManifold.Initialize_s_clipPoint);
+                      const s = radiusB - b2Vec2.DotVV(b2Vec2.SubVV(clipPoint, planePoint, b2Vec2.s_t0), this.normal);
+                      const cB = b2Vec2.AddVMulSV(clipPoint, s, this.normal, b2WorldManifold.Initialize_s_cB);
+                      const cA = b2Vec2.SubVMulSV(clipPoint, radiusA, this.normal, b2WorldManifold.Initialize_s_cA);
+                      b2Vec2.MidVV(cA, cB, this.points[i]);
+                      this.separations[i] = b2Vec2.DotVV(b2Vec2.SubVV(cA, cB, b2Vec2.s_t0), this.normal); // b2Dot(cA - cB, normal);
                   }
+                  // Ensure normal points from A to B.
+                  this.normal.SelfNeg();
                   break;
-              case b2ManifoldType.e_faceB:
-                  {
-                      b2Rot.MulRV(xfB.q, manifold.localNormal, this.normal);
-                      const planePoint = b2Transform.MulXV(xfB, manifold.localPoint, b2WorldManifold.Initialize_s_planePoint);
-                      for (let i = 0; i < manifold.pointCount; ++i) {
-                          const clipPoint = b2Transform.MulXV(xfA, manifold.points[i].localPoint, b2WorldManifold.Initialize_s_clipPoint);
-                          const s = radiusB - b2Vec2.DotVV(b2Vec2.SubVV(clipPoint, planePoint, b2Vec2.s_t0), this.normal);
-                          const cB = b2Vec2.AddVMulSV(clipPoint, s, this.normal, b2WorldManifold.Initialize_s_cB);
-                          const cA = b2Vec2.SubVMulSV(clipPoint, radiusA, this.normal, b2WorldManifold.Initialize_s_cA);
-                          b2Vec2.MidVV(cA, cB, this.points[i]);
-                          this.separations[i] = b2Vec2.DotVV(b2Vec2.SubVV(cA, cB, b2Vec2.s_t0), this.normal); // b2Dot(cA - cB, normal);
-                      }
-                      // Ensure normal points from A to B.
-                      this.normal.SelfNeg();
-                  }
-                  break;
+              }
           }
       }
   }
@@ -3457,8 +3467,8 @@
       const cache = b2TimeOfImpact_s_cache;
       cache.count = 0;
       const distanceInput = b2TimeOfImpact_s_distanceInput;
-      distanceInput.proxyA = input.proxyA;
-      distanceInput.proxyB = input.proxyB;
+      distanceInput.proxyA.Copy(input.proxyA);
+      distanceInput.proxyB.Copy(input.proxyB);
       distanceInput.useRadii = false;
       // The outer loop progressively attempts to compute new separating axes.
       // This loop terminates when an axis is repeated (no progress is made).
@@ -10700,28 +10710,6 @@
   b2WheelJoint.SolvePositionConstraints_s_d = new b2Vec2();
   b2WheelJoint.SolvePositionConstraints_s_P = new b2Vec2();
 
-  class b2JointFactory {
-      static Create(def, allocator) {
-          switch (def.type) {
-              case b2JointType.e_distanceJoint: return new b2DistanceJoint(def);
-              case b2JointType.e_mouseJoint: return new b2MouseJoint(def);
-              case b2JointType.e_prismaticJoint: return new b2PrismaticJoint(def);
-              case b2JointType.e_revoluteJoint: return new b2RevoluteJoint(def);
-              case b2JointType.e_pulleyJoint: return new b2PulleyJoint(def);
-              case b2JointType.e_gearJoint: return new b2GearJoint(def);
-              case b2JointType.e_wheelJoint: return new b2WheelJoint(def);
-              case b2JointType.e_weldJoint: return new b2WeldJoint(def);
-              case b2JointType.e_frictionJoint: return new b2FrictionJoint(def);
-              case b2JointType.e_ropeJoint: return new b2RopeJoint(def);
-              case b2JointType.e_motorJoint: return new b2MotorJoint(def);
-              case b2JointType.e_areaJoint: return new b2AreaJoint(def);
-          }
-          throw new Error();
-      }
-      static Destroy(joint, allocator) {
-      }
-  }
-
   /*
   * Copyright (c) 2006-2009 Erin Catto http://www.box2d.org
   *
@@ -13443,7 +13431,6 @@
           this.m_back = 0;
           this.m_capacity = 0;
           this.m_buffer = b2MakeArray(capacity, (index) => null);
-          ///this.m_end = capacity; // TODO: this was wrong!
           this.m_capacity = capacity;
       }
       Push(item) {
@@ -18910,14 +18897,30 @@
           }
           --this.m_bodyCount;
       }
-      /// Create a joint to constrain bodies together. No reference to the definition
-      /// is retained. This may cause the connected bodies to cease colliding.
-      /// @warning This function is locked during callbacks.
+      static _Joint_Create(def, allocator) {
+          switch (def.type) {
+              case b2JointType.e_distanceJoint: return new b2DistanceJoint(def);
+              case b2JointType.e_mouseJoint: return new b2MouseJoint(def);
+              case b2JointType.e_prismaticJoint: return new b2PrismaticJoint(def);
+              case b2JointType.e_revoluteJoint: return new b2RevoluteJoint(def);
+              case b2JointType.e_pulleyJoint: return new b2PulleyJoint(def);
+              case b2JointType.e_gearJoint: return new b2GearJoint(def);
+              case b2JointType.e_wheelJoint: return new b2WheelJoint(def);
+              case b2JointType.e_weldJoint: return new b2WeldJoint(def);
+              case b2JointType.e_frictionJoint: return new b2FrictionJoint(def);
+              case b2JointType.e_ropeJoint: return new b2RopeJoint(def);
+              case b2JointType.e_motorJoint: return new b2MotorJoint(def);
+              case b2JointType.e_areaJoint: return new b2AreaJoint(def);
+          }
+          throw new Error();
+      }
+      static _Joint_Destroy(joint, allocator) {
+      }
       CreateJoint(def) {
           if (this.IsLocked()) {
               throw new Error();
           }
-          const j = b2JointFactory.Create(def, null);
+          const j = b2World._Joint_Create(def, null);
           // Connect to the world list.
           j.m_prev = null;
           j.m_next = this.m_jointList;
@@ -19007,7 +19010,7 @@
           }
           j.m_edgeB.prev = null;
           j.m_edgeB.next = null;
-          b2JointFactory.Destroy(j, null);
+          b2World._Joint_Destroy(j, null);
           // DEBUG: b2Assert(this.m_jointCount > 0);
           --this.m_jointCount;
           // If the joint prevents collisions, then flag any contacts for filtering.

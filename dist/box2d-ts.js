@@ -1353,6 +1353,19 @@ define("Collision/b2Distance", ["require", "exports", "Common/b2Settings", "Comm
             this.m_count = 0;
             this.m_radius = 0;
         }
+        b2DistanceProxy.prototype.Copy = function (other) {
+            if (other.m_vertices === other.m_buffer) {
+                this.m_vertices = this.m_buffer;
+                this.m_buffer[0].Copy(other.m_buffer[0]);
+                this.m_buffer[1].Copy(other.m_buffer[1]);
+            }
+            else {
+                this.m_vertices = other.m_vertices;
+            }
+            this.m_count = other.m_count;
+            this.m_radius = other.m_radius;
+            return this;
+        };
         b2DistanceProxy.prototype.Reset = function () {
             this.m_vertices = this.m_buffer;
             this.m_count = 0;
@@ -2130,49 +2143,46 @@ define("Collision/b2Collision", ["require", "exports", "Common/b2Settings", "Com
                 return;
             }
             switch (manifold.type) {
-                case b2ManifoldType.e_circles:
-                    {
-                        this.normal.Set(1, 0);
-                        var pointA = b2Math_3.b2Transform.MulXV(xfA, manifold.localPoint, b2WorldManifold.Initialize_s_pointA);
-                        var pointB = b2Math_3.b2Transform.MulXV(xfB, manifold.points[0].localPoint, b2WorldManifold.Initialize_s_pointB);
-                        if (b2Math_3.b2Vec2.DistanceSquaredVV(pointA, pointB) > b2Settings_4.b2_epsilon_sq) {
-                            b2Math_3.b2Vec2.SubVV(pointB, pointA, this.normal).SelfNormalize();
-                        }
-                        var cA = b2Math_3.b2Vec2.AddVMulSV(pointA, radiusA, this.normal, b2WorldManifold.Initialize_s_cA);
-                        var cB = b2Math_3.b2Vec2.SubVMulSV(pointB, radiusB, this.normal, b2WorldManifold.Initialize_s_cB);
-                        b2Math_3.b2Vec2.MidVV(cA, cB, this.points[0]);
-                        this.separations[0] = b2Math_3.b2Vec2.DotVV(b2Math_3.b2Vec2.SubVV(cB, cA, b2Math_3.b2Vec2.s_t0), this.normal);
+                case b2ManifoldType.e_circles: {
+                    this.normal.Set(1, 0);
+                    var pointA = b2Math_3.b2Transform.MulXV(xfA, manifold.localPoint, b2WorldManifold.Initialize_s_pointA);
+                    var pointB = b2Math_3.b2Transform.MulXV(xfB, manifold.points[0].localPoint, b2WorldManifold.Initialize_s_pointB);
+                    if (b2Math_3.b2Vec2.DistanceSquaredVV(pointA, pointB) > b2Settings_4.b2_epsilon_sq) {
+                        b2Math_3.b2Vec2.SubVV(pointB, pointA, this.normal).SelfNormalize();
+                    }
+                    var cA = b2Math_3.b2Vec2.AddVMulSV(pointA, radiusA, this.normal, b2WorldManifold.Initialize_s_cA);
+                    var cB = b2Math_3.b2Vec2.SubVMulSV(pointB, radiusB, this.normal, b2WorldManifold.Initialize_s_cB);
+                    b2Math_3.b2Vec2.MidVV(cA, cB, this.points[0]);
+                    this.separations[0] = b2Math_3.b2Vec2.DotVV(b2Math_3.b2Vec2.SubVV(cB, cA, b2Math_3.b2Vec2.s_t0), this.normal);
+                    break;
+                }
+                case b2ManifoldType.e_faceA: {
+                    b2Math_3.b2Rot.MulRV(xfA.q, manifold.localNormal, this.normal);
+                    var planePoint = b2Math_3.b2Transform.MulXV(xfA, manifold.localPoint, b2WorldManifold.Initialize_s_planePoint);
+                    for (var i = 0; i < manifold.pointCount; ++i) {
+                        var clipPoint = b2Math_3.b2Transform.MulXV(xfB, manifold.points[i].localPoint, b2WorldManifold.Initialize_s_clipPoint);
+                        var s = radiusA - b2Math_3.b2Vec2.DotVV(b2Math_3.b2Vec2.SubVV(clipPoint, planePoint, b2Math_3.b2Vec2.s_t0), this.normal);
+                        var cA = b2Math_3.b2Vec2.AddVMulSV(clipPoint, s, this.normal, b2WorldManifold.Initialize_s_cA);
+                        var cB = b2Math_3.b2Vec2.SubVMulSV(clipPoint, radiusB, this.normal, b2WorldManifold.Initialize_s_cB);
+                        b2Math_3.b2Vec2.MidVV(cA, cB, this.points[i]);
+                        this.separations[i] = b2Math_3.b2Vec2.DotVV(b2Math_3.b2Vec2.SubVV(cB, cA, b2Math_3.b2Vec2.s_t0), this.normal);
                     }
                     break;
-                case b2ManifoldType.e_faceA:
-                    {
-                        b2Math_3.b2Rot.MulRV(xfA.q, manifold.localNormal, this.normal);
-                        var planePoint = b2Math_3.b2Transform.MulXV(xfA, manifold.localPoint, b2WorldManifold.Initialize_s_planePoint);
-                        for (var i = 0; i < manifold.pointCount; ++i) {
-                            var clipPoint = b2Math_3.b2Transform.MulXV(xfB, manifold.points[i].localPoint, b2WorldManifold.Initialize_s_clipPoint);
-                            var s = radiusA - b2Math_3.b2Vec2.DotVV(b2Math_3.b2Vec2.SubVV(clipPoint, planePoint, b2Math_3.b2Vec2.s_t0), this.normal);
-                            var cA = b2Math_3.b2Vec2.AddVMulSV(clipPoint, s, this.normal, b2WorldManifold.Initialize_s_cA);
-                            var cB = b2Math_3.b2Vec2.SubVMulSV(clipPoint, radiusB, this.normal, b2WorldManifold.Initialize_s_cB);
-                            b2Math_3.b2Vec2.MidVV(cA, cB, this.points[i]);
-                            this.separations[i] = b2Math_3.b2Vec2.DotVV(b2Math_3.b2Vec2.SubVV(cB, cA, b2Math_3.b2Vec2.s_t0), this.normal);
-                        }
+                }
+                case b2ManifoldType.e_faceB: {
+                    b2Math_3.b2Rot.MulRV(xfB.q, manifold.localNormal, this.normal);
+                    var planePoint = b2Math_3.b2Transform.MulXV(xfB, manifold.localPoint, b2WorldManifold.Initialize_s_planePoint);
+                    for (var i = 0; i < manifold.pointCount; ++i) {
+                        var clipPoint = b2Math_3.b2Transform.MulXV(xfA, manifold.points[i].localPoint, b2WorldManifold.Initialize_s_clipPoint);
+                        var s = radiusB - b2Math_3.b2Vec2.DotVV(b2Math_3.b2Vec2.SubVV(clipPoint, planePoint, b2Math_3.b2Vec2.s_t0), this.normal);
+                        var cB = b2Math_3.b2Vec2.AddVMulSV(clipPoint, s, this.normal, b2WorldManifold.Initialize_s_cB);
+                        var cA = b2Math_3.b2Vec2.SubVMulSV(clipPoint, radiusA, this.normal, b2WorldManifold.Initialize_s_cA);
+                        b2Math_3.b2Vec2.MidVV(cA, cB, this.points[i]);
+                        this.separations[i] = b2Math_3.b2Vec2.DotVV(b2Math_3.b2Vec2.SubVV(cA, cB, b2Math_3.b2Vec2.s_t0), this.normal);
                     }
+                    this.normal.SelfNeg();
                     break;
-                case b2ManifoldType.e_faceB:
-                    {
-                        b2Math_3.b2Rot.MulRV(xfB.q, manifold.localNormal, this.normal);
-                        var planePoint = b2Math_3.b2Transform.MulXV(xfB, manifold.localPoint, b2WorldManifold.Initialize_s_planePoint);
-                        for (var i = 0; i < manifold.pointCount; ++i) {
-                            var clipPoint = b2Math_3.b2Transform.MulXV(xfA, manifold.points[i].localPoint, b2WorldManifold.Initialize_s_clipPoint);
-                            var s = radiusB - b2Math_3.b2Vec2.DotVV(b2Math_3.b2Vec2.SubVV(clipPoint, planePoint, b2Math_3.b2Vec2.s_t0), this.normal);
-                            var cB = b2Math_3.b2Vec2.AddVMulSV(clipPoint, s, this.normal, b2WorldManifold.Initialize_s_cB);
-                            var cA = b2Math_3.b2Vec2.SubVMulSV(clipPoint, radiusA, this.normal, b2WorldManifold.Initialize_s_cA);
-                            b2Math_3.b2Vec2.MidVV(cA, cB, this.points[i]);
-                            this.separations[i] = b2Math_3.b2Vec2.DotVV(b2Math_3.b2Vec2.SubVV(cA, cB, b2Math_3.b2Vec2.s_t0), this.normal);
-                        }
-                        this.normal.SelfNeg();
-                    }
-                    break;
+                }
             }
         };
         b2WorldManifold.Initialize_s_pointA = new b2Math_3.b2Vec2();
@@ -3370,8 +3380,8 @@ define("Collision/b2TimeOfImpact", ["require", "exports", "Common/b2Settings", "
         var cache = b2TimeOfImpact_s_cache;
         cache.count = 0;
         var distanceInput = b2TimeOfImpact_s_distanceInput;
-        distanceInput.proxyA = input.proxyA;
-        distanceInput.proxyB = input.proxyB;
+        distanceInput.proxyA.Copy(input.proxyA);
+        distanceInput.proxyB.Copy(input.proxyB);
         distanceInput.useRadii = false;
         for (;;) {
             var xfA = b2TimeOfImpact_s_xfA;
@@ -8733,35 +8743,6 @@ define("Dynamics/Joints/b2WheelJoint", ["require", "exports", "Common/b2Settings
     }(b2Joint_12.b2Joint));
     exports.b2WheelJoint = b2WheelJoint;
 });
-define("Dynamics/Joints/b2JointFactory", ["require", "exports", "Dynamics/Joints/b2Joint", "Dynamics/Joints/b2AreaJoint", "Dynamics/Joints/b2DistanceJoint", "Dynamics/Joints/b2FrictionJoint", "Dynamics/Joints/b2GearJoint", "Dynamics/Joints/b2MotorJoint", "Dynamics/Joints/b2MouseJoint", "Dynamics/Joints/b2PrismaticJoint", "Dynamics/Joints/b2PulleyJoint", "Dynamics/Joints/b2RevoluteJoint", "Dynamics/Joints/b2RopeJoint", "Dynamics/Joints/b2WeldJoint", "Dynamics/Joints/b2WheelJoint"], function (require, exports, b2Joint_13, b2AreaJoint_1, b2DistanceJoint_2, b2FrictionJoint_1, b2GearJoint_1, b2MotorJoint_1, b2MouseJoint_1, b2PrismaticJoint_1, b2PulleyJoint_1, b2RevoluteJoint_1, b2RopeJoint_1, b2WeldJoint_1, b2WheelJoint_1) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    var b2JointFactory = (function () {
-        function b2JointFactory() {
-        }
-        b2JointFactory.Create = function (def, allocator) {
-            switch (def.type) {
-                case b2Joint_13.b2JointType.e_distanceJoint: return new b2DistanceJoint_2.b2DistanceJoint(def);
-                case b2Joint_13.b2JointType.e_mouseJoint: return new b2MouseJoint_1.b2MouseJoint(def);
-                case b2Joint_13.b2JointType.e_prismaticJoint: return new b2PrismaticJoint_1.b2PrismaticJoint(def);
-                case b2Joint_13.b2JointType.e_revoluteJoint: return new b2RevoluteJoint_1.b2RevoluteJoint(def);
-                case b2Joint_13.b2JointType.e_pulleyJoint: return new b2PulleyJoint_1.b2PulleyJoint(def);
-                case b2Joint_13.b2JointType.e_gearJoint: return new b2GearJoint_1.b2GearJoint(def);
-                case b2Joint_13.b2JointType.e_wheelJoint: return new b2WheelJoint_1.b2WheelJoint(def);
-                case b2Joint_13.b2JointType.e_weldJoint: return new b2WeldJoint_1.b2WeldJoint(def);
-                case b2Joint_13.b2JointType.e_frictionJoint: return new b2FrictionJoint_1.b2FrictionJoint(def);
-                case b2Joint_13.b2JointType.e_ropeJoint: return new b2RopeJoint_1.b2RopeJoint(def);
-                case b2Joint_13.b2JointType.e_motorJoint: return new b2MotorJoint_1.b2MotorJoint(def);
-                case b2Joint_13.b2JointType.e_areaJoint: return new b2AreaJoint_1.b2AreaJoint(def);
-            }
-            throw new Error();
-        };
-        b2JointFactory.Destroy = function (joint, allocator) {
-        };
-        return b2JointFactory;
-    }());
-    exports.b2JointFactory = b2JointFactory;
-});
 define("Dynamics/Contacts/b2CircleContact", ["require", "exports", "Collision/b2CollideCircle", "Dynamics/Contacts/b2Contact"], function (require, exports, b2CollideCircle_1, b2Contact_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
@@ -10168,7 +10149,7 @@ define("Controllers/b2Controller", ["require", "exports"], function (require, ex
     }());
     exports.b2Controller = b2Controller;
 });
-define("Dynamics/b2World", ["require", "exports", "Common/b2Settings", "Common/b2Math", "Common/b2Timer", "Common/b2Draw", "Collision/b2Collision", "Collision/b2TimeOfImpact", "Collision/Shapes/b2Shape", "Dynamics/Joints/b2Joint", "Dynamics/Joints/b2JointFactory", "Dynamics/b2Body", "Dynamics/b2ContactManager", "Dynamics/b2Island", "Dynamics/b2TimeStep", "Dynamics/b2WorldCallbacks", "Common/b2Settings", "Particle/b2Particle", "Particle/b2ParticleSystem"], function (require, exports, b2Settings_35, b2Math_30, b2Timer_3, b2Draw_2, b2Collision_10, b2TimeOfImpact_1, b2Shape_7, b2Joint_14, b2JointFactory_1, b2Body_3, b2ContactManager_1, b2Island_1, b2TimeStep_3, b2WorldCallbacks_3, b2Settings_36, b2Particle_1, b2ParticleSystem_1) {
+define("Dynamics/b2World", ["require", "exports", "Common/b2Settings", "Common/b2Math", "Common/b2Timer", "Common/b2Draw", "Collision/b2Collision", "Collision/b2TimeOfImpact", "Collision/Shapes/b2Shape", "Dynamics/Joints/b2Joint", "Dynamics/Joints/b2AreaJoint", "Dynamics/Joints/b2DistanceJoint", "Dynamics/Joints/b2FrictionJoint", "Dynamics/Joints/b2GearJoint", "Dynamics/Joints/b2MotorJoint", "Dynamics/Joints/b2MouseJoint", "Dynamics/Joints/b2PrismaticJoint", "Dynamics/Joints/b2PulleyJoint", "Dynamics/Joints/b2RevoluteJoint", "Dynamics/Joints/b2RopeJoint", "Dynamics/Joints/b2WeldJoint", "Dynamics/Joints/b2WheelJoint", "Dynamics/b2Body", "Dynamics/b2ContactManager", "Dynamics/b2Island", "Dynamics/b2TimeStep", "Dynamics/b2WorldCallbacks", "Common/b2Settings", "Particle/b2Particle", "Particle/b2ParticleSystem"], function (require, exports, b2Settings_35, b2Math_30, b2Timer_3, b2Draw_2, b2Collision_10, b2TimeOfImpact_1, b2Shape_7, b2Joint_13, b2AreaJoint_1, b2DistanceJoint_2, b2FrictionJoint_1, b2GearJoint_1, b2MotorJoint_1, b2MouseJoint_1, b2PrismaticJoint_1, b2PulleyJoint_1, b2RevoluteJoint_1, b2RopeJoint_1, b2WeldJoint_1, b2WheelJoint_1, b2Body_3, b2ContactManager_1, b2Island_1, b2TimeStep_3, b2WorldCallbacks_3, b2Settings_36, b2Particle_1, b2ParticleSystem_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var b2World = (function () {
@@ -10278,11 +10259,30 @@ define("Dynamics/b2World", ["require", "exports", "Common/b2Settings", "Common/b
             }
             --this.m_bodyCount;
         };
+        b2World._Joint_Create = function (def, allocator) {
+            switch (def.type) {
+                case b2Joint_13.b2JointType.e_distanceJoint: return new b2DistanceJoint_2.b2DistanceJoint(def);
+                case b2Joint_13.b2JointType.e_mouseJoint: return new b2MouseJoint_1.b2MouseJoint(def);
+                case b2Joint_13.b2JointType.e_prismaticJoint: return new b2PrismaticJoint_1.b2PrismaticJoint(def);
+                case b2Joint_13.b2JointType.e_revoluteJoint: return new b2RevoluteJoint_1.b2RevoluteJoint(def);
+                case b2Joint_13.b2JointType.e_pulleyJoint: return new b2PulleyJoint_1.b2PulleyJoint(def);
+                case b2Joint_13.b2JointType.e_gearJoint: return new b2GearJoint_1.b2GearJoint(def);
+                case b2Joint_13.b2JointType.e_wheelJoint: return new b2WheelJoint_1.b2WheelJoint(def);
+                case b2Joint_13.b2JointType.e_weldJoint: return new b2WeldJoint_1.b2WeldJoint(def);
+                case b2Joint_13.b2JointType.e_frictionJoint: return new b2FrictionJoint_1.b2FrictionJoint(def);
+                case b2Joint_13.b2JointType.e_ropeJoint: return new b2RopeJoint_1.b2RopeJoint(def);
+                case b2Joint_13.b2JointType.e_motorJoint: return new b2MotorJoint_1.b2MotorJoint(def);
+                case b2Joint_13.b2JointType.e_areaJoint: return new b2AreaJoint_1.b2AreaJoint(def);
+            }
+            throw new Error();
+        };
+        b2World._Joint_Destroy = function (joint, allocator) {
+        };
         b2World.prototype.CreateJoint = function (def) {
             if (this.IsLocked()) {
                 throw new Error();
             }
-            var j = b2JointFactory_1.b2JointFactory.Create(def, null);
+            var j = b2World._Joint_Create(def, null);
             j.m_prev = null;
             j.m_next = this.m_jointList;
             if (this.m_jointList) {
@@ -10355,7 +10355,7 @@ define("Dynamics/b2World", ["require", "exports", "Common/b2Settings", "Common/b
             }
             j.m_edgeB.prev = null;
             j.m_edgeB.next = null;
-            b2JointFactory_1.b2JointFactory.Destroy(j, null);
+            b2World._Joint_Destroy(j, null);
             --this.m_jointCount;
             if (!collideConnected) {
                 var edge = bodyB.GetContactList();
@@ -10841,7 +10841,7 @@ define("Dynamics/b2World", ["require", "exports", "Common/b2Settings", "Common/b
                 ++i;
             }
             for (var j = this.m_jointList; j; j = j.m_next) {
-                if (j.m_type === b2Joint_14.b2JointType.e_gearJoint) {
+                if (j.m_type === b2Joint_13.b2JointType.e_gearJoint) {
                     continue;
                 }
                 log("{\n");
@@ -10849,7 +10849,7 @@ define("Dynamics/b2World", ["require", "exports", "Common/b2Settings", "Common/b
                 log("}\n");
             }
             for (var j = this.m_jointList; j; j = j.m_next) {
-                if (j.m_type !== b2Joint_14.b2JointType.e_gearJoint) {
+                if (j.m_type !== b2Joint_13.b2JointType.e_gearJoint) {
                     continue;
                 }
                 log("{\n");
@@ -10871,10 +10871,10 @@ define("Dynamics/b2World", ["require", "exports", "Common/b2Settings", "Common/b
             var p2 = joint.GetAnchorB(b2World.DrawJoint_s_p2);
             var color = b2World.DrawJoint_s_color.SetRGB(0.5, 0.8, 0.8);
             switch (joint.m_type) {
-                case b2Joint_14.b2JointType.e_distanceJoint:
+                case b2Joint_13.b2JointType.e_distanceJoint:
                     this.m_debugDraw.DrawSegment(p1, p2, color);
                     break;
-                case b2Joint_14.b2JointType.e_pulleyJoint: {
+                case b2Joint_13.b2JointType.e_pulleyJoint: {
                     var pulley = joint;
                     var s1 = pulley.GetGroundAnchorA();
                     var s2 = pulley.GetGroundAnchorB();
@@ -10883,7 +10883,7 @@ define("Dynamics/b2World", ["require", "exports", "Common/b2Settings", "Common/b
                     this.m_debugDraw.DrawSegment(s1, s2, color);
                     break;
                 }
-                case b2Joint_14.b2JointType.e_mouseJoint: {
+                case b2Joint_13.b2JointType.e_mouseJoint: {
                     var c = b2World.DrawJoint_s_c;
                     c.Set(0.0, 1.0, 0.0);
                     this.m_debugDraw.DrawPoint(p1, 4.0, c);
@@ -17078,7 +17078,7 @@ define("Rope/b2Rope", ["require", "exports", "Common/b2Settings", "Common/b2Math
     }());
     exports.b2Rope = b2Rope;
 });
-define("Box2D", ["require", "exports", "Common/b2Settings", "Common/b2Math", "Common/b2Draw", "Common/b2Timer", "Common/b2GrowableStack", "Common/b2BlockAllocator", "Common/b2StackAllocator", "Collision/b2Collision", "Collision/b2Distance", "Collision/b2BroadPhase", "Collision/b2DynamicTree", "Collision/b2TimeOfImpact", "Collision/b2CollideCircle", "Collision/b2CollidePolygon", "Collision/b2CollideEdge", "Collision/Shapes/b2Shape", "Collision/Shapes/b2CircleShape", "Collision/Shapes/b2PolygonShape", "Collision/Shapes/b2EdgeShape", "Collision/Shapes/b2ChainShape", "Dynamics/b2Fixture", "Dynamics/b2Body", "Dynamics/b2World", "Dynamics/b2WorldCallbacks", "Dynamics/b2Island", "Dynamics/b2TimeStep", "Dynamics/b2ContactManager", "Dynamics/Contacts/b2Contact", "Dynamics/Contacts/b2ContactFactory", "Dynamics/Contacts/b2ContactSolver", "Dynamics/Contacts/b2CircleContact", "Dynamics/Contacts/b2PolygonContact", "Dynamics/Contacts/b2PolygonAndCircleContact", "Dynamics/Contacts/b2EdgeAndCircleContact", "Dynamics/Contacts/b2EdgeAndPolygonContact", "Dynamics/Contacts/b2ChainAndCircleContact", "Dynamics/Contacts/b2ChainAndPolygonContact", "Dynamics/Joints/b2Joint", "Dynamics/Joints/b2JointFactory", "Dynamics/Joints/b2AreaJoint", "Dynamics/Joints/b2DistanceJoint", "Dynamics/Joints/b2FrictionJoint", "Dynamics/Joints/b2GearJoint", "Dynamics/Joints/b2MotorJoint", "Dynamics/Joints/b2MouseJoint", "Dynamics/Joints/b2PrismaticJoint", "Dynamics/Joints/b2PulleyJoint", "Dynamics/Joints/b2RevoluteJoint", "Dynamics/Joints/b2RopeJoint", "Dynamics/Joints/b2WeldJoint", "Dynamics/Joints/b2WheelJoint", "Controllers/b2Controller", "Controllers/b2BuoyancyController", "Controllers/b2ConstantAccelController", "Controllers/b2ConstantForceController", "Controllers/b2GravityController", "Controllers/b2TensorDampingController", "Particle/b2Particle", "Particle/b2ParticleGroup", "Particle/b2ParticleSystem", "Rope/b2Rope"], function (require, exports, b2Settings_49, b2Math_43, b2Draw_7, b2Timer_4, b2GrowableStack_2, b2BlockAllocator_1, b2StackAllocator_1, b2Collision_15, b2Distance_3, b2BroadPhase_2, b2DynamicTree_2, b2TimeOfImpact_3, b2CollideCircle_3, b2CollidePolygon_2, b2CollideEdge_5, b2Shape_11, b2CircleShape_1, b2PolygonShape_1, b2EdgeShape_5, b2ChainShape_1, b2Fixture_2, b2Body_5, b2World_1, b2WorldCallbacks_5, b2Island_2, b2TimeStep_5, b2ContactManager_2, b2Contact_8, b2ContactFactory_2, b2ContactSolver_2, b2CircleContact_2, b2PolygonContact_2, b2PolygonAndCircleContact_2, b2EdgeAndCircleContact_2, b2EdgeAndPolygonContact_2, b2ChainAndCircleContact_2, b2ChainAndPolygonContact_2, b2Joint_15, b2JointFactory_2, b2AreaJoint_2, b2DistanceJoint_3, b2FrictionJoint_2, b2GearJoint_2, b2MotorJoint_2, b2MouseJoint_2, b2PrismaticJoint_2, b2PulleyJoint_2, b2RevoluteJoint_2, b2RopeJoint_2, b2WeldJoint_2, b2WheelJoint_2, b2Controller_6, b2BuoyancyController_1, b2ConstantAccelController_1, b2ConstantForceController_1, b2GravityController_1, b2TensorDampingController_1, b2Particle_3, b2ParticleGroup_2, b2ParticleSystem_2, b2Rope_1) {
+define("Box2D", ["require", "exports", "Common/b2Settings", "Common/b2Math", "Common/b2Draw", "Common/b2Timer", "Common/b2GrowableStack", "Common/b2BlockAllocator", "Common/b2StackAllocator", "Collision/b2Collision", "Collision/b2Distance", "Collision/b2BroadPhase", "Collision/b2DynamicTree", "Collision/b2TimeOfImpact", "Collision/b2CollideCircle", "Collision/b2CollidePolygon", "Collision/b2CollideEdge", "Collision/Shapes/b2Shape", "Collision/Shapes/b2CircleShape", "Collision/Shapes/b2PolygonShape", "Collision/Shapes/b2EdgeShape", "Collision/Shapes/b2ChainShape", "Dynamics/b2Fixture", "Dynamics/b2Body", "Dynamics/b2World", "Dynamics/b2WorldCallbacks", "Dynamics/b2Island", "Dynamics/b2TimeStep", "Dynamics/b2ContactManager", "Dynamics/Contacts/b2Contact", "Dynamics/Contacts/b2ContactFactory", "Dynamics/Contacts/b2ContactSolver", "Dynamics/Contacts/b2CircleContact", "Dynamics/Contacts/b2PolygonContact", "Dynamics/Contacts/b2PolygonAndCircleContact", "Dynamics/Contacts/b2EdgeAndCircleContact", "Dynamics/Contacts/b2EdgeAndPolygonContact", "Dynamics/Contacts/b2ChainAndCircleContact", "Dynamics/Contacts/b2ChainAndPolygonContact", "Dynamics/Joints/b2Joint", "Dynamics/Joints/b2AreaJoint", "Dynamics/Joints/b2DistanceJoint", "Dynamics/Joints/b2FrictionJoint", "Dynamics/Joints/b2GearJoint", "Dynamics/Joints/b2MotorJoint", "Dynamics/Joints/b2MouseJoint", "Dynamics/Joints/b2PrismaticJoint", "Dynamics/Joints/b2PulleyJoint", "Dynamics/Joints/b2RevoluteJoint", "Dynamics/Joints/b2RopeJoint", "Dynamics/Joints/b2WeldJoint", "Dynamics/Joints/b2WheelJoint", "Controllers/b2Controller", "Controllers/b2BuoyancyController", "Controllers/b2ConstantAccelController", "Controllers/b2ConstantForceController", "Controllers/b2GravityController", "Controllers/b2TensorDampingController", "Particle/b2Particle", "Particle/b2ParticleGroup", "Particle/b2ParticleSystem", "Rope/b2Rope"], function (require, exports, b2Settings_49, b2Math_43, b2Draw_7, b2Timer_4, b2GrowableStack_2, b2BlockAllocator_1, b2StackAllocator_1, b2Collision_15, b2Distance_3, b2BroadPhase_2, b2DynamicTree_2, b2TimeOfImpact_3, b2CollideCircle_3, b2CollidePolygon_2, b2CollideEdge_5, b2Shape_11, b2CircleShape_1, b2PolygonShape_1, b2EdgeShape_5, b2ChainShape_1, b2Fixture_2, b2Body_5, b2World_1, b2WorldCallbacks_5, b2Island_2, b2TimeStep_5, b2ContactManager_2, b2Contact_8, b2ContactFactory_2, b2ContactSolver_2, b2CircleContact_2, b2PolygonContact_2, b2PolygonAndCircleContact_2, b2EdgeAndCircleContact_2, b2EdgeAndPolygonContact_2, b2ChainAndCircleContact_2, b2ChainAndPolygonContact_2, b2Joint_14, b2AreaJoint_2, b2DistanceJoint_3, b2FrictionJoint_2, b2GearJoint_2, b2MotorJoint_2, b2MouseJoint_2, b2PrismaticJoint_2, b2PulleyJoint_2, b2RevoluteJoint_2, b2RopeJoint_2, b2WeldJoint_2, b2WheelJoint_2, b2Controller_6, b2BuoyancyController_1, b2ConstantAccelController_1, b2ConstantForceController_1, b2GravityController_1, b2TensorDampingController_1, b2Particle_3, b2ParticleGroup_2, b2ParticleSystem_2, b2Rope_1) {
     "use strict";
     function __export(m) {
         for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
@@ -17121,8 +17121,7 @@ define("Box2D", ["require", "exports", "Common/b2Settings", "Common/b2Math", "Co
     __export(b2EdgeAndPolygonContact_2);
     __export(b2ChainAndCircleContact_2);
     __export(b2ChainAndPolygonContact_2);
-    __export(b2Joint_15);
-    __export(b2JointFactory_2);
+    __export(b2Joint_14);
     __export(b2AreaJoint_2);
     __export(b2DistanceJoint_3);
     __export(b2FrictionJoint_2);

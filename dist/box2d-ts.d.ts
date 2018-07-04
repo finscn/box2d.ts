@@ -384,10 +384,11 @@ declare module "Collision/b2Distance" {
     import { b2Vec2, b2Transform } from "Common/b2Math";
     import { b2Shape } from "Collision/Shapes/b2Shape";
     export class b2DistanceProxy {
-        m_buffer: b2Vec2[];
+        readonly m_buffer: b2Vec2[];
         m_vertices: b2Vec2[];
         m_count: number;
         m_radius: number;
+        Copy(other: Readonly<b2DistanceProxy>): this;
         Reset(): b2DistanceProxy;
         SetShape(shape: b2Shape, index: number): void;
         SetVerticesRadius(vertices: b2Vec2[], count: number, radius: number): void;
@@ -399,13 +400,13 @@ declare module "Collision/b2Distance" {
     export class b2SimplexCache {
         metric: number;
         count: number;
-        indexA: number[];
-        indexB: number[];
+        readonly indexA: number[];
+        readonly indexB: number[];
         Reset(): b2SimplexCache;
     }
     export class b2DistanceInput {
-        proxyA: b2DistanceProxy;
-        proxyB: b2DistanceProxy;
+        readonly proxyA: b2DistanceProxy;
+        readonly proxyB: b2DistanceProxy;
         readonly transformA: b2Transform;
         readonly transformB: b2Transform;
         useRadii: boolean;
@@ -448,7 +449,7 @@ declare module "Collision/b2Distance" {
         readonly m_v1: b2SimplexVertex;
         readonly m_v2: b2SimplexVertex;
         readonly m_v3: b2SimplexVertex;
-        m_vertices: b2SimplexVertex[];
+        readonly m_vertices: b2SimplexVertex[];
         m_count: number;
         constructor();
         ReadCache(cache: b2SimplexCache, proxyA: b2DistanceProxy, transformA: b2Transform, proxyB: b2DistanceProxy, transformB: b2Transform): void;
@@ -509,13 +510,12 @@ declare module "Collision/b2Collision" {
         e_face = 1
     }
     export class b2ContactFeature {
-        _key: number;
-        _key_invalid: boolean;
-        _indexA: number;
-        _indexB: number;
-        _typeA: number;
-        _typeB: number;
-        constructor();
+        private _key;
+        private _key_invalid;
+        private _indexA;
+        private _indexB;
+        private _typeA;
+        private _typeB;
         key: number;
         indexA: number;
         indexB: number;
@@ -544,10 +544,10 @@ declare module "Collision/b2Collision" {
         e_faceB = 2
     }
     export class b2Manifold {
-        points: b2ManifoldPoint[];
+        readonly points: b2ManifoldPoint[];
         readonly localNormal: b2Vec2;
         readonly localPoint: b2Vec2;
-        type: number;
+        type: b2ManifoldType;
         pointCount: number;
         Reset(): void;
         Copy(o: b2Manifold): b2Manifold;
@@ -555,8 +555,8 @@ declare module "Collision/b2Collision" {
     }
     export class b2WorldManifold {
         readonly normal: b2Vec2;
-        points: b2Vec2[];
-        separations: number[];
+        readonly points: b2Vec2[];
+        readonly separations: number[];
         private static Initialize_s_pointA;
         private static Initialize_s_pointB;
         private static Initialize_s_cA;
@@ -592,8 +592,8 @@ declare module "Collision/b2Collision" {
     export class b2AABB {
         readonly lowerBound: b2Vec2;
         readonly upperBound: b2Vec2;
-        private m_cache_center;
-        private m_cache_extent;
+        private readonly m_cache_center;
+        private readonly m_cache_extent;
         Copy(o: b2AABB): b2AABB;
         IsValid(): boolean;
         GetCenter(): b2Vec2;
@@ -1023,7 +1023,7 @@ declare module "Dynamics/Joints/b2Joint" {
         collideConnected?: boolean;
     }
     export class b2JointDef {
-        type: b2JointType;
+        readonly type: b2JointType;
         userData: any;
         bodyA: b2Body;
         bodyB: b2Body;
@@ -1031,11 +1031,11 @@ declare module "Dynamics/Joints/b2Joint" {
         constructor(type: b2JointType);
     }
     export abstract class b2Joint {
-        m_type: b2JointType;
+        readonly m_type: b2JointType;
         m_prev: b2Joint | null;
         m_next: b2Joint | null;
-        m_edgeA: b2JointEdge;
-        m_edgeB: b2JointEdge;
+        readonly m_edgeA: b2JointEdge;
+        readonly m_edgeB: b2JointEdge;
         m_bodyA: b2Body;
         m_bodyB: b2Body;
         m_index: number;
@@ -1501,22 +1501,24 @@ declare module "Dynamics/Joints/b2RevoluteJoint" {
 declare module "Dynamics/Joints/b2GearJoint" {
     import { b2Vec2, b2Rot, XY } from "Common/b2Math";
     import { b2Joint, b2JointDef, b2JointType, b2IJointDef } from "Dynamics/Joints/b2Joint";
+    import { b2PrismaticJoint } from "Dynamics/Joints/b2PrismaticJoint";
+    import { b2RevoluteJoint } from "Dynamics/Joints/b2RevoluteJoint";
     import { b2SolverData } from "Dynamics/b2TimeStep";
     import { b2Body } from "Dynamics/b2Body";
     export interface b2IGearJointDef extends b2IJointDef {
-        joint1: b2Joint;
-        joint2: b2Joint;
+        joint1: b2RevoluteJoint | b2PrismaticJoint;
+        joint2: b2RevoluteJoint | b2PrismaticJoint;
         ratio?: number;
     }
     export class b2GearJointDef extends b2JointDef implements b2IGearJointDef {
-        joint1: b2Joint;
-        joint2: b2Joint;
+        joint1: b2RevoluteJoint | b2PrismaticJoint;
+        joint2: b2RevoluteJoint | b2PrismaticJoint;
         ratio: number;
         constructor();
     }
     export class b2GearJoint extends b2Joint {
-        m_joint1: b2Joint;
-        m_joint2: b2Joint;
+        m_joint1: b2RevoluteJoint | b2PrismaticJoint;
+        m_joint2: b2RevoluteJoint | b2PrismaticJoint;
         m_typeA: b2JointType;
         m_typeB: b2JointType;
         m_bodyC: b2Body;
@@ -1581,8 +1583,8 @@ declare module "Dynamics/Joints/b2GearJoint" {
         GetAnchorB<T extends XY>(out: T): T;
         GetReactionForce<T extends XY>(inv_dt: number, out: T): T;
         GetReactionTorque(inv_dt: number): number;
-        GetJoint1(): b2Joint;
-        GetJoint2(): b2Joint;
+        GetJoint1(): b2PrismaticJoint | b2RevoluteJoint;
+        GetJoint2(): b2PrismaticJoint | b2RevoluteJoint;
         GetRatio(): number;
         SetRatio(ratio: number): void;
         Dump(log: (format: string, ...args: any[]) => void): void;
@@ -2033,13 +2035,6 @@ declare module "Dynamics/Joints/b2WheelJoint" {
         Dump(log: (format: string, ...args: any[]) => void): void;
     }
 }
-declare module "Dynamics/Joints/b2JointFactory" {
-    import { b2Joint, b2IJointDef } from "Dynamics/Joints/b2Joint";
-    export class b2JointFactory {
-        static Create(def: b2IJointDef, allocator: any): b2Joint;
-        static Destroy(joint: b2Joint, allocator: any): void;
-    }
-}
 declare module "Dynamics/Contacts/b2CircleContact" {
     import { b2Transform } from "Common/b2Math";
     import { b2Manifold } from "Collision/b2Collision";
@@ -2360,7 +2355,19 @@ declare module "Dynamics/b2World" {
     import { b2AABB } from "Collision/b2Collision";
     import { b2Shape } from "Collision/Shapes/b2Shape";
     import { b2Contact } from "Dynamics/Contacts/b2Contact";
-    import { b2Joint, b2IJointDef } from "Dynamics/Joints/b2Joint";
+    import { b2Joint } from "Dynamics/Joints/b2Joint";
+    import { b2AreaJoint, b2IAreaJointDef } from "Dynamics/Joints/b2AreaJoint";
+    import { b2DistanceJoint, b2IDistanceJointDef } from "Dynamics/Joints/b2DistanceJoint";
+    import { b2FrictionJoint, b2IFrictionJointDef } from "Dynamics/Joints/b2FrictionJoint";
+    import { b2GearJoint, b2IGearJointDef } from "Dynamics/Joints/b2GearJoint";
+    import { b2MotorJoint, b2IMotorJointDef } from "Dynamics/Joints/b2MotorJoint";
+    import { b2MouseJoint, b2IMouseJointDef } from "Dynamics/Joints/b2MouseJoint";
+    import { b2PrismaticJoint, b2IPrismaticJointDef } from "Dynamics/Joints/b2PrismaticJoint";
+    import { b2PulleyJoint, b2IPulleyJointDef } from "Dynamics/Joints/b2PulleyJoint";
+    import { b2RevoluteJoint, b2IRevoluteJointDef } from "Dynamics/Joints/b2RevoluteJoint";
+    import { b2RopeJoint, b2IRopeJointDef } from "Dynamics/Joints/b2RopeJoint";
+    import { b2WeldJoint, b2IWeldJointDef } from "Dynamics/Joints/b2WeldJoint";
+    import { b2WheelJoint, b2IWheelJointDef } from "Dynamics/Joints/b2WheelJoint";
     import { b2Body, b2IBodyDef } from "Dynamics/b2Body";
     import { b2ContactManager } from "Dynamics/b2ContactManager";
     import { b2Fixture } from "Dynamics/b2Fixture";
@@ -2404,7 +2411,20 @@ declare module "Dynamics/b2World" {
         SetDebugDraw(debugDraw: b2Draw): void;
         CreateBody(def?: b2IBodyDef): b2Body;
         DestroyBody(b: b2Body): void;
-        CreateJoint<T extends b2Joint>(def: b2IJointDef): T;
+        private static _Joint_Create;
+        private static _Joint_Destroy;
+        CreateJoint(def: b2IAreaJointDef): b2AreaJoint;
+        CreateJoint(def: b2IDistanceJointDef): b2DistanceJoint;
+        CreateJoint(def: b2IFrictionJointDef): b2FrictionJoint;
+        CreateJoint(def: b2IGearJointDef): b2GearJoint;
+        CreateJoint(def: b2IMotorJointDef): b2MotorJoint;
+        CreateJoint(def: b2IMouseJointDef): b2MouseJoint;
+        CreateJoint(def: b2IPrismaticJointDef): b2PrismaticJoint;
+        CreateJoint(def: b2IPulleyJointDef): b2PulleyJoint;
+        CreateJoint(def: b2IRevoluteJointDef): b2RevoluteJoint;
+        CreateJoint(def: b2IRopeJointDef): b2RopeJoint;
+        CreateJoint(def: b2IWeldJointDef): b2WeldJoint;
+        CreateJoint(def: b2IWheelJointDef): b2WheelJoint;
         DestroyJoint(j: b2Joint): void;
         CreateParticleSystem(def: b2ParticleSystemDef): b2ParticleSystem;
         DestroyParticleSystem(p: b2ParticleSystem): void;
@@ -3675,7 +3695,6 @@ declare module "Box2D" {
     export * from "Dynamics/Contacts/b2ChainAndCircleContact";
     export * from "Dynamics/Contacts/b2ChainAndPolygonContact";
     export * from "Dynamics/Joints/b2Joint";
-    export * from "Dynamics/Joints/b2JointFactory";
     export * from "Dynamics/Joints/b2AreaJoint";
     export * from "Dynamics/Joints/b2DistanceJoint";
     export * from "Dynamics/Joints/b2FrictionJoint";
