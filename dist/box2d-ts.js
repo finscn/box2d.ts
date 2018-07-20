@@ -3406,7 +3406,6 @@ define("Collision/b2TimeOfImpact", ["require", "exports", "Common/b2Settings", "
             fcn.Initialize(cache, proxyA, sweepA, proxyB, sweepB, t1);
             var done = false;
             var t2 = tMax;
-            var pushBackIter = 0;
             for (;;) {
                 var indexA = b2TimeOfImpact_s_indexA;
                 var indexB = b2TimeOfImpact_s_indexB;
@@ -3465,10 +3464,6 @@ define("Collision/b2TimeOfImpact", ["require", "exports", "Common/b2Settings", "
                     }
                 }
                 exports.b2_toiMaxRootIters = b2Math_5.b2Max(exports.b2_toiMaxRootIters, rootIterCount);
-                ++pushBackIter;
-                if (pushBackIter === b2Settings_6.b2_maxPolygonVertices) {
-                    break;
-                }
             }
             ++iter;
             ++exports.b2_toiIters;
@@ -3634,23 +3629,22 @@ define("Collision/Shapes/b2PolygonShape", ["require", "exports", "Common/b2Setti
             if (count < 3) {
                 return this.SetAsBox(1, 1);
             }
-            var n = b2Math_7.b2Min(count, b2Settings_8.b2_maxPolygonVertices);
-            var ps = b2PolygonShape.Set_s_ps;
-            var tempCount = 0;
+            var n = count;
+            var ps = [];
             for (var i = 0; i < n; ++i) {
                 var v = vertices[start + i];
                 var unique = true;
-                for (var j = 0; j < tempCount; ++j) {
+                for (var j = 0; j < ps.length; ++j) {
                     if (b2Math_7.b2Vec2.DistanceSquaredVV(v, ps[j]) < ((0.5 * b2Settings_8.b2_linearSlop) * (0.5 * b2Settings_8.b2_linearSlop))) {
                         unique = false;
                         break;
                     }
                 }
                 if (unique) {
-                    ps[tempCount++].Copy(v);
+                    ps.push(v);
                 }
             }
-            n = tempCount;
+            n = ps.length;
             if (n < 3) {
                 return this.SetAsBox(1.0, 1.0);
             }
@@ -3663,7 +3657,7 @@ define("Collision/Shapes/b2PolygonShape", ["require", "exports", "Common/b2Setti
                     x0 = x;
                 }
             }
-            var hull = b2PolygonShape.Set_s_hull;
+            var hull = [];
             var m = 0;
             var ih = i0;
             for (;;) {
@@ -3880,7 +3874,7 @@ define("Collision/Shapes/b2PolygonShape", ["require", "exports", "Common/b2Setti
         b2PolygonShape.prototype.ComputeSubmergedArea = function (normal, offset, xf, c) {
             var normalL = b2Math_7.b2Rot.MulTRV(xf.q, normal, b2PolygonShape.ComputeSubmergedArea_s_normalL);
             var offsetL = offset - b2Math_7.b2Vec2.DotVV(normal, xf.p);
-            var depths = b2PolygonShape.ComputeSubmergedArea_s_depths;
+            var depths = [];
             var diveCount = 0;
             var intoIndex = -1;
             var outoIndex = -1;
@@ -3955,9 +3949,9 @@ define("Collision/Shapes/b2PolygonShape", ["require", "exports", "Common/b2Setti
         };
         b2PolygonShape.prototype.Dump = function (log) {
             log("    const shape: b2PolygonShape = new b2PolygonShape();\n");
-            log("    const vs: b2Vec2[] = b2Vec2.MakeArray(%d);\n", b2Settings_8.b2_maxPolygonVertices);
+            log("    const vs: b2Vec2[] = [];\n");
             for (var i = 0; i < this.m_count; ++i) {
-                log("    vs[%d].Set(%.15f, %.15f);\n", i, this.m_vertices[i].x, this.m_vertices[i].y);
+                log("    vs[%d] = new b2Vec2(%.15f, %.15f);\n", i, this.m_vertices[i].x, this.m_vertices[i].y);
             }
             log("    shape.Set(vs, %d);\n", this.m_count);
         };
@@ -3982,8 +3976,6 @@ define("Collision/Shapes/b2PolygonShape", ["require", "exports", "Common/b2Setti
             c.SelfMul(1 / area);
             return c;
         };
-        b2PolygonShape.Set_s_ps = b2Math_7.b2Vec2.MakeArray(b2Settings_8.b2_maxPolygonVertices);
-        b2PolygonShape.Set_s_hull = b2Settings_8.b2MakeNumberArray(b2Settings_8.b2_maxPolygonVertices);
         b2PolygonShape.Set_s_r = new b2Math_7.b2Vec2();
         b2PolygonShape.Set_s_v = new b2Math_7.b2Vec2();
         b2PolygonShape.TestPoint_s_pLocal = new b2Math_7.b2Vec2();
@@ -4002,7 +3994,6 @@ define("Collision/Shapes/b2PolygonShape", ["require", "exports", "Common/b2Setti
         b2PolygonShape.Validate_s_e = new b2Math_7.b2Vec2();
         b2PolygonShape.Validate_s_v = new b2Math_7.b2Vec2();
         b2PolygonShape.ComputeSubmergedArea_s_normalL = new b2Math_7.b2Vec2();
-        b2PolygonShape.ComputeSubmergedArea_s_depths = b2Settings_8.b2MakeNumberArray(b2Settings_8.b2_maxPolygonVertices);
         b2PolygonShape.ComputeSubmergedArea_s_md = new b2Shape_2.b2MassData();
         b2PolygonShape.ComputeSubmergedArea_s_intoVec = new b2Math_7.b2Vec2();
         b2PolygonShape.ComputeSubmergedArea_s_outoVec = new b2Math_7.b2Vec2();
@@ -4597,8 +4588,8 @@ define("Collision/b2CollideEdge", ["require", "exports", "Common/b2Settings", "C
     }());
     var b2TempPolygon = (function () {
         function b2TempPolygon() {
-            this.vertices = b2Math_11.b2Vec2.MakeArray(b2Settings_12.b2_maxPolygonVertices);
-            this.normals = b2Math_11.b2Vec2.MakeArray(b2Settings_12.b2_maxPolygonVertices);
+            this.vertices = [];
+            this.normals = [];
             this.count = 0;
         }
         return b2TempPolygon;
@@ -4799,6 +4790,12 @@ define("Collision/b2CollideEdge", ["require", "exports", "Common/b2Settings", "C
             }
             this.m_polygonB.count = polygonB.m_count;
             for (var i = 0; i < polygonB.m_count; ++i) {
+                if (this.m_polygonB.vertices.length <= i) {
+                    this.m_polygonB.vertices.push(new b2Math_11.b2Vec2());
+                }
+                if (this.m_polygonB.normals.length <= i) {
+                    this.m_polygonB.normals.push(new b2Math_11.b2Vec2());
+                }
                 b2Math_11.b2Transform.MulXV(this.m_xf, polygonB.m_vertices[i], this.m_polygonB.vertices[i]);
                 b2Math_11.b2Rot.MulRV(this.m_xf.q, polygonB.m_normals[i], this.m_polygonB.normals[i]);
             }
@@ -5141,9 +5138,9 @@ define("Collision/Shapes/b2ChainShape", ["require", "exports", "Common/b2Setting
         };
         b2ChainShape.prototype.Dump = function (log) {
             log("    const shape: b2ChainShape = new b2ChainShape();\n");
-            log("    const vs: b2Vec2[] = b2Vec2.MakeArray(%d);\n", b2Settings_13.b2_maxPolygonVertices);
+            log("    const vs: b2Vec2[] = [];\n");
             for (var i = 0; i < this.m_count; ++i) {
-                log("    vs[%d].Set(%.15f, %.15f);\n", i, this.m_vertices[i].x, this.m_vertices[i].y);
+                log("    vs[%d] = new bVec2(%.15f, %.15f);\n", i, this.m_vertices[i].x, this.m_vertices[i].y);
             }
             log("    shape.CreateChain(vs, %d);\n", this.m_count);
             log("    shape.m_prevVertex.Set(%.15f, %.15f);\n", this.m_prevVertex.x, this.m_prevVertex.y);

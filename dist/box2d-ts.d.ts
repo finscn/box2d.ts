@@ -794,8 +794,6 @@ declare module "Collision/Shapes/b2PolygonShape" {
         Clone(): b2PolygonShape;
         Copy(other: b2PolygonShape): b2PolygonShape;
         GetChildCount(): number;
-        private static Set_s_ps;
-        private static Set_s_hull;
         private static Set_s_r;
         private static Set_s_v;
         Set(vertices: XY[], count?: number, start?: number): b2PolygonShape;
@@ -824,7 +822,6 @@ declare module "Collision/Shapes/b2PolygonShape" {
         Validate(): boolean;
         SetupDistanceProxy(proxy: b2DistanceProxy, index: number): void;
         private static ComputeSubmergedArea_s_normalL;
-        private static ComputeSubmergedArea_s_depths;
         private static ComputeSubmergedArea_s_md;
         private static ComputeSubmergedArea_s_intoVec;
         private static ComputeSubmergedArea_s_outoVec;
