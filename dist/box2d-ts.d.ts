@@ -744,7 +744,7 @@ declare module "Collision/b2TimeOfImpact" {
         readonly m_localPoint: b2Vec2;
         readonly m_axis: b2Vec2;
         Initialize(cache: b2SimplexCache, proxyA: b2DistanceProxy, sweepA: b2Sweep, proxyB: b2DistanceProxy, sweepB: b2Sweep, t1: number): number;
-        FindMinSeparation(indexA: number[], indexB: number[], t: number): number;
+        FindMinSeparation(indexA: [number], indexB: [number], t: number): number;
         Evaluate(indexA: number, indexB: number, t: number): number;
     }
     export function b2TimeOfImpact(output: b2TOIOutput, input: b2TOIInput): void;

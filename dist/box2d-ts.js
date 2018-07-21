@@ -3366,6 +3366,7 @@ define("Collision/b2TimeOfImpact", ["require", "exports", "Common/b2Settings", "
         output.t = input.tMax;
         var proxyA = input.proxyA;
         var proxyB = input.proxyB;
+        var maxVertices = b2Math_5.b2Max(b2Settings_6.b2_maxPolygonVertices, proxyA.m_count, proxyB.m_count);
         var sweepA = b2TimeOfImpact_s_sweepA.Copy(input.sweepA);
         var sweepB = b2TimeOfImpact_s_sweepB.Copy(input.sweepB);
         sweepA.Normalize();
@@ -3406,6 +3407,7 @@ define("Collision/b2TimeOfImpact", ["require", "exports", "Common/b2Settings", "
             fcn.Initialize(cache, proxyA, sweepA, proxyB, sweepB, t1);
             var done = false;
             var t2 = tMax;
+            var pushBackIter = 0;
             for (;;) {
                 var indexA = b2TimeOfImpact_s_indexA;
                 var indexB = b2TimeOfImpact_s_indexB;
@@ -3464,6 +3466,10 @@ define("Collision/b2TimeOfImpact", ["require", "exports", "Common/b2Settings", "
                     }
                 }
                 exports.b2_toiMaxRootIters = b2Math_5.b2Max(exports.b2_toiMaxRootIters, rootIterCount);
+                ++pushBackIter;
+                if (pushBackIter === maxVertices) {
+                    break;
+                }
             }
             ++iter;
             ++exports.b2_toiIters;
