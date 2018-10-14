@@ -19,9 +19,12 @@ var __spread = (this && this.__spread) || function () {
     return ar;
 };
 var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    }
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -11609,7 +11612,6 @@ define("Particle/b2ParticleSystem", ["require", "exports", "Common/b2Settings", 
         return l;
     }
     function std_lower_bound(array, first, last, val, cmp) {
-        if (cmp === void 0) { cmp = default_compare; }
         var count = last - first;
         while (count > 0) {
             var step = Math.floor(count / 2);
@@ -11625,7 +11627,6 @@ define("Particle/b2ParticleSystem", ["require", "exports", "Common/b2Settings", 
         return first;
     }
     function std_upper_bound(array, first, last, val, cmp) {
-        if (cmp === void 0) { cmp = default_compare; }
         var count = last - first;
         while (count > 0) {
             var step = Math.floor(count / 2);
