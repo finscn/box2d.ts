@@ -116,6 +116,7 @@ declare module "Common/b2Math" {
         Normalize(): number;
         SelfNormalize(): this;
         SelfRotate(radians: number): this;
+        SelfRotateCosSin(c: number, s: number): this;
         IsValid(): boolean;
         SelfCrossVS(s: number): this;
         SelfCrossSV(s: number): this;
@@ -1426,7 +1427,7 @@ declare module "Dynamics/Joints/b2RevoluteJoint" {
         motorSpeed: number;
         maxMotorTorque: number;
         constructor();
-        Initialize(bA: b2Body, bB: b2Body, anchor: b2Vec2): void;
+        Initialize(bA: b2Body, bB: b2Body, anchor: XY): void;
     }
     export class b2RevoluteJoint extends b2Joint {
         readonly m_localAnchorA: b2Vec2;
@@ -2405,7 +2406,7 @@ declare module "Dynamics/b2World" {
         SetDestructionListener(listener: b2DestructionListener | null): void;
         SetContactFilter(filter: b2ContactFilter): void;
         SetContactListener(listener: b2ContactListener): void;
-        SetDebugDraw(debugDraw: b2Draw): void;
+        SetDebugDraw(debugDraw: b2Draw | null): void;
         CreateBody(def?: b2IBodyDef): b2Body;
         DestroyBody(b: b2Body): void;
         private static _Joint_Create;

@@ -316,6 +316,12 @@ define("Common/b2Math", ["require", "exports", "Common/b2Settings"], function (r
             this.y = s * x + c * this.y;
             return this;
         };
+        b2Vec2.prototype.SelfRotateCosSin = function (c, s) {
+            var x = this.x;
+            this.x = c * x - s * this.y;
+            this.y = s * x + c * this.y;
+            return this;
+        };
         b2Vec2.prototype.IsValid = function () {
             return isFinite(this.x) && isFinite(this.y);
         };
